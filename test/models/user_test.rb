@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   def setup
-  	@user = User.new(name: "Example Userson", email: "user@example.clom", password: "foobar",
+  	@user = User.new(name: "Example Userson", user_name: "example", email: "user@example.clom", password: "foobar",
   		password_confirmation: "foobar")
   end
 
@@ -63,4 +63,22 @@ class UserTest < ActiveSupport::TestCase
   	assert_not @user.valid?
   end
 
+  #I think that's enough tests - I trust all the other stuff
+  #This will be my doom
+  test "user names should not include white space" do
+    @user.user_name = "cool guy"
+    assert_not @user.valid?
+  end
+
+  test "valid user names should be accepted" do
+    @user.user_name = "coolguy"
+    assert @user.valid?
+  end
+
+  test "user names should be unique" do
+    duplicate_user = @user.dup
+    duplicate_user.user_name = @user.user_name.upcase
+    @user.save
+    assert_not duplicate_user.valid?
+  end
 end
