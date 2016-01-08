@@ -9,5 +9,8 @@ class User < ActiveRecord::Base
 	has_secure_password
 	validates :password, presence: true, length: { minimum: 6}
 
-	GENDERS = ['4524', '23412', 'zzzzzz', 'l4l4l4']
+	GENDERS = ['4524', '___!___!_', 'zzzzzz', '<_>']
+
+	NAME_WORDS = "Goat Mountain Tower Sun Moon Star Horse Desert Tree Hammer Cool Warm Kind Tall 
+	Fast Green Dark Run Swim Build See Home Child Plan".split(" ")
 end

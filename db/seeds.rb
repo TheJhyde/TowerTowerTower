@@ -5,3 +5,11 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+name_words = "Goat Mountain Tower Sun Moon Star Horse Desert Tree Hammer Cool Warm Kind Tall 
+	Fast Green Dark Run Swim Build See Home Child Plan"
+
+words = name_words.split(" ")
+words.each do |word|
+	NameWord.create(word: word)
+end
