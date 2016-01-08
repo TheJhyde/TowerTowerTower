@@ -4,6 +4,7 @@
 	<div class = "col-md-6 col-md-offset-3">
 		<%= form_for(@user) do |f| %>
 			<%= render 'shared/error_messages' %>
+			
 			<!-- This should check if the name you've selected is already in use, 
 			so you don't have to submit the form only to find out it is -->
 			<%= fields_for :name, @user.name do |name| %>
@@ -14,10 +15,6 @@
 					options = { :include_blank => true } %>
 			<% end %>
 			<br/>
-			<%#= f.text_field :name %>
-
-			<%#= f.label :user_name %>
-			<%#= f.text_field :email %>
 
 			<%= f.label :gender %>
 			<%= f.collection_select :gender, User::GENDERS, :to_s, :to_s, :include_blank => true, class: 'form-control' %>
