@@ -1,0 +1,2 @@
+module ClayShipmentsHelper
+end

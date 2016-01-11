@@ -11,7 +11,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160111151940) do
+ActiveRecord::Schema.define(version: 20160111210349) do
+
+  create_table "clay_shipments", force: :cascade do |t|
+    t.string   "message"
+    t.datetime "used"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "clay_shipments", ["user_id"], name: "index_clay_shipments_on_user_id"
+
+  create_table "clays", force: :cascade do |t|
+    t.integer  "clay"
+    t.integer  "clay_shipment_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "clays", ["clay_shipment_id"], name: "index_clays_on_clay_shipment_id"
+
+  create_table "mines", force: :cascade do |t|
+    t.integer  "red_clay"
+    t.integer  "brown_clay"
+    t.integer  "black_clay"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "name"

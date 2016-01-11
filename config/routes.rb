@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'clay_shipments/new'
+
+  get 'clay_shipments/index'
+
   root 'static_pages#home'
   #get 'static_pages/about'
   get 'about' => 'static_pages#about'
