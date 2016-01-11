@@ -19,6 +19,7 @@ class UsersController < ApplicationController
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
   	if @user.save
+      log_in @user
   		flash[:success] = "Welcome #{@user.name}"
   		#I would like this to redirect to the /username page, not /id
   		redirect_to @user
