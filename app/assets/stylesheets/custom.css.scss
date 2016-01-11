@@ -94,6 +94,40 @@ input{
  	}
 }
 
+/* mining */
+.blank {
+    background-color: #FFFFFF;
+}
+
+.red {
+	background-color: #B20000;
+}
+
+.brown {
+	background-color: #8B4513;
+}
+
+.black {
+	background-color: #363636;
+}
+
+.grid{
+	border-style: solid;
+}
+
+.grid_selected{
+	border-style: dashed;
+}
+
+.clay{
+    height: 20px;
+    width: 20px;
+    margin: 2px;
+    display: inline-block;
+    border-radius: 0px;
+    text-align: center;
+}
+
 /* misc */
 .debug_dump {
 	clear: both;

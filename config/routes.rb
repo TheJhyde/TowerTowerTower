@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-  get 'clay_shipments/new'
-
-  get 'clay_shipments/index'
-
   root 'static_pages#home'
   #get 'static_pages/about'
   get 'about' => 'static_pages#about'
@@ -11,4 +7,5 @@ Rails.application.routes.draw do
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
   resources :users
+  resources :clay_shipments, only: [:new, :create, :index, :edit]
 end

@@ -1,2 +1,12 @@
-<h1>ClayShipments#new</h1>
-<p>Find me in app/views/clay_shipments/new.html.erb</p>
+<% provide(:title, "MINING") %>
+<p id = "alert">It is time to go mining</p>
+
+<p id = "mines">
+	<% @mines.times do |i| %>
+		<!-- Replace with a button tag maybe -->
+		<button type="button" id = "mine<%= i %>" class = 'mine'>MINE</button> 
+	<% end %>
+</p>
+
+<p id = "pack">
+</p>
