@@ -1,0 +1,17 @@
+<p id = 'message'>
+	Write your message here:
+</p>
+<p id = 'text_area' >
+
+</p>
+
+<%= form_for(:shipment, url: url) do |f| %>
+	<%= f.label :message %>
+	<%= f.hidden_field :message, :value => "" %>
+
+	<%= f.submit 'Submit', class: 'btn btn-primary' %>
+<% end %>
+
+<div id = "glyph_zone">
+	<%= render partial: 'shared/glyph', collection: glyphs %>
+</div>

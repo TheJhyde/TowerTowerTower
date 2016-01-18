@@ -3,6 +3,7 @@ class ClayShipmentsController < ApplicationController
 
   def new
     @finished = session["finished_clay"]
+    @glyphs = Glyph.all
   	#Make n mines and save their id's in the session
     create_mines
   	#Creates a new clay shipment, if necessary
@@ -15,6 +16,7 @@ class ClayShipmentsController < ApplicationController
   end
 
   def index
+    @shipments = ClayShipment.all
   end
 
   def create
@@ -47,6 +49,7 @@ class ClayShipmentsController < ApplicationController
 
   def finish
     session["finished_clay"] = true
+    @glyphs = Glyph.all
     respond_to do |format|
       format.js
     end

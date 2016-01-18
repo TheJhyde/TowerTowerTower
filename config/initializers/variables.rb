@@ -1,4 +1,7 @@
-#Mining variables
+#System variables--------------------------------------------------------------------------
+Tbl::Application.config.x.img_url = "https://s3.amazonaws.com/towerbricklightning/glyphs/"
+
+#Mining variables ----------------------------------------------------------------------------
 #How many mines appear on a page
 Tbl::Application.config.x.total_mines = 3
 #How many times the server will attempt to get clay when you mine

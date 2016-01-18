@@ -1,4 +1,4 @@
 $(".mine").hide();
 $(".finish").hide();
 
-$(".content").append("<%= escape_javascript(render(:partial => 'shared/message_form'))%>");
+$(".content").append("<%= escape_javascript(render partial: 'shared/message_form', locals: {url: clay_shipments_path, glyphs: @glyphs}) %>");

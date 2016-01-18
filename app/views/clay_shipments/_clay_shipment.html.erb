@@ -1,0 +1,21 @@
+<p>
+	Created by: <%= clay_shipment.user.name %><br/>
+	Created at: <%= clay_shipment.created_at %><br/>
+	Used: <%= clay_shipment.used %><br/>
+	Message: <%= clay_shipment.message %><br/>
+	<% Rails.configuration.x.pack_height.times do |i| %>
+		<% Rails.configuration.x.pack_width.times do |j| %>
+			<% if clay_shipment.clay[i*Rails.configuration.x.pack_width + j] == Rails.configuration.x.red %>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'red grid clay'></div>
+			<% elsif clay_shipment.clay[i*Rails.configuration.x.pack_width + j] == Rails.configuration.x.brown %>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'brown grid clay'></div>
+			<% elsif clay_shipment.clay[i*Rails.configuration.x.pack_width + j] == Rails.configuration.x.black %>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'black grid clay'></div>
+			<% else %>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'blank grid clay'></div>
+			<% end %>
+		<% end %>
+		<br/>
+	<% end %>
+	<hr>
+</p>

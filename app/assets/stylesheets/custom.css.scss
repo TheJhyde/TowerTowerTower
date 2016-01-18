@@ -78,6 +78,19 @@ input{
 	margin-left: 0;
 }
 
+/* glyphs */
+.glyph{
+	height: 90px;
+    width: 90px;
+    margin: 1px;
+    display: inline-block;
+    background-color: #F38630;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 50%;
+    word-wrap: break-word;
+}
+
 /* header */
 #logo {
 	float: left;

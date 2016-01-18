@@ -6,8 +6,7 @@ $(document).on("page:change", function(){
 
 	var holding = 0;
 
-	//Lets you move things around in the grid
-	//This does not update the clay shipment, which is potentially a problem
+	//Lets you move things around in your pack
 	$('.grid').click(function(){
 		if(holding == 0){
 			$(this).removeClass('grid').addClass('grid_selected');
@@ -30,4 +29,10 @@ $(document).on("page:change", function(){
 		}
 	});
 
+	$('.glyph').click(function(){
+	  $('#text_area').append($(this).find("img").prop('outerHTML'));
+	  // console.log($(this).find("img").prop('outerHTML'));
+	  //console.log($(this).children().attr("id"));
+	  $('#shipment_message').val($('#shipment_message').val() + $(this).children().attr("id") + " ");
+	});
 });

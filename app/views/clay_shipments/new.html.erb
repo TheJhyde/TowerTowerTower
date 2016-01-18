@@ -32,5 +32,5 @@
 <% end %>
 
 <% if @finished %>
-	<%= render 'shared/message_form' %>
+	<%= render partial: 'shared/message_form', locals: {url: clay_shipments_path, glyphs: @glyphs} %>
 <% end %>
