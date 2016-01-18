@@ -2,11 +2,35 @@
 <p id = "alert">It is time to go mining</p>
 
 <p id = "mines">
-	<% @mines.times do |i| %>
-		<!-- Replace with a button tag maybe -->
-		<button type="button" id = "mine<%= i %>" class = 'mine'>MINE</button> 
+	<% if !@finished %>
+		<% @mine_count.times do |i| %>
+			<%= button_to "MINE", edit_clay_shipment_path("mine#{i}"), method: "get", remote: true, form_class: "btn mine" %>
+		<% end %>
 	<% end %>
 </p>
 
 <p id = "pack">
+	<% 2.times do |i| %>
+		<% 5.times do |j| %>
+			<% if @shipment.clay[i*5 + j] == 0 %>
+				<div id = 'grid<%= i*5 + j %>' class = 'red grid clay'></div>
+			<% elsif @shipment.clay[i*5 + j] == 1 %>
+				<div id = 'grid<%= i*5 + j %>' class = 'brown grid clay'></div>
+			<% elsif @shipment.clay[i*5 + j] == 2 %>
+				<div id = 'grid<%= i*5 + j %>' class = 'black grid clay'></div>
+			<% else %>
+				<div id = 'grid<%= i*5 + j %>' class = 'blank grid clay'></div>
+			<% end %>
+		<% end %>
+		<br/>
+	<% end %>
 </p>
+
+<% if !@finished %>
+	<%= button_to "FINISH", '/clay_shipments/finish.js', method: "get", remote: true, 
+		form_class: "btn finish" %>
+<% end %>
+
+<% if @finished %>
+	<%= render 'shared/message_form' %>
+<% end %>

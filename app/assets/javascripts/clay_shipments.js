@@ -1,24 +1,33 @@
-//Constants
-var PACK_WIDTH = 5;
-var PACK_HEIGHT = 2;
-var PACK_TOTAL = PACK_WIDTH * PACK_HEIGHT;
-
 $(document).on("page:change", function(){
 	//Check if we're on the right page
 	if($(".clay_shipments.new").length == 0){
 		return
 	}
 
-	for(var i = 0; i < PACK_HEIGHT; i++){
-		for(var j = 0; j < PACK_WIDTH; j++){
-			$('#pack').append("<div id = 'grid" + (i*PACK_WIDTH + j) + "' class = 'blank grid clay'></div>");
-		}
-		$('#pack').append("<br/>");
-	}
+	var holding = 0;
 
-	$('.mine').click(function(){
-		console.log("You clicked mine " + $(this).attr('id'));
-		//And here's where the ajax magic goes
+	//Lets you move things around in the grid
+	//This does not update the clay shipment, which is potentially a problem
+	$('.grid').click(function(){
+		if(holding == 0){
+			$(this).removeClass('grid').addClass('grid_selected');
+			holding = $(this);
+		}else{
+			// Sends these changes to the server, so it can do the same
+			changes = {"a": holding.attr("id").replace("grid", ""), "b": $(this).attr("id").replace("grid", "")};
+			$.post('/clay_shipments/rearrange', changes);
+			
+			//put the original square back to a solid border			
+			holding.removeClass('grid_selected').addClass('grid');
+			//Get the color of the original square
+			var swapClay = holding.attr('class');
+			//set the original square as the new square
+			holding.removeClass().addClass($(this).attr("class"));
+			//Set the new square as the original square
+			$(this).removeClass().addClass(swapClay);
+
+			holding = 0;
+		}
 	});
 
 });

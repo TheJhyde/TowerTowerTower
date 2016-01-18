@@ -1,0 +1,34 @@
+PACK_TOTAL = 10;
+
+// console.log("Editing mine id: <%= @mine.id %>");
+// console.log("Editing clay shipment id: <%= @shipment.id %>");
+
+<% @shipment.clay.each_with_index do |color, i| %>
+	setGrid(<%= i %>, getColor(<%= color %>));
+<% end %>
+
+$("#alert").text("<%= @update %>");
+
+function setGrid(i, color){
+	if(i < PACK_TOTAL){
+		$("#grid"+ i ).removeClass("blank red brown black").addClass(color);
+	}else{
+		console.log("You tried to add too many clays");
+	}
+}
+
+function getColor(number){
+	switch(number){
+		case 0:
+			return "red";
+			break;
+		case 1:
+			return "brown";
+			break;
+		case 2:
+			return "black"
+			break
+		default:
+			return "blank";
+	}
+}

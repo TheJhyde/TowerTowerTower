@@ -4,7 +4,7 @@ class Mine < ActiveRecord::Base
 	MIN_MINE = 8
 
 	#Generates a new mine with a random distribution of clays
-	def self.new_mine
+	def self.new_mine()
 		total_clay = rand(MAX_MINE - MIN_MINE) + MIN_MINE
 		values = [rand(4)]
 		values.push rand(total_clay - values[0])

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160111210349) do
+ActiveRecord::Schema.define(version: 20160115192643) do
 
   create_table "clay_shipments", force: :cascade do |t|
     t.string   "message"
@@ -19,12 +19,13 @@ ActiveRecord::Schema.define(version: 20160111210349) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text     "clay"
   end
 
   add_index "clay_shipments", ["user_id"], name: "index_clay_shipments_on_user_id"
 
   create_table "clays", force: :cascade do |t|
-    t.integer  "clay"
+    t.integer  "color"
     t.integer  "clay_shipment_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false

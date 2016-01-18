@@ -8,4 +8,6 @@ Rails.application.routes.draw do
   delete 'logout' => 'sessions#destroy'
   resources :users
   resources :clay_shipments, only: [:new, :create, :index, :edit]
+  post 'clay_shipments/rearrange' => 'clay_shipments#rearrange'
+  get 'clay_shipments/finish' => 'clay_shipments#finish'
 end

@@ -1,0 +1,10 @@
+<p id = 'message'>
+	Write your message here:
+</p>
+
+<%= form_for(:shipment, url: clay_shipments_path) do |f| %>
+	<%= f.label :message %>
+	<%= f.text_field :message, class: 'form-control' %>
+
+	<%= f.submit 'Submit', class: 'btn btn-primary' %>
+<% end %>
