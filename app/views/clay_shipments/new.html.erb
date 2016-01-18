@@ -3,23 +3,23 @@
 
 <p id = "mines">
 	<% if !@finished %>
-		<% @mine_count.times do |i| %>
+		<% Rails.configuration.x.total_mines.times do |i| %>
 			<%= button_to "MINE", edit_clay_shipment_path("mine#{i}"), method: "get", remote: true, form_class: "btn mine" %>
 		<% end %>
 	<% end %>
 </p>
 
 <p id = "pack">
-	<% 2.times do |i| %>
-		<% 5.times do |j| %>
-			<% if @shipment.clay[i*5 + j] == 0 %>
-				<div id = 'grid<%= i*5 + j %>' class = 'red grid clay'></div>
-			<% elsif @shipment.clay[i*5 + j] == 1 %>
-				<div id = 'grid<%= i*5 + j %>' class = 'brown grid clay'></div>
-			<% elsif @shipment.clay[i*5 + j] == 2 %>
-				<div id = 'grid<%= i*5 + j %>' class = 'black grid clay'></div>
+	<% Rails.configuration.x.pack_height.times do |i| %>
+		<% Rails.configuration.x.pack_width.times do |j| %>
+			<% if @shipment.clay[i*Rails.configuration.x.pack_width + j] == Rails.configuration.x.red %>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'red grid clay'></div>
+			<% elsif @shipment.clay[i*Rails.configuration.x.pack_width + j] == Rails.configuration.x.brown %>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'brown grid clay'></div>
+			<% elsif @shipment.clay[i*Rails.configuration.x.pack_width + j] == Rails.configuration.x.black %>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'black grid clay'></div>
 			<% else %>
-				<div id = 'grid<%= i*5 + j %>' class = 'blank grid clay'></div>
+				<div id = 'grid<%= i*Rails.configuration.x.pack_width + j %>' class = 'blank grid clay'></div>
 			<% end %>
 		<% end %>
 		<br/>

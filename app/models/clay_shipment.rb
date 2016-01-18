@@ -6,7 +6,7 @@ class ClayShipment < ActiveRecord::Base
 
 	def init
 		if clay[0].nil?
-			10.times do
+			Rails.configuration.x.pack_total.times do
 				self.clay << -1
 			end
 		end

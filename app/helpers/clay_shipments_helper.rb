@@ -1,11 +1,9 @@
 include ActionView::Helpers::TextHelper
 
 module ClayShipmentsHelper
-	MINE_ACTIONS = 4
-	PACK_SIZE = 10
 
 	def create_mines
-		Settings.mining.total_mines.times do |i|
+		Rails.configuration.x.total_mines.times do |i|
 			if(session["mine#{i}"].nil?)
 				session["mine#{i}"] = Mine.new_mine.id
 			end	
@@ -19,26 +17,26 @@ module ClayShipmentsHelper
 	    brown_clay = 0;
 	    black_clay = 0;
 
-	    MINE_ACTIONS.times do
-	    	if @shipment.clay.include?(-1)
-	    		r = rand(3)
+	    Rails.configuration.x.mine_actions.times do
+	    	if @shipment.clay.include?(Rails.configuration.x.no_clay)
+	    		r = rand(Rails.configuration.x.clay_types)
 		    	case r
-		    	when 0
+		    	when Rails.configuration.x.red
 		    		if @mine.red_clay > 0
 		      			@mine.update(red_clay: @mine.red_clay - 1)
-		      			@shipment.clay[@shipment.clay.index(-1)] = 0
+		      			@shipment.clay[@shipment.clay.index(-1)] = Rails.configuration.x.red
 		      			red_clay += 1
 		    		end
-		    	when 1
+		    	when Rails.configuration.x.brown
 		    		if @mine.brown_clay > 0
 		      			@mine.update(brown_clay: @mine.brown_clay - 1)
-		      			@shipment.clay[@shipment.clay.index(-1)] = 1
+		      			@shipment.clay[@shipment.clay.index(-1)] = Rails.configuration.x.brown
 		      			brown_clay += 1
 		    		end
-		    	when 2
+		    	when Rails.configuration.x.black
 		    		if @mine.black_clay > 0
 		      			@mine.update(black_clay: @mine.black_clay - 1)
- 		      			@shipment.clay[@shipment.clay.index(-1)] = 2
+ 		      			@shipment.clay[@shipment.clay.index(-1)] = Rails.configuration.x.black
 		      			black_clay += 1
 		    		end
 		    	else
@@ -54,7 +52,7 @@ module ClayShipmentsHelper
 	def write_update(red, brown, black)
 		@update = ""
 		if (red + brown + black) == 0
-			if @shipment.clay.include?(-1)
+			if @shipment.clay.include?(Rails.configuration.x.no_clay)
 				@update += "That mine is tapped out."
 			end
 		else
@@ -76,14 +74,14 @@ module ClayShipmentsHelper
 			@update += clays.to_sentence + "."
 		end
 
-		if !@shipment.clay.include?(-1)
+		if !@shipment.clay.include?(Rails.configuration.x.no_clay)
 			@update += " Your pack is full."
 		end
 	end
 
 	def clear_session
 		session["clay_shipment"] = nil
-		Settings.mining.total_mines.times do |i|
+		Rails.configuration.x.total_mines.times do |i|
 			Mine.find(session["mine#{i}"]).delete
 			session["mine#{i}"] = nil
 		end

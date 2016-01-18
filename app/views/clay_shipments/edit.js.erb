@@ -1,5 +1,3 @@
-PACK_TOTAL = 10;
-
 // console.log("Editing mine id: <%= @mine.id %>");
 // console.log("Editing clay shipment id: <%= @shipment.id %>");
 
@@ -10,7 +8,7 @@ PACK_TOTAL = 10;
 $("#alert").text("<%= @update %>");
 
 function setGrid(i, color){
-	if(i < PACK_TOTAL){
+	if(i < <%= Rails.configuration.x.pack_total %>){
 		$("#grid"+ i ).removeClass("blank red brown black").addClass(color);
 	}else{
 		console.log("You tried to add too many clays");
@@ -19,13 +17,13 @@ function setGrid(i, color){
 
 function getColor(number){
 	switch(number){
-		case 0:
+		case <%= Rails.configuration.x.red %>:
 			return "red";
 			break;
-		case 1:
+		case <%= Rails.configuration.x.brown %>:
 			return "brown";
 			break;
-		case 2:
+		case <%= Rails.configuration.x.black %>:
 			return "black"
 			break
 		default:

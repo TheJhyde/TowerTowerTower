@@ -4,7 +4,7 @@ class ClayShipmentsController < ApplicationController
   def new
     @finished = session["finished_clay"]
   	#Make n mines and save their id's in the session
-  	@mine_count = Settings.mining.total_mines
+    create_mines
   	#Creates a new clay shipment, if necessary
     if(session["clay_shipment"].nil?)
   	  @shipment = ClayShipment.create(user: current_user)
