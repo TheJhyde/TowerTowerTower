@@ -16,13 +16,26 @@ meanings = "just him know take people into year your good some could them see
 	other than then now look only come its over think also back after use two how our work first well 
 	way even new want because any these give day most us"
 
-urls = images.split(" ")
-words = meanings.split(" ")
-words.each do |word|
-	word.upcase!
-end
-words.uniq!
+# Adds the glyphs to the database
+# urls = images.split(" ")
+# words = meanings.split(" ")
+# words.each do |word|
+# 	word.upcase!
+# end
+# words.uniq!
 
-urls.each_with_index do |url, i|
-	Glyph.create(url: url, meaning: words[i])
+# urls.each_with_index do |url, i|
+# 	Glyph.create(url: url, meaning: words[i])
+# end
+
+99.times do |n|
+	name = "#{User::NAME_WORDS.sample} #{User::NAME_WORDS.sample}"
+	email = "email-#{n}@thejhyde.zone"
+	password = "password"
+	gender = "#{User::GENDERS.sample}"
+	User.create!(name: name,
+		email: email,
+		gender: gender,
+		password: password,
+		password_confirmation: password)
 end

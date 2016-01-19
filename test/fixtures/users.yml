@@ -2,8 +2,16 @@ coolgoat:
  name: Cool Goat
  email: cool@goat.com
  password_digest: <%= User.digest('password') %>
+ admin: true
 
 suntall:
   name: Sun Tall
   email: sun@tall.com
   password_digest: <%= User.digest('password') %>
+
+<% 30.times do |n| %>
+user_<%= n %>:
+  name: <%= "User #{n}" %>
+  email: <%= "user-#{n}@thejhyde.zone" %>
+  password_digest: <%= User.digest('password') %>
+<% end %>

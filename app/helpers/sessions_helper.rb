@@ -28,6 +28,7 @@ module SessionsHelper
 
 	def logged_in_user
 		unless logged_in?
+			store_location
 			flash[:danger] = "You must log in to do that"
 			redirect_to login_url
 		end
@@ -35,6 +36,13 @@ module SessionsHelper
 
 	def current_user?(user)
 		user == current_user
+	end
+
+	def check_admin
+		unless current_user.admin?
+			flash[:danger] = "Only admins may access that page."
+			redirect_to current_user
+		end
 	end
 
 	def forget(user)
@@ -48,5 +56,14 @@ module SessionsHelper
 		#session.delete(:user_id)
 		reset_session
 		@current_user = nil
+	end
+
+	def store_location
+		session[:forwarding_url] = request.url if request.get?
+	end
+
+	def redirect_back_or(default)
+		redirect_to(session[:forwarding_url] || default)
+		session.delete(:forwarding_url)
 	end
 end

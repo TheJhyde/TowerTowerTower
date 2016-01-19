@@ -1,0 +1,7 @@
+<li>
+	<%= link_to user.name, user %>
+	<% if user.admin? %>
+		| ADMIN
+	<% end %> |
+	<%= link_to "delete", user, method: :delete, data: {confirm: "You sure?"} %>
+</li>
