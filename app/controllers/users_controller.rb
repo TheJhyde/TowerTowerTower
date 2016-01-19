@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
-  # before_action :set_name, only: [:create]
-  
-
+  before_action :logged_in_user, only: [:edit, :update]
+  before_action :correct_user, only: [:edit, :update]
   def new
   	@user = User.new
   end
@@ -24,15 +23,23 @@ class UsersController < ApplicationController
   		#I would like this to redirect to the /username page, not /id
   		redirect_to @user
   	else
-  		# if @user.errors.any?
-  		# 	@user.errors.full_messages.each do |msg|
-  		# 		puts "Here's an error: #{msg}"
-  		# 	end
-  		# end
-  		# puts "The user we're passing back is: #{@user.inspect}"
   		@user.name = nil #This is a little hackey
   		render 'new'
   	end
+  end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+    if @user.update_attributes(edit_params)
+      flash[:success] = "Profile updated"
+      redirect_to @user
+    else
+      render 'edit'
+    end
   end
 
   private #-------------------------------------------------------------------------------
@@ -40,6 +47,15 @@ class UsersController < ApplicationController
   	def user_params
   		params.require(:user).permit(:email, :gender, :password, :password_confirmation)
   	end
+
+    def edit_params
+      params.require(:user).permit(:email, :password, :password_confirmation)
+    end
+
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_url) unless current_user?(@user)
+    end
 
   	# def set_name
   	# 	params.user.name = "#{params.name.name_1} #{params.name.name_2}" 

@@ -1,4 +1,5 @@
 class ClayShipmentsController < ApplicationController
+  before_action :logged_in_user
   include ClayShipmentsHelper
 
   def new
