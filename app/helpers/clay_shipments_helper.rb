@@ -4,7 +4,7 @@ module ClayShipmentsHelper
 
 	def create_mines
 		Rails.configuration.x.total_mines.times do |i|
-			if(session["mine#{i}"].nil?)
+			if session["mine#{i}"].nil? || !Mine.exists?(session["mine#{i}"])
 				session["mine#{i}"] = Mine.new_mine.id
 			end	
 		end

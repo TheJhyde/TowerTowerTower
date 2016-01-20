@@ -1,0 +1,6 @@
+<div class='glyph'> 
+	<p id = '<%= glyph.id %>'>
+		<%= image_tag "#{Rails.configuration.x.img_url}#{glyph.url}.png", title: glyph.meaning, width: '80', class: "glyph_image" %><br>
+		<%= glyph.meaning %>
+	</p>
+</div> 

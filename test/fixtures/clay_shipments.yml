@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  message: Test Message 1
+  message: 0 1 1
   used: 2016-01-11 16:03:49
   clay: 0 2 0 2 0 2 0 2 0 2
   user: coolgoat
 
 two:
-  message: Test Message 2
+  message: 1 0 1
   used: 2016-01-11 16:03:49
   clay: 0 0 0 0 0 0 0 0 0 0
   user: suntall

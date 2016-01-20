@@ -1,4 +1,10 @@
-$(".mine").hide();
-$(".finish").hide();
+<% if @finished %>
+	$(".mine").hide();
+	$(".finish").hide();
 
-$(".content").append("<%= escape_javascript(render partial: 'shared/message_form', locals: {url: clay_shipments_path, glyphs: @glyphs}) %>");
+	$(".content").append("<%= escape_javascript(
+		render partial: 'shared/message_form', locals: {url: clay_shipments_path, glyphs: @glyphs}
+		) %>");
+<% else %>
+	$("#alert").text("You must have at least four clays to submit.");	
+<% end %>

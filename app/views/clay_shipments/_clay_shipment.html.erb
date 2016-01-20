@@ -2,7 +2,13 @@
 	Created by: <%= clay_shipment.user.name %><br/>
 	Created at: <%= clay_shipment.created_at %><br/>
 	Used: <%= clay_shipment.used %><br/>
-	Message: <%= clay_shipment.message %><br/>
+	Message:
+	<% if !clay_shipment.message.nil? %>
+		<% clay_shipment.message.split(" ").each do |glyph| %>
+			<%= render partial: 'shared/glyph_read', locals: {glyph: @glyphs.find(glyph)} %>
+		<% end %>
+	<% end %>
+	<br/>
 	<% Rails.configuration.x.pack_height.times do |i| %>
 		<% Rails.configuration.x.pack_width.times do |j| %>
 			<% if clay_shipment.clay[i*Rails.configuration.x.pack_width + j] == Rails.configuration.x.red %>

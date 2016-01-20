@@ -8,10 +8,11 @@
 <%= form_for(:shipment, url: url) do |f| %>
 	<%= f.label :message %>
 	<%= f.hidden_field :message, :value => "" %>
+	<%= f.hidden_field :order, :value => "" %>
 
 	<%= f.submit 'Submit', class: 'btn btn-primary' %>
 <% end %>
 
-<div id = "glyph_zone">
-	<%= render partial: 'shared/glyph', collection: glyphs %>
+<div id = "keyboard">
+	<%= render partial: 'shared/glyph_button', collection: glyphs, as: :glyph %>
 </div>

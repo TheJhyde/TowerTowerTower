@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ClayShipmentsControllerTest < ActionController::TestCase
   def setup
-	@user = users(:coolgoat)
+	  @user = users(:coolgoat)
   end
 
   test "should get new" do

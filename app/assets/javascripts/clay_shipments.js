@@ -12,9 +12,9 @@ $(document).on("page:change", function(){
 			$(this).removeClass('grid').addClass('grid_selected');
 			holding = $(this);
 		}else{
-			// Sends these changes to the server, so it can do the same
-			changes = {"a": holding.attr("id").replace("grid", ""), "b": $(this).attr("id").replace("grid", "")};
-			$.post('/clay_shipments/rearrange', changes);
+			// // Sends these changes to the server, so it can do the same
+			// changes = {"a": holding.attr("id").replace("grid", ""), "b": $(this).attr("id").replace("grid", "")};
+			// $.post('/clay_shipments/rearrange', changes);
 			
 			//put the original square back to a solid border			
 			holding.removeClass('grid_selected').addClass('grid');
@@ -27,12 +27,5 @@ $(document).on("page:change", function(){
 
 			holding = 0;
 		}
-	});
-
-	$('.glyph').click(function(){
-	  $('#text_area').append($(this).find("img").prop('outerHTML'));
-	  // console.log($(this).find("img").prop('outerHTML'));
-	  //console.log($(this).children().attr("id"));
-	  $('#shipment_message').val($('#shipment_message').val() + $(this).children().attr("id") + " ");
 	});
 });

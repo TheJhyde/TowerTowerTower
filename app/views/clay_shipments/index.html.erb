@@ -6,4 +6,4 @@
 <p>
 
 <h4>All Shipments</h4>
-<%= render @shipments %>
+<%= render @shipments.order(created_at: :desc) %>

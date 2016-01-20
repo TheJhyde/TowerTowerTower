@@ -11,4 +11,10 @@ class ClayShipment < ActiveRecord::Base
 			end
 		end
 	end
+
+	def self.clear_out
+		ClayShipment.where(message: nil).each do |shipment|
+			shipment.delete
+		end
+	end
 end

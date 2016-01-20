@@ -19,6 +19,9 @@
 			<%= f.label :gender %>
 			<%= f.collection_select :gender, User::GENDERS, :to_s, :to_s, :include_blank => true, class: 'form-control' %>
 			<br/>
+			<%= f.label :curse, "How have the gods cursed you?" %>
+			<%= f.collection_select :gender, User::CURSES, :to_s, :to_s, :include_blank => true, class: 'form-control' %>
+			<br/>
 			<%= f.label :email %>
 			<%= f.email_field :email, class: 'form-control' %>
 

@@ -9,7 +9,7 @@ class ClayShipmentsController < ApplicationController
   	#Make n mines and save their id's in the session
     create_mines
   	#Creates a new clay shipment, if necessary
-    if(session["clay_shipment"].nil?)
+    if session["clay_shipment"].nil? || !ClayShipment.exists?(session["clay_shipment"])
   	  @shipment = ClayShipment.create(user: current_user)
       session["clay_shipment"] = @shipment.id
     else
@@ -19,17 +19,22 @@ class ClayShipmentsController < ApplicationController
 
   def index
     @shipments = ClayShipment.all
+    @glyphs = Glyph.all
   end
 
   def create
-    shipment = ClayShipment.find(session["clay_shipment"])
-    shipment.message = params[:shipment][:message]
+    @shipment = ClayShipment.find(session["clay_shipment"])
+    @shipment.message = params[:shipment][:message]
     #This needs to check that the message isn't blank
-    if shipment.save
+    if @shipment.message.blank?
+      flash[:danger] = "Clay Shipments must include a message."
+      redirect_to :back
+      #render js: "$('#alert').text('Clay shipments must include a message');"
+    elsif @shipment.save
+      flash[:success] = "Clay Shipment sent! Good job."
       clear_session
       redirect_to root_url
     else
-      flash[:danger] = "Not work"
       render "new"
     end
   end
@@ -42,16 +47,23 @@ class ClayShipmentsController < ApplicationController
     end
   end
 
-  def rearrange
-    shipment = ClayShipment.find(session["clay_shipment"])
-    shipment.clay[params[:a].to_i], shipment.clay[params[:b].to_i] = shipment.clay[params[:b].to_i], shipment.clay[params[:a].to_i]
-    shipment.save
-    render :nothing => true
-  end
+  # def rearrange
+  #   shipment = ClayShipment.find(session["clay_shipment"])
+  #   shipment.clay[params[:a].to_i], shipment.clay[params[:b].to_i] = shipment.clay[params[:b].to_i], shipment.clay[params[:a].to_i]
+  #   shipment.save
+  #   render :nothing => true
+  # end
 
   def finish
-    session["finished_clay"] = true
-    @glyphs = Glyph.all
+    shipment = ClayShipment.find(session["clay_shipment"])
+    if shipment.clay.count(-1) <= 4
+      session["finished_clay"] = true
+      @glyphs = Glyph.all
+      @finished = true;
+    else
+      @finished = false;
+    end
+
     respond_to do |format|
       format.js
     end
