@@ -6,36 +6,38 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-images = "noun_24037_cc noun_27816 noun_66244_cc noun_68015_cc noun_86908_cc noun_147109_cc noun_167462_cc
-noun_204737_cc noun_206666_cc noun_209743_cc noun_213102_cc noun_213212_cc noun_213235_cc noun_213271_cc
-noun_213421_cc noun_213492_cc noun_213496_cc noun_214299_cc noun_214573_cc noun_214576_cc noun_214780_cc
-noun_214820_cc noun_214827_cc noun_214866_cc noun_214934_cc noun_215208_cc noun_215364_cc noun_215365_cc
-noun_215367_cc noun_215570_cc"
+images = "tower up_top red brown black brick clay everything_harm mine_build work_game
+despair down bread run_is language glyph bring_lie large_size no_not_never push_destroy
+both neither row_small column_lucky center build_haunted avoid_prevent triangle_carry
+wisdom_pile strong weak_gods curse"
 
-meanings = "just him know take people into year your good some could them see 
-	other than then now look only come its over think also back after use two how our work first well 
-	way even new want because any these give day most us"
+meanings = "TOWER UP/TOP RED BROWN BLACK BRICK CLAY EVERYTHING/HARM MINE/BUILD GAME/WORK
+DESPAIR DOWN/GOOD BREAD RUN/IS LANGUAGE GLYPH BRING/LIE LARGE/SIZE NO/NOT/NEVER PUSH/DESTROY 
+BOTH NEITHER ROW/SMALL COLUMN/LUCKY CENTER BAKE/HAUNTED AVOID/PREVENT TRIANGLE/CARRY 
+WISDOM/PILE STRONG WEAK/GODS CURSE"
 
-# Adds the glyphs to the database
-# urls = images.split(" ")
-# words = meanings.split(" ")
-# words.each do |word|
-# 	word.upcase!
-# end
-# words.uniq!
-
-# urls.each_with_index do |url, i|
-# 	Glyph.create(url: url, meaning: words[i])
-# end
-
-99.times do |n|
-	name = "#{User::NAME_WORDS.sample} #{User::NAME_WORDS.sample}"
-	email = "email-#{n}@thejhyde.zone"
-	password = "password"
-	gender = "#{User::GENDERS.sample}"
-	User.create!(name: name,
-		email: email,
-		gender: gender,
-		password: password,
-		password_confirmation: password)
+#Adds the glyphs to the database
+urls = images.split(" ")
+words = meanings.split(" ")
+words.each do |word|
+	word.upcase!
 end
+words.uniq!
+
+urls.each_with_index do |url, i|
+	Glyph.create(url: url, meaning: words[i])
+end
+
+# 99.times do |n|
+# 	name = "#{User::NAME_WORDS.sample} #{User::NAME_WORDS.sample}"
+# 	email = "email-#{n}@thejhyde.zone"
+# 	password = "password"
+# 	gender = "#{User::GENDERS.sample}"
+# 	User.create!(name: name,
+# 		email: email,
+# 		gender: gender,
+# 		password: password,
+# 		password_confirmation: password,
+# 		activated: true,
+# 		activated_at: Time.zone.now)
+# end

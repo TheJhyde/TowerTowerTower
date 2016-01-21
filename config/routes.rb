@@ -7,8 +7,11 @@ Rails.application.routes.draw do
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
+
   resources :users
   resources :clay_shipments, only: [:new, :create, :index, :edit]
+  resources :account_activations, only: [:edit]
+
   post 'clay_shipments/rearrange' => 'clay_shipments#rearrange'
   get 'clay_shipments/finish' => 'clay_shipments#finish'
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120203546) do
+ActiveRecord::Schema.define(version: 20160121143918) do
 
   create_table "clay_shipments", force: :cascade do |t|
     t.string   "message"
@@ -51,14 +51,17 @@ ActiveRecord::Schema.define(version: 20160120203546) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.string   "password_digest"
     t.string   "user_name"
     t.string   "gender"
     t.string   "remember_digest"
-    t.boolean  "admin",           default: false
-    t.string   "curse",           default: "bees"
+    t.boolean  "admin",             default: false
+    t.string   "curse",             default: "bees"
+    t.string   "activation_digest"
+    t.boolean  "activated"
+    t.datetime "activated_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

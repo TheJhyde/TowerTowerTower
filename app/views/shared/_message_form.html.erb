@@ -14,5 +14,5 @@
 <% end %>
 
 <div id = "keyboard">
-	<%= render partial: 'shared/glyph_button', collection: glyphs, as: :glyph %>
+	<%= render partial: 'shared/glyph_button', collection: glyphs.order(:meaning), as: :glyph %>
 </div>
