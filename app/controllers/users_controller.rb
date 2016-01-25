@@ -18,6 +18,7 @@ class UsersController < ApplicationController
   	@user = User.new(user_params)
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
+    @user.news_item << NewsItem.first
   	if @user.save
       log_in @user
   		flash[:success] = "Welcome #{@user.name}"

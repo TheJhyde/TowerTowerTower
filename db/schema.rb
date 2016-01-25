@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160121143918) do
+ActiveRecord::Schema.define(version: 20160123203409) do
 
   create_table "clay_shipments", force: :cascade do |t|
     t.string   "message"
@@ -47,6 +47,21 @@ ActiveRecord::Schema.define(version: 20160121143918) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "news_items", force: :cascade do |t|
+    t.string   "message"
+    t.string   "msg_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "news_items_users", id: false, force: :cascade do |t|
+    t.integer "user_id",      null: false
+    t.integer "news_item_id", null: false
+  end
+
+  add_index "news_items_users", ["news_item_id", "user_id"], name: "index_news_items_users_on_news_item_id_and_user_id"
+  add_index "news_items_users", ["user_id", "news_item_id"], name: "index_news_items_users_on_user_id_and_news_item_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "name"

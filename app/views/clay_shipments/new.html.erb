@@ -1,5 +1,11 @@
 <% provide(:title, "MINING") %>
-<p id = "alert">It is time to go mining</p>
+<p id = "alert">
+	<% if !@finished %>
+		It is time to go mining
+	<% else %>
+		Write a message to describe your clay shipment.
+	<% end %>
+</p>
 
 <p id = "mines">
 	<% if !@finished %>

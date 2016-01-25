@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 	has_secure_password
 	validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 	has_many :clay_shipments
+	has_and_belongs_to_many :news_items
 
 	GENDERS = ['4524', '___!___!_', 'zzzzzz', '<_>']
 

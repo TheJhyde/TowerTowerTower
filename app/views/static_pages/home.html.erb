@@ -1,9 +1,37 @@
 <% provide(:title, "Tower Brick Lightning") %>
-<div class = "center jumbotron">
-	<h1>Tower Brick Lightning</h1>
-	<p>
-		An exciting tower building confusion game coming soon to a browser near you!
-	</p>
+<% if !logged_in? %>
+	<div class = "center jumbotron">
+		<h1>Tower Brick Lightning</h1>
+		<p>
+			An exciting tower building confusion game coming soon to a browser near you!
+		</p>
 
-	<%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %>
-</div>
+		<%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %>
+	</div>
+<% else %>
+	<h1><%= current_user.name %></h1>
+	<div id = "player_status">
+		Actions: 10
+	</div>
+	<div id = "global_stats">
+		Total Clay Shipments: 3</br>
+		Total Brick Shipments: 2</br>
+		Total Tower Levels: 0</br>
+	</div>
+	<div id = "links">
+		<%= link_to "Mining", new_clay_shipment_path %><br/>
+		<%= link_to "Brick Baking", '#' %><br/>
+		<%= link_to "Tower Build", '#' %><br/>
+		<%= link_to "The Tower", '#' %><br/>
+		<%= link_to "Profile", current_user %><br/>
+		<%= link_to "Settings", edit_user_path(current_user) %><br/>
+	</div>
+	<div id = "news">
+		<h3>Updates</h3>
+		<ul>
+			<% current_user.news_items.each do |news| %>
+				<li class = "<%= news.msg_type %>"><%= news.created_at.strftime("%_m/%-d, %l:%M %p")%>: <%= news.message %></li>
+			<% end %>
+		</ul>
+	</div>
+<% end %>
