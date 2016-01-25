@@ -10,26 +10,33 @@
 	</div>
 <% else %>
 	<h1><%= current_user.name %></h1>
-	<div id = "player_status">
-		Actions: 10
+	<div id = "information">
+		<div id = "player_status">
+			Actions: Not Applicable for the Moment
+		</div>
+		<div id = "siderbar">
+			<div id = "global_stats" class = "box">
+				Total Clay Shipments: <%= @clays %></br>
+				Total Brick Shipments: <%= @bricks %></br>
+				Total Tower Levels: <%= @towers %></br>
+			</div>
+			<div id = "links" class = "box">
+				<%= link_to "Mining", new_clay_shipment_path %><br/>
+				<%= link_to "Brick Baking", '#' %><br/>
+				<%= link_to "Tower Build", '#' %><br/>
+				<%= link_to "The Tower", '#' %><br/>
+				<%= link_to "Profile", current_user %><br/>
+				<%= link_to "Settings", edit_user_path(current_user) %><br/>
+				<% if current_user.admin %>
+					<%= link_to "Admin", '/admin' %>
+				<% end %>
+			</div>
+		</div>
 	</div>
-	<div id = "global_stats">
-		Total Clay Shipments: 3</br>
-		Total Brick Shipments: 2</br>
-		Total Tower Levels: 0</br>
-	</div>
-	<div id = "links">
-		<%= link_to "Mining", new_clay_shipment_path %><br/>
-		<%= link_to "Brick Baking", '#' %><br/>
-		<%= link_to "Tower Build", '#' %><br/>
-		<%= link_to "The Tower", '#' %><br/>
-		<%= link_to "Profile", current_user %><br/>
-		<%= link_to "Settings", edit_user_path(current_user) %><br/>
-	</div>
-	<div id = "news">
+	<div id = "news_feed">
 		<h3>Updates</h3>
 		<ul>
-			<% current_user.news_items.each do |news| %>
+			<% current_user.news_items.order(created_at: :desc).each do |news| %>
 				<li class = "<%= news.msg_type %>"><%= news.created_at.strftime("%_m/%-d, %l:%M %p")%>: <%= news.message %></li>
 			<% end %>
 		</ul>

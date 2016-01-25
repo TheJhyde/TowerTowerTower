@@ -39,7 +39,7 @@ footer{
 /* forms */
 input, textarea, select .uneditable-input{
 	border: 1px, solid #bbb;
-	width: 100%;
+	width: 80%;
 	margin-bottom: 15px;
 	@include box_sizing;
 }
@@ -77,6 +77,32 @@ input{
 	width: auto;
 	margin-left: 0;
 }
+
+/* Front Page */
+.box{
+	border-style: solid;
+	border-width: 1px;
+	margin: 10px;
+	width: 20%;
+}
+
+#player_status{
+	width: 70%;
+}
+
+#information{
+	// height: 100px
+}
+
+#sidebar{
+	float: right;
+}
+
+#news{
+	font-size: 8em;
+}
+
+
 
 /* glyphs */
 .glyph{
@@ -143,10 +169,6 @@ input{
     display: inline-block;
     border-radius: 0px;
     text-align: center;
-}
-
-.mine{
-	
 }
 
 /* misc */
