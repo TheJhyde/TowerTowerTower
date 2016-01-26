@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160123203409) do
+ActiveRecord::Schema.define(version: 20160126211131) do
 
   create_table "clay_shipments", force: :cascade do |t|
     t.string   "message"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20160123203409) do
     t.string   "activation_digest"
     t.boolean  "activated"
     t.datetime "activated_at"
+    t.integer  "actions",           default: 2
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

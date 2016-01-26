@@ -4,16 +4,21 @@ class ClayShipmentsController < ApplicationController
   include ClayShipmentsHelper
 
   def new
-    @finished = session["finished_clay"]
-    @glyphs = Glyph.all
-  	#Make n mines and save their id's in the session
-    create_mines
-  	#Creates a new clay shipment, if necessary
-    if session["clay_shipment"].nil? || !ClayShipment.exists?(session["clay_shipment"])
-  	  @shipment = ClayShipment.create(user: current_user)
-      session["clay_shipment"] = @shipment.id
+    if current_user.actions > 0
+      @finished = session["finished_clay"]
+      @glyphs = Glyph.all
+    	#Make n mines and save their id's in the session
+      create_mines
+    	#Creates a new clay shipment, if necessary
+      if session["clay_shipment"].nil? || !ClayShipment.exists?(session["clay_shipment"])
+    	  @shipment = ClayShipment.create(user: current_user)
+        session["clay_shipment"] = @shipment.id
+      else
+        @shipment = ClayShipment.find(session["clay_shipment"])
+      end
     else
-      @shipment = ClayShipment.find(session["clay_shipment"])
+      flash[:danger] = "You are out of actions for day. :("
+      redirect_to '/'
     end
   end
 
@@ -33,6 +38,8 @@ class ClayShipmentsController < ApplicationController
     elsif @shipment.save
       flash[:success] = "Clay Shipment sent! Good job."
       clear_session
+      current_user.actions -= 1
+      current_user.save
       redirect_to root_url
     else
       render "new"

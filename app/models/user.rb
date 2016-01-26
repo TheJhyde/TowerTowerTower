@@ -44,6 +44,16 @@ class User < ActiveRecord::Base
 		update_attribute(:remember_digest, nil)
 	end
 
+	def self.add_actions
+		User.all.each do |user|
+			user.actions += Rails.configuration.x.daily_actions
+			if user.actions > Rails.configuration.x.max_actions
+				user.actions = Rails.configuration.x.max_actions
+			end
+			user.save
+		end
+	end
+
 	private
 		def downcase_email
 			self.email = email.downcase

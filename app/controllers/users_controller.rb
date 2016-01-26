@@ -19,6 +19,7 @@ class UsersController < ApplicationController
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
     @user.news_items << NewsItem.first
+    @user.actions = Rails.configuration.x.starting_actions
   	if @user.save
       log_in @user
   		flash[:success] = "Welcome #{@user.name}"
@@ -57,7 +58,7 @@ class UsersController < ApplicationController
   private #-------------------------------------------------------------------------------
 
   	def user_params
-  		params.require(:user).permit(:email, :gender, :password, :password_confirmation)
+  		params.require(:user).permit(:email, :gender, :curse, :password, :password_confirmation)
   	end
 
     def edit_params

@@ -1,6 +1,11 @@
 #System variables--------------------------------------------------------------------------
 Tbl::Application.config.x.img_url = "https://s3.amazonaws.com/towerbricklightning/glyphs/"
 
+#Player variables------------------------------------------------------------------------------
+Tbl::Application.config.x.max_actions = 20
+Tbl::Application.config.x.daily_actions = 3
+Tbl::Application.config.x.starting_actions = 5
+
 #Mining variables ----------------------------------------------------------------------------
 #How many mines appear on a page
 Tbl::Application.config.x.total_mines = 3
