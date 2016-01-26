@@ -98,11 +98,13 @@ input{
 	float: right;
 }
 
-#news{
-	font-size: 8em;
+.news{
+	font-size: 120%;
 }
 
-
+.error_report{
+	color: red;
+}
 
 /* glyphs */
 .glyph{

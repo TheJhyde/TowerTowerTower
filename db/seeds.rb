@@ -28,6 +28,10 @@ urls.each_with_index do |url, i|
 	Glyph.create(url: url, meaning: words[i])
 end
 
+NewsItem.new(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get updates 
+	about the game, check out our <a href ='http://towerbricklightning.tumblr.com/'>tumblr</a>
+	 or <a href='https://twitter.com/TBLGame'>twitter</a>.")
+
 # 99.times do |n|
 # 	name = "#{User::NAME_WORDS.sample} #{User::NAME_WORDS.sample}"
 # 	email = "email-#{n}@thejhyde.zone"
