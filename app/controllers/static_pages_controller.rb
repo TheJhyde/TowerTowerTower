@@ -3,7 +3,7 @@ class StaticPagesController < ApplicationController
 
   def home
     @clays = ClayShipment.count
-    @mines = 0
+    @bricks = 0
     @towers = 0
   end
 

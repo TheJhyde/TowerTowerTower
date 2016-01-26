@@ -18,12 +18,12 @@ class UsersController < ApplicationController
   	@user = User.new(user_params)
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
-    @user.news_item << NewsItem.first
+    @user.news_items << NewsItem.first
   	if @user.save
       log_in @user
   		flash[:success] = "Welcome #{@user.name}"
   		#I would like this to redirect to the /username page, not /id
-  		redirect_to @user
+  		redirect_to '/'
   	else
   		@user.name = nil #This is a little hackey
   		render 'new'
