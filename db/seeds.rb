@@ -28,7 +28,7 @@ urls.each_with_index do |url, i|
 	Glyph.create(url: url, meaning: words[i])
 end
 
-NewsItem.new(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get updates 
+NewsItem.create(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get updates 
 	about the game, check out our <a href ='http://towerbricklightning.tumblr.com/'>tumblr</a>
 	 or <a href='https://twitter.com/TBLGame'>twitter</a>.")
 
