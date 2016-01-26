@@ -19,6 +19,8 @@ class StaticPagesController < ApplicationController
 
   def submit
   	@message = NewsItem.new(error_params)
+    #No shenagins, you hear!
+    @message.message = ActionView::Base.full_sanitizer.sanitize(@message.message)
   	@message.users << User.where(admin: true)
   	@message.msg_type = "error_report"
   	if @message.save
