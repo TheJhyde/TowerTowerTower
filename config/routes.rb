@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   post 'clay_shipments/rearrange' => 'clay_shipments#rearrange'
   get 'clay_shipments/finish' => 'clay_shipments#finish'
 
+  get 'brick_shipments/bake' => 'brick_shipments#bake'
+
   resources :users
   resources :clay_shipments, only: [:new, :create, :index, :edit, :show]
   resources :brick_shipments, only: [:new, :create, :index, :edit]

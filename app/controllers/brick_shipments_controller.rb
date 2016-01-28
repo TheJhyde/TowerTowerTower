@@ -21,4 +21,14 @@ class BrickShipmentsController < ApplicationController
 
   def create
   end
+
+  #Takes in an oven full of clay and returns a brick.
+  def bake
+    @brick = makeBrick(params["clay"])
+    BrickShipment.find(session["brick_shipment"]).color << @brick["color"]
+    BrickShipment.find(session["brick_shipment"]).strength << @brick["strength"]
+    respond_to do |format|
+      format.json { render json: @brick }
+    end
+  end
 end

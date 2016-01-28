@@ -57,12 +57,20 @@ class ClayShipmentsController < ApplicationController
     render :nothing => true
   end
 
-  #What if random people use this info to steal the data?
-  #These things I fear
   def show
-    @clay = ClayShipment.find(session[params["id"]]).hide_clay
-    respond_to do |format|
-      format.json { render json: @clay }
+    if request.xhr?
+      if params["type"] == "hidden"
+        @clay = ClayShipment.find(session[params["id"]]).hide_clay
+      elsif params["type"] == "clay"
+        shipment = ClayShipment.find(session[params["id"]])
+        @clay = shipment.clay[params["index"].to_i]
+        puts @clay
+        shipment.clay[params["index"].to_i] = Rails.configuration.x.no_clay
+        shipment.save
+      end
+      respond_to do |format|
+        format.json { render json: @clay }
+      end
     end
   end
 

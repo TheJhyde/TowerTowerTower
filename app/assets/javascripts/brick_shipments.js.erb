@@ -34,6 +34,8 @@ $(document).on("page:change", function(){
 	var sketch = function(p){
 		var clay = [];
 		var oven = [];
+		var bricks_strength = [];
+		var bricks_color = [];
 
 		var lastPlaced = 0;
 
@@ -43,12 +45,15 @@ $(document).on("page:change", function(){
 			p.textAlign(p.LEFT, p.TOP)
 			p.textSize(15);
 			for(var i = 0; i < SHIPMENTS; i++){
-				$.get('/clay_shipments/clay'+ i + ".json", function(data){
+				$.get('/clay_shipments/clay'+ i + ".json", {type: "hidden"}, function(data){
 					for(var j = 0; j < data.length; j++){
 						clay.push(data[j]);
 					}
 				});
 			}
+
+			//Get the bricks from the brick shipment and put them in the bricks array
+			//
 
 			ovenReset();
 		};
@@ -82,13 +87,21 @@ $(document).on("page:change", function(){
 					p.rect(j*OVEN_SIZE + OVEN_OFFSET_X, i*OVEN_SIZE + OVEN_OFFSET_Y, BOX, BOX);
 				}
 			}
+
+			p.fill(0);
+			p.text("BRICKS", 300, 100);
+			for(var i = 0; i < bricks_strength.length; i++){
+				p.pickFill(bricks_color[i]);
+				p.strokeWeight(bricks_strength[i]*2-1);
+				p.rect(300, 120 + i * 50, 50, 30);
+			}
 		};
 
 		p.pickFill = function(color){
 			if(color == BRICK_RED){
 				p.fill(200, 0, 0);
 			}else if(color == BRICK_BLACK){
-				p.fill(0);
+				p.fill(40);
 			}else if(color == BRICK_BROWN){
 				p.fill(160, 82, 45);
 			}else{
@@ -101,24 +114,32 @@ $(document).on("page:change", function(){
 		  var boxY = Math.floor((p.mouseY - SHIPMENT_OFFSET_Y)/CLAY_SIZE);
 		  if(boxX >= 0 && boxX < SHIPMENT_WIDTH && boxY >= 0 && boxY < SHIPMENT_HEIGHT * SHIPMENTS){
 		    if(clay[boxX + boxY * SHIPMENT_WIDTH] != BRICK_NONE){
+		      var shipment = Math.floor(boxY / SHIPMENT_HEIGHT);
+		      var index = boxX + (boxY - shipment * SHIPMENT_HEIGHT) * SHIPMENT_WIDTH;
 		      //This needs to pull the exact color of the element
-		      oven[lastPlaced] = clay[boxX + boxY * SHIPMENT_WIDTH];
-		      clay[boxX + boxY * SHIPMENT_WIDTH] = -1;
+		      $.get('/clay_shipments/clay'+ shipment + ".json", {type: "clay", index: index}, function(data){
+					oven[lastPlaced] = data;
+					clay[boxX + boxY * SHIPMENT_WIDTH] = -1;
+					lastPlaced++;
 
-		      lastPlaced++;
-
-		      if(lastPlaced >= oven.length){
-		        setTimeout(function(){ bakeBrick() }, 300);
-		        lastPlaced = 0;
-		      }
+					if(lastPlaced >= oven.length){
+				        setTimeout(function(){ bakeBrick() }, 300);
+				        lastPlaced = 0;
+				    }
+				});
 		    }
 		  }
 		};
 
 		function bakeBrick(){
 			//Send all the bricks to the server side and bakes them
+			$.get('/brick_shipments/bake', {clay: oven}, function(data){
+				//console.log("I did the thing. Strength: " + data["strength"] + ", Color: " + data["color"]);
+				bricks_strength.push(data["strength"]);
+				bricks_color.push(data["color"]);
+			});
+
 			ovenReset();
-			//Lists the bricks someplace
 		}
 
 		function ovenReset(){

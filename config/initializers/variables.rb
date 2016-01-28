@@ -35,3 +35,8 @@ Tbl::Application.config.x.clay_shipments = 3
 
 Tbl::Application.config.x.oven_width = 4
 Tbl::Application.config.x.oven_height = 2
+
+#How much of the clay must be the same in order for the brick to be strong
+Tbl::Application.config.x.strong_amount = 5
+#How much the clay must be the same in order for the brick to be medium strength
+Tbl::Application.config.x.strong_amount = 3
