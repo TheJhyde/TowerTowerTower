@@ -3,5 +3,9 @@
 	<% if user.admin? %>
 		| ADMIN
 	<% end %> |
-	<%= link_to "delete", user, method: :delete, data: {confirm: "You sure?"} %>
+	<%= link_to "delete", user, method: :delete, data: {confirm: "You sure?"} %><br/>
+	Email: <%= user.email %><br/>
+	Gender: <%= user.gender %><br/>
+	Curse: <%= user.curse %><br/>
+	Actions: <%= user.actions %>
 </li>

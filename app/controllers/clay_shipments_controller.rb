@@ -57,6 +57,8 @@ class ClayShipmentsController < ApplicationController
     render :nothing => true
   end
 
+  #What if random people use this info to steal the data?
+  #These things I fear
   def show
     @clay = ClayShipment.find(session[params["id"]]).hide_clay
     respond_to do |format|
