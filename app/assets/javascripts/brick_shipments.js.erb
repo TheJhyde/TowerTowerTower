@@ -1,0 +1,132 @@
+$(document).on("page:change", function(){
+	//Check if we're on the right page
+	if($(".brick_shipments.new").length == 0){
+		return
+	}
+
+	//CONSTANTS
+	//These variables are universal for the whole program
+	var OVEN_WIDTH = <%= Rails.configuration.x.oven_width %>;
+	var OVEN_HEIGHT = <%= Rails.configuration.x.oven_height %>;
+
+	var SHIPMENTS = <%= Rails.configuration.x.clay_shipments %>;
+	var SHIPMENT_WIDTH = <%= Rails.configuration.x.pack_width %>;
+	var SHIPMENT_HEIGHT = <%= Rails.configuration.x.pack_height %>;
+
+	var BRICK_RED = <%= Rails.configuration.x.red %>;
+	var BRICK_BROWN = <%= Rails.configuration.x.brown %>;
+	var BRICK_BLACK = <%= Rails.configuration.x.black %>;
+	var BRICK_NONE = <%= Rails.configuration.x.no_clay %>;
+
+	//And these variables are graphical variables, relevant only to this page
+	//It might be worth moving them to the config file, maybe not though
+	var SHIPMENT_OFFSET_X = 20;
+	var SHIPMENT_OFFSET_Y = 50;
+	var OVEN_OFFSET_X = 20;
+	var OVEN_OFFSET_Y = 300;
+
+	var CLAY_SIZE = 25; //The size of the clay boxes you can select
+	var OVEN_SIZE = 30; //the size of the oven boxes
+	var BOX = 20; //All the boxes are actually the same size
+
+	//Ok, this is a little awkward looking but it lets me run 
+	//p5 inside the above page check instead of just globally.
+	var sketch = function(p){
+		var clay = [];
+		var oven = [];
+
+		var lastPlaced = 0;
+
+		p.setup = function(){
+			canvas = p.createCanvas(400, 400);
+			canvas.parent("canvas");
+			p.textAlign(p.LEFT, p.TOP)
+			p.textSize(15);
+			for(var i = 0; i < SHIPMENTS; i++){
+				$.get('/clay_shipments/clay'+ i + ".json", function(data){
+					for(var j = 0; j < data.length; j++){
+						clay.push(data[j]);
+					}
+				});
+			}
+
+			ovenReset();
+		};
+
+		p.draw = function(){
+			p.background(255);
+
+			//Draw the clay shipments
+			for(var i = 0; i < SHIPMENTS; i++){
+				p.fill(0);
+				p.text((i+1) + ".", 0, i*SHIPMENT_HEIGHT*CLAY_SIZE + SHIPMENT_OFFSET_Y);
+				for(var j = 0; j < SHIPMENT_HEIGHT; j++){
+					for(var k = 0; k < SHIPMENT_WIDTH; k++){
+						if(clay[i * SHIPMENT_HEIGHT*SHIPMENT_WIDTH + j * SHIPMENT_WIDTH + k] == 1){
+							p.fill(150);
+						}else{
+							p.fill(255);
+						}
+						p.rect(k*CLAY_SIZE + SHIPMENT_OFFSET_X, (j+i*SHIPMENT_HEIGHT)*CLAY_SIZE + SHIPMENT_OFFSET_Y, BOX, BOX);
+					}
+				}
+			}
+
+			p.fill(0);
+			p.text("KILN", OVEN_OFFSET_X, OVEN_OFFSET_Y - 25);
+			//p.fill(255);
+
+			for(var i = 0; i < OVEN_HEIGHT; i++){
+				for(var j = 0; j < OVEN_WIDTH; j++){
+					p.pickFill(oven[i*OVEN_WIDTH+j]);
+					p.rect(j*OVEN_SIZE + OVEN_OFFSET_X, i*OVEN_SIZE + OVEN_OFFSET_Y, BOX, BOX);
+				}
+			}
+		};
+
+		p.pickFill = function(color){
+			if(color == BRICK_RED){
+				p.fill(200, 0, 0);
+			}else if(color == BRICK_BLACK){
+				p.fill(0);
+			}else if(color == BRICK_BROWN){
+				p.fill(160, 82, 45);
+			}else{
+				p.fill(255);
+			}
+		};
+
+		p.mouseClicked = function(){
+		  var boxX = Math.floor((p.mouseX - SHIPMENT_OFFSET_X)/CLAY_SIZE);
+		  var boxY = Math.floor((p.mouseY - SHIPMENT_OFFSET_Y)/CLAY_SIZE);
+		  if(boxX >= 0 && boxX < SHIPMENT_WIDTH && boxY >= 0 && boxY < SHIPMENT_HEIGHT * SHIPMENTS){
+		    if(clay[boxX + boxY * SHIPMENT_WIDTH] != BRICK_NONE){
+		      //This needs to pull the exact color of the element
+		      oven[lastPlaced] = clay[boxX + boxY * SHIPMENT_WIDTH];
+		      clay[boxX + boxY * SHIPMENT_WIDTH] = -1;
+
+		      lastPlaced++;
+
+		      if(lastPlaced >= oven.length){
+		        setTimeout(function(){ bakeBrick() }, 300);
+		        lastPlaced = 0;
+		      }
+		    }
+		  }
+		};
+
+		function bakeBrick(){
+			//Send all the bricks to the server side and bakes them
+			ovenReset();
+			//Lists the bricks someplace
+		}
+
+		function ovenReset(){
+			for(var i = 0; i < OVEN_WIDTH * OVEN_HEIGHT; i++){
+				oven[i] = BRICK_NONE;
+			}
+		}
+	};
+
+	var myp5 = new p5(sketch);
+});

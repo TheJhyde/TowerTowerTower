@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'brick_shipments/index'
+
+  get 'brick_shipments/new'
+
+  get 'brick_shipments/create'
+
   root 'static_pages#home'
   #get 'static_pages/about'
   get 'about' => 'static_pages#about'
@@ -10,10 +16,11 @@ Rails.application.routes.draw do
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
 
-  resources :users
-  resources :clay_shipments, only: [:new, :create, :index, :edit]
-  resources :account_activations, only: [:edit]
-
   post 'clay_shipments/rearrange' => 'clay_shipments#rearrange'
   get 'clay_shipments/finish' => 'clay_shipments#finish'
+
+  resources :users
+  resources :clay_shipments, only: [:new, :create, :index, :edit, :show]
+  resources :brick_shipments, only: [:new, :create, :index, :edit]
+  resources :account_activations, only: [:edit]
 end

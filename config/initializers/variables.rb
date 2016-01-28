@@ -29,3 +29,9 @@ Tbl::Application.config.x.mine_max = 10
 Tbl::Application.config.x.mine_min = 8
 #How big the initial amount of clay put into the mine should be
 Tbl::Application.config.x.clay_start = 4
+
+#Brick Making variables-----------------------------------------------------------
+Tbl::Application.config.x.clay_shipments = 3
+
+Tbl::Application.config.x.oven_width = 4
+Tbl::Application.config.x.oven_height = 2

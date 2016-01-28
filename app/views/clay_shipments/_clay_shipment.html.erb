@@ -1,11 +1,16 @@
 <p>
 	Created by: <%= clay_shipment.user.name %><br/>
 	Created at: <%= clay_shipment.created_at %><br/>
+	Id: <%= clay_shipment.id %><br/>
 	Used: <%= clay_shipment.used %><br/>
 	Message:
 	<% if !clay_shipment.message.nil? %>
 		<% clay_shipment.message.split(" ").each do |glyph| %>
-			<%= render partial: 'shared/glyph_read', locals: {glyph: @glyphs.find(glyph)} %>
+			<% if @glyphs.exists?(glyph) %>
+				<%= render partial: 'shared/glyph_read', locals: {glyph: @glyphs.find(glyph)} %>
+			<% else %>
+				(<%= glyph %>)
+			<% end %>
 		<% end %>
 	<% end %>
 	<br/>

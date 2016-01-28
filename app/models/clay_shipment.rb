@@ -17,4 +17,21 @@ class ClayShipment < ActiveRecord::Base
 			shipment.delete
 		end
 	end
+
+	#Picks N random shipments and returns them
+	def self.random(number)
+		ClayShipment.where(used: nil).where.not(message: nil).order("RANDOM()").limit(number)
+	end
+
+	def hide_clay
+		@secret_clay = []
+		clay.each do |i|
+			if i == -1
+				@secret_clay << -1
+			else
+				@secret_clay << 1
+			end
+		end
+		return @secret_clay
+	end
 end

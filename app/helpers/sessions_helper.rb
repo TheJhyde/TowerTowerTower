@@ -45,6 +45,13 @@ module SessionsHelper
 		end
 	end
 
+	def has_actions
+		unless current_user.actions > 0
+			flash[:danger] = "You are out of actions for day. :("
+      		redirect_to '/'
+		end
+	end
+
 	def forget(user)
 		user.forget
 		cookies.delete(:user_id)

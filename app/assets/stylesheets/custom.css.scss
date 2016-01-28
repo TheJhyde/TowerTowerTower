@@ -11,6 +11,18 @@ $gray-medium-light: #eaeaea;
 	box-sizing: border-box;
 }
 
+/* brick making */
+#craft{
+	/*width: 100%;*/
+	float: left;
+}
+
+#panel{
+	float: right;
+	text-align: left;
+	width: 350px;
+}
+
 /* foot-er */
 footer{
 	margin-top: 45px;
@@ -34,6 +46,7 @@ footer{
 			margin-left: 15px;
 		}
 	}
+	clear: both;
 }
 
 /* forms */

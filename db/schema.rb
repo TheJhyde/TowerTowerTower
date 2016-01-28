@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160126211131) do
+ActiveRecord::Schema.define(version: 20160126213509) do
+
+  create_table "brick_shipments", force: :cascade do |t|
+    t.string   "strength"
+    t.string   "color"
+    t.string   "message"
+    t.datetime "used"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "brick_shipments", ["user_id"], name: "index_brick_shipments_on_user_id"
 
   create_table "clay_shipments", force: :cascade do |t|
     t.string   "message"

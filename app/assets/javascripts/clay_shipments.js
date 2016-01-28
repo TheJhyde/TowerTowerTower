@@ -13,8 +13,8 @@ $(document).on("page:change", function(){
 			holding = $(this);
 		}else{
 			// // Sends these changes to the server, so it can do the same
-			// changes = {"a": holding.attr("id").replace("grid", ""), "b": $(this).attr("id").replace("grid", "")};
-			// $.post('/clay_shipments/rearrange', changes);
+			changes = {"a": holding.attr("id").replace("grid", ""), "b": $(this).attr("id").replace("grid", "")};
+			$.post('/clay_shipments/rearrange', changes);
 			
 			//put the original square back to a solid border			
 			holding.removeClass('grid_selected').addClass('grid');
