@@ -10,9 +10,9 @@ class User < ActiveRecord::Base
 		uniqueness: {case_sensitive: false}
 	has_secure_password
 	validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
-	has_many :clay_shipments
-	has_many :brick_shipments
 	has_and_belongs_to_many :news_items
+	has_many :build_orders
+	has_many :bricks
 
 	GENDERS = ['4524', '___!___!_', 'zzzzzz', '<_>']
 

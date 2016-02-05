@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BrickShipmentTest < ActiveSupport::TestCase
+class BuildOrderTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

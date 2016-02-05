@@ -1,0 +1,2 @@
+module TowerHelper
+end

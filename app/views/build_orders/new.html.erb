@@ -1,0 +1,25 @@
+<% provide(:title, "TOWER TOWER TOWER") %>
+<div id="craft">
+	<div id="canvas"></div>
+</div>
+
+<div id = "panel">
+	<div id = "alerts">Let's build that tower already!</div>
+	<div id = "bricks">
+		<b>BRICKS</b><br/>
+	</div>
+
+	<div id = "messages">
+		<h3>Build Orders</h3>
+		<ul>
+		<% @orders.each do |order| %>
+			<li>
+				<% order.message.split(" ").each do |glyph| %>
+					<%= render partial: 'shared/glyph_read', locals: {glyph: @glyphs.find(glyph)} %>
+				<% end %>
+				- <%= order.user.name %>
+			</li>
+		<% end %>
+		</ul>
+	</div>
+</div>

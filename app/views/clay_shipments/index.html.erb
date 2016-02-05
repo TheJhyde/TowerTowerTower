@@ -1,9 +1,0 @@
-<% provide(:title, "Clay Shipments") %>
-<h1>Clay Shipments</h1>
-<p>
-	Total Clay Shipments: <%= @shipments.length %><br/>
-	Unused Clay Shipments: <%= @shipments.where(used: nil).count %>
-<p>
-
-<h4>All Shipments</h4>
-<%= render @shipments.order(created_at: :desc) %>

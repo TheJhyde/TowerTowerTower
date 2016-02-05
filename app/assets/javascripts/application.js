@@ -4,9 +4,8 @@
 //= require p5
 //= require p5.dom
 //= require turbolinks
-//= require clay_shipments
-//= require brick_shipments
 //= require_self
+//= require build_orders
 
 $(document).on('click', '.glyph', function(){
   var $glyph = $(this)

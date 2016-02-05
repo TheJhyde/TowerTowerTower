@@ -1,0 +1,153 @@
+$(document).on("page:change", function(){
+	//Check if we're on the right page
+	if($(".build_orders.new").length == 0){
+		return
+	}
+
+	//Ok, this is a little awkward looking but it lets me run 
+	//p5 inside the above page check instead of just globally.
+	var sketch = function(p){
+
+		const BRICK_WIDTH = 80;
+		const BRICK_HEIGHT = 35;
+		const BRICKS = 3;
+		var OFFSET = 100;
+
+		var finish = false;
+
+		var tower = [];
+		var bricks = [];
+		var placedBricks = [];
+
+		p.setup = function(){
+			//Where does that five come from? I don't know
+			//Probably something to go with pixels?
+			OFFSET = (p.width * 5 - 5 * BRICK_WIDTH)/2;
+			canvas = p.createCanvas(500, 500);
+			canvas.parent("canvas");
+			$.get('/tower.json', function(data){
+				tower = data;
+			});
+
+			for(var i = 0; i < BRICKS; i++){
+				bricks.push(Math.floor(Math.random() * 3));
+			}
+			updateBricks();
+		};
+
+		p.draw = function(){
+			p.background(200);
+			p.fill(100);
+			for(var i = 0; i < tower.length; i++){
+				pickFill(tower[i]["color"]);
+				p.rect(xToScreen(tower[i]["x"]), yToScreen(tower[i]["y"]), BRICK_WIDTH, BRICK_HEIGHT);
+			}
+			for(var i = 0; i < placedBricks.length; i++){
+				pickFill(placedBricks[i][0]);
+				p.rect(xToScreen(placedBricks[i][1]), yToScreen(placedBricks[i][2]), BRICK_WIDTH, BRICK_HEIGHT);
+
+			}
+
+			if(finish == false){
+				pickFill(bricks[0]);
+				p.rect(nearestBrickX(p.mouseX), nearestBrickY(p.mouseY), BRICK_WIDTH, BRICK_HEIGHT);
+			}
+		};
+
+		p.mouseClicked = function(){
+			placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
+			bricks.shift();
+			if(bricks.length == 0){
+				finish = true;
+				$("#bricks").hide();
+				$("#messages").hide();
+				$.get('finished.js', function(){
+					var colors = "";
+					var x = "";
+					var y = "";
+					for(var i = 0; i < placedBricks.length; i++){
+						colors += placedBricks[i][0] + " ";
+						x += placedBricks[i][1] + " ";
+						y += placedBricks[i][2] + " ";
+					}
+					$("#build_order_colors").val(colors);
+					$("#build_order_x").val(x);
+					$("#build_order_y").val(y);
+				});
+			}
+			updateBricks();
+		}
+
+		function updateBricks(){
+			var msg = "<b>BRICKS</b><br/>"
+			for(var i = 0; i < bricks.length; i++){
+				msg += "You have a " +colorWord(bricks[i])+ " brick.<br/>"
+			}
+			$("#bricks").html(msg);
+		}
+
+		//----------------------------POSITIONAL FUNCTIONS--------------------------------
+		// Converts a x coordinate from the database to a screen value
+		function xToScreen(x){
+			return x * BRICK_WIDTH + OFFSET;
+		}
+
+		function yToScreen(y){
+			return p.height - (y+1) * BRICK_HEIGHT;
+		}
+
+		// Converts the screen position to the nearest x,y position
+		function screenToX(x){
+			return Math.floor((x-OFFSET)/BRICK_WIDTH);
+		}
+
+		function screenToY(y){
+			return Math.floor((p.height-y)/BRICK_HEIGHT);
+		}
+
+		//gives the screen coordinates of the nearest brick, based on a given screen coord
+		function nearestBrickX(x){
+			return xToScreen(screenToX(x));
+		}
+
+		function nearestBrickY(y){
+			return yToScreen(screenToY(y));
+		}
+
+
+		//-------------------------------COLORS FUNCTION---------------------------------
+		function pickFill(color){
+			switch (color){
+				case 0:
+					p.fill(200, 0, 0);
+					break;
+				case 1:
+					p.fill(0, 200, 0);
+					break;
+				case 2:
+					p.fill(0, 0, 200);
+					break;
+				default:
+					p.fill(0);
+			}
+		}
+
+		function colorWord(color){
+			switch (color){
+				case 0:
+					return "red";
+					break;
+				case 1:
+					return "green";
+					break;
+				case 2:
+					return "blue";
+					break;
+				default:
+					return "ERROR";
+			}
+		}
+	};
+
+	var myp5 = new p5(sketch);
+});

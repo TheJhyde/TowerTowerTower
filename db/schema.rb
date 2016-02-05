@@ -11,51 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160126213509) do
+ActiveRecord::Schema.define(version: 20160205003944) do
 
-  create_table "brick_shipments", force: :cascade do |t|
-    t.string   "strength"
-    t.string   "color"
-    t.string   "message"
-    t.datetime "used"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "brick_shipments", ["user_id"], name: "index_brick_shipments_on_user_id"
-
-  create_table "clay_shipments", force: :cascade do |t|
-    t.string   "message"
-    t.datetime "used"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text     "clay"
-  end
-
-  add_index "clay_shipments", ["user_id"], name: "index_clay_shipments_on_user_id"
-
-  create_table "clays", force: :cascade do |t|
+  create_table "bricks", force: :cascade do |t|
+    t.integer  "x"
+    t.integer  "y"
     t.integer  "color"
-    t.integer  "clay_shipment_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_index "clays", ["clay_shipment_id"], name: "index_clays_on_clay_shipment_id"
+  create_table "build_orders", force: :cascade do |t|
+    t.string   "message"
+    t.integer  "colors"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "x"
+    t.string   "y"
+  end
 
   create_table "glyphs", force: :cascade do |t|
     t.string   "url"
     t.string   "meaning"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mines", force: :cascade do |t|
-    t.integer  "red_clay"
-    t.integer  "brown_clay"
-    t.integer  "black_clay"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -87,7 +65,7 @@ ActiveRecord::Schema.define(version: 20160126213509) do
     t.boolean  "admin",             default: false
     t.string   "curse",             default: "bees"
     t.string   "activation_digest"
-    t.boolean  "activated"
+    t.boolean  "activated",         default: false
     t.datetime "activated_at"
     t.integer  "actions",           default: 2
   end

@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  get 'brick_shipments/index'
-
-  get 'brick_shipments/new'
-
-  get 'brick_shipments/create'
-
   root 'static_pages#home'
   #get 'static_pages/about'
   get 'about' => 'static_pages#about'
@@ -16,13 +10,9 @@ Rails.application.routes.draw do
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
 
-  post 'clay_shipments/rearrange' => 'clay_shipments#rearrange'
-  get 'clay_shipments/finish' => 'clay_shipments#finish'
-
-  get 'brick_shipments/bake' => 'brick_shipments#bake'
-
   resources :users
-  resources :clay_shipments, only: [:new, :create, :index, :edit, :show]
-  resources :brick_shipments, only: [:new, :create, :index, :edit]
   resources :account_activations, only: [:edit]
+  resources :build_orders, only: [:new, :create]
+  resources :tower, only: [:index]
+  get 'build_orders/finished' => 'build_orders#finished'
 end

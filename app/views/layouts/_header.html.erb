@@ -5,10 +5,7 @@
 			<ul class = "nav navbar-nav navbar-right">
 				<li><%= link_to "Home", 	root_path %></li>
 				<% if logged_in? %>
-					<li><%= link_to "Mine", new_clay_shipment_path %></li>
-					<li><%= link_to "Bake", '#' %></li>
-					<li><%= link_to "Build", '#' %></li>
-					<li><%= link_to "Tower", '#' %></li>
+					<li><%= link_to "Build Tower", new_build_order_path %></li>
 					<li><%= link_to "Log Out", logout_path, method: "delete" %></li>
 				<% else %>
 					<li><%= link_to "About", 	about_path %></li>

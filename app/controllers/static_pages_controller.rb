@@ -3,8 +3,6 @@ class StaticPagesController < ApplicationController
 
   #The home page, with all the global stats
   def home
-    @clays = ClayShipment.count
-    @bricks = 0
     @towers = 0
   end
 
