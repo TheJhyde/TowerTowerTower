@@ -1,8 +1,10 @@
 class BuildOrdersController < ApplicationController
+	before_action :has_actions, only: [:new]
+
 	def new
 		@tower = Brick.all
 		@glyphs = Glyph.all
-		@orders = BuildOrder.all
+		@orders = BuildOrder.where(used: nil)
 	end
 
 	def finished
@@ -14,10 +16,15 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def create
-		@order = BuildOrder.new(build_order_params)
+		@order = BuildOrder.new
+		@order.message = params["build_order"]["message"]
+		@order.x = params["build_order"]["x"].split(" ").map{|x| x.to_i}
+		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
+		@order.colors = params["build_order"]["colors"].split(" ").map{|x| x.to_i}
 		@order.user = current_user
 		if @order.save
 			flash[:success] = "You have placed your bricks!"
+			current_user.update(actions: current_user.actions - 1)
 			redirect_to '/'
 		else
 			flash[:danger] = "There was an error!"
