@@ -4,6 +4,14 @@ $(document).on("page:change", function(){
 		return
 	}
 
+	$(document).on('click', '.glyph', function(){
+	  var $glyph = $(this)
+	  $('#text_area').append($glyph.find("img").prop('outerHTML'));
+	  $('#build_order_message').val(function(index, value){
+	    return value + $glyph.find("p").attr("id") + " ";
+	  });
+	});
+
 	//Ok, this is a little awkward looking but it lets me run 
 	//p5 inside the above page check instead of just globally.
 	var sketch = function(p){
@@ -38,16 +46,19 @@ $(document).on("page:change", function(){
 		p.draw = function(){
 			p.background(200);
 			p.fill(100);
+			//Draws the bricks from the tower
 			for(var i = 0; i < tower.length; i++){
 				pickFill(tower[i]["color"]);
 				p.rect(xToScreen(tower[i]["x"]), yToScreen(tower[i]["y"]), BRICK_WIDTH, BRICK_HEIGHT);
 			}
+			//Draws the bricks which the player just placed
 			for(var i = 0; i < placedBricks.length; i++){
 				pickFill(placedBricks[i][0]);
 				p.rect(xToScreen(placedBricks[i][1]), yToScreen(placedBricks[i][2]), BRICK_WIDTH, BRICK_HEIGHT);
 
 			}
 
+			//Draws the brick you're about to place, if you haven't placed all the bricks yet
 			if(finish == false){
 				pickFill(bricks[0]);
 				p.rect(nearestBrickX(p.mouseX), nearestBrickY(p.mouseY), BRICK_WIDTH, BRICK_HEIGHT);
@@ -55,27 +66,33 @@ $(document).on("page:change", function(){
 		};
 
 		p.mouseClicked = function(){
-			placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
-			bricks.shift();
-			if(bricks.length == 0){
-				finish = true;
-				$("#bricks").hide();
-				$("#messages").hide();
-				$.get('finished.js', function(){
-					var colors = "";
-					var x = "";
-					var y = "";
-					for(var i = 0; i < placedBricks.length; i++){
-						colors += placedBricks[i][0] + " ";
-						x += placedBricks[i][1] + " ";
-						y += placedBricks[i][2] + " ";
-					}
-					$("#build_order_colors").val(colors);
-					$("#build_order_x").val(x);
-					$("#build_order_y").val(y);
-				});
+			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
+				placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
+				bricks.shift();
+				if(bricks.length == 0){
+					finish = true;
+					$("#bricks").hide();
+					$("#messages").hide();
+					$.get('finished.js', function(){
+						var colors = "";
+						var x = "";
+						var y = "";
+						for(var i = 0; i < placedBricks.length; i++){
+							colors += placedBricks[i][0] + " ";
+							x += placedBricks[i][1] + " ";
+							y += placedBricks[i][2] + " ";
+						}
+						console.log("Placed bricks: " + placedBricks.toString());
+						console.log("To Colors: " + colors);
+						console.log("To x: " + x);
+						console.log("To y: " + y);
+						$("#build_order_colors").val(colors);
+						$("#build_order_x").val(x);
+						$("#build_order_y").val(y);
+					});
+				}
+				updateBricks();
 			}
-			updateBricks();
 		}
 
 		function updateBricks(){

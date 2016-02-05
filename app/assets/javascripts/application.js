@@ -6,11 +6,3 @@
 //= require turbolinks
 //= require_self
 //= require build_orders
-
-$(document).on('click', '.glyph', function(){
-  var $glyph = $(this)
-  $('#text_area').append($glyph.find("img").prop('outerHTML'));
-  $('#shipment_message').val(function(index, value){
-    return value + $glyph.find("p").attr("id") + " ";
-  });
-});

@@ -17,7 +17,9 @@
 				<% order.message.split(" ").each do |glyph| %>
 					<%= render partial: 'shared/glyph_read', locals: {glyph: @glyphs.find(glyph)} %>
 				<% end %>
-				- <%= order.user.name %>
+				<% unless order.user.nil? %>
+					- <%= order.user.name %>
+				<% end %>
 			</li>
 		<% end %>
 		</ul>
