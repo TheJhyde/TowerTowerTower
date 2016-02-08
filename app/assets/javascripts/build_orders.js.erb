@@ -19,6 +19,7 @@ $(document).on("page:change", function(){
 		const BRICK_WIDTH = 80;
 		const BRICK_HEIGHT = 35;
 		const BRICKS = 3;
+		const ROWS = 5;
 		var OFFSET = 100;
 
 		var finish = false;
@@ -26,6 +27,10 @@ $(document).on("page:change", function(){
 		var tower = [];
 		var bricks = [];
 		var placedBricks = [];
+		var level = 0;
+		//This should be based on how high the tower is somehow
+		//But that's a task for later
+		var maxLevel = 10;
 
 		p.setup = function(){
 			//Where does that five come from? I don't know
@@ -33,9 +38,7 @@ $(document).on("page:change", function(){
 			OFFSET = (p.width * 5 - 5 * BRICK_WIDTH)/2;
 			canvas = p.createCanvas(500, 500);
 			canvas.parent("canvas");
-			$.get('/tower.json', function(data){
-				tower = data;
-			});
+			loadTower(level);
 
 			for(var i = 0; i < BRICKS; i++){
 				bricks.push(Math.floor(Math.random() * 3));
@@ -59,14 +62,24 @@ $(document).on("page:change", function(){
 			}
 
 			//Draws the brick you're about to place, if you haven't placed all the bricks yet
-			if(finish == false){
+			if(finish == false && p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * ROWS){
 				pickFill(bricks[0]);
 				p.rect(nearestBrickX(p.mouseX), nearestBrickY(p.mouseY), BRICK_WIDTH, BRICK_HEIGHT);
+			}
+
+			p.fill(0);
+			if(level < maxLevel){
+				p.triangle(25, 10, 5, 30, 45, 30);
+			}
+			if(level > 0){
+				p.triangle(5, 35, 45, 35, 25, 55);
 			}
 		};
 
 		p.mouseClicked = function(){
-			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
+			console.log("A mouse sure got clicked!");
+			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * ROWS && p.mouseY > 0 && p.mouseY < p.height){
+				console.log("Placing a brick");
 				placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
 				bricks.shift();
 				if(bricks.length == 0){
@@ -88,6 +101,12 @@ $(document).on("page:change", function(){
 					});
 				}
 				updateBricks();
+			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 10 && p.mouseY < 30 && level < maxLevel){
+				level++;
+				loadTower(level);
+			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 35 && p.mouseY < 55 && level > 0){
+				level--;
+				loadTower(level);
 			}
 		}
 
@@ -97,6 +116,12 @@ $(document).on("page:change", function(){
 				msg += "You have a " +colorWord(bricks[i])+ " brick.<br/>"
 			}
 			$("#bricks").html(msg);
+		}
+
+		function loadTower(requestedLevel){
+			$.get('/tower.json', {level: requestedLevel}, function(data){
+				tower = data;
+			});
 		}
 
 		//----------------------------POSITIONAL FUNCTIONS--------------------------------
