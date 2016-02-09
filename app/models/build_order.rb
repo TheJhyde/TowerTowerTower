@@ -1,3 +1,5 @@
+include ActionView::Helpers::TextHelper
+
 class BuildOrder < ActiveRecord::Base
 	belongs_to :user
 	serialize :colors, Array
@@ -6,18 +8,37 @@ class BuildOrder < ActiveRecord::Base
 
 	def self.resolve_orders
 		BuildOrder.where(used: nil).order(:created_at).each do |order|
+			placed_bricks = 0;
+			destroyed_bricks = 0;
 			order.colors.each_with_index do |color, i|
 				if Brick.where(x: order.x[i], y: order.y[i]).length > 0
-					puts "Destroyed a brick at #{order.x[i]}, #{order.y[i]}"
 					#Then there's already a brick there - destroy it.
 					#There should be more than one brick there, but just in case we destroy all.
-					Brick.destroy_all(x: order.x[i], y: order.y[i])
+
+					Brick.where(x: order.x[i], y: order.y[i]).each do |brick|
+						unless brick.user.nil?
+							brick.user.news_items << NewsItem.create(msg_type: "update", 
+								message: "A brick you placed was destroyed by a brick placed by #{order.user.name}")
+						end
+						brick.destroy
+					end
+					destroyed_bricks += 1
 				else
 					#Then there isn't a brick there. Add it to the tower.
-					puts "Added a brick at #{order.x[i]}, #{order.y[i]}"
-					Brick.create(x: order.x[i], y: order.y[i], color: color)
+					placed_bricks += 1
+					Brick.create(x: order.x[i], y: order.y[i], color: color, user: order.user)
 				end
 			end
+			msg = ""
+			if placed_bricks > 0
+				msg += "You successfully placed #{pluralize(placed_bricks, 'brick')} on the tower."
+			end
+			if destroyed_bricks > 0
+				msg += "Your bricks destroyed #{pluralize(destroyed_bricks, 'brick')} in a collision."
+			end
+
+			order.user.news_items << NewsItem.create(msg_type: "update", message: msg)
+
 			order.update(used: DateTime.now)
 		end
 	end
