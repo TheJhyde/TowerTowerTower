@@ -78,7 +78,7 @@ $(document).on("page:change", function(){
 
 		p.mouseClicked = function(){
 			console.log("A mouse sure got clicked!");
-			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * ROWS && p.mouseY > 0 && p.mouseY < p.height){
+			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * ROWS && p.mouseY > 0 && p.mouseY < p.height && !finish){
 				console.log("Placing a brick");
 				placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
 				bricks.shift();
