@@ -1,0 +1,2 @@
+module TowerPicsHelper
+end

@@ -2,6 +2,8 @@ desc "This task is called once a day by the Heroku scheduler add-on"
 task :daily_tasks => :environment do
   puts "Updates player's actions"
   User.add_actions
+  puts "Drawing today's tower"
+  Brick.draw_tower
   puts "Done!"
 end
 

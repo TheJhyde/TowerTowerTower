@@ -41,15 +41,19 @@ class Brick < ActiveRecord::Base
 				brick.x_to_pic + @@brick_width, brick.y_to_pic + @@brick_height)
 		end
 		tower.draw(picture)
+		#Save the file
 		file_name = "tower#{DateTime.now.strftime("%s")}.png"
 		picture.write(file_name)
 
-		#Ok, now I gotta send this picture to be store on the Amazon S3 I've got for this project
+		#Send picture to be stored on the Amazon S3 I've got for this project
 		s3 = Aws::S3::Resource.new(region:'us-east-1')
-		obj = s3.bucket('towerbricklightning').object('AKIAI3PINHWVOTQCT6EA')
-		obj.upload_file("#{file_name}")
+		obj = s3.bucket('towerbricklightning').object("tower/#{file_name}")
+		obj.upload_file(file_name)
+		TowerPic.create(file: file_name)
 
-		#File.delete(file_name)
+		#Delete the photo so it doesn't clutter up the place/interfer with heroku in anyway
+		File.delete(file_name)
+
 	end
 
 	def x_to_pic
