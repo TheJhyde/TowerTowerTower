@@ -10,7 +10,7 @@ class Brick < ActiveRecord::Base
 	@@pic_width = Rails.configuration.x.screen_width/5
 
 	def self.gravity
-		Brick.where.not(y: 0).each do |brick|
+		Brick.where.not(y: 0).order(:y).each do |brick|
 			#If there are no brick underneath, that is
 			if Brick.where(x: ((brick.x-1)..(brick.x+1)), y: brick.y - 1).length == 0
 				unless brick.user.nil?
