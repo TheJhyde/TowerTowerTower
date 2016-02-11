@@ -15,7 +15,6 @@ $(document).on("page:change", function(){
 	//Ok, this is a little awkward looking but it lets me run 
 	//p5 inside the above page check instead of just globally.
 	var sketch = function(p){
-
 		const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
 		const BRICK_HEIGHT = <%= Rails.configuration.x.brick_height %>;
 		const BRICKS = <%= Rails.configuration.x.shipment %>;
@@ -26,6 +25,7 @@ $(document).on("page:change", function(){
 		// const BRICK_HEIGHT = 40;
 		// const COLUMNS = 10;
 		// const BPL = 6;
+		// const BRICKS = 2
 		var OFFSET;
 
 		var finish = false;
@@ -34,6 +34,7 @@ $(document).on("page:change", function(){
 		var bricks = [];
 		var placedBricks = [];
 		var level = 0;
+		var ar = [];
 		//This should be based on how high the tower is somehow
 		//But that's a task for later
 		var maxLevel = <%= Rails.configuration.x.max_levels %>;
@@ -48,6 +49,7 @@ $(document).on("page:change", function(){
 				bricks.push(Math.floor(Math.random() * 3));
 			}
 			updateBricks();
+			generateArrangement();
 		};
 
 		p.draw = function(){
@@ -56,14 +58,14 @@ $(document).on("page:change", function(){
 			//Draws the bricks from the tower
 			for(var i = 0; i < tower.length; i++){
 				pickFill(tower[i]["color"]);
-				p.rect(xToScreen(tower[i]["x"]), yToScreen(tower[i]["y"]), BRICK_WIDTH, BRICK_HEIGHT);
+				drawBrick(tower[i]["x"], tower[i]["y"]);
 			}
 			//Draws the bricks which the player just placed
 			for(var i = 0; i < placedBricks.length; i++){
 				//Only place the brick if we're on the right level
-				if(placedBricks[i][2] > level * BPL && placedBricks[i][2] < (level+1) * BPL){
+				if(placedBricks[i][2] >= level * BPL && placedBricks[i][2] <= (level+1) * BPL){
 					pickFill(placedBricks[i][0]);
-					p.rect(xToScreen(placedBricks[i][1]), yToScreen(placedBricks[i][2]), BRICK_WIDTH, BRICK_HEIGHT);
+					drawBrick(placedBricks[i][1], placedBricks[i][2]);
 				}
 
 			}
@@ -71,7 +73,10 @@ $(document).on("page:change", function(){
 			//Draws the brick you're about to place, if you haven't placed all the bricks yet
 			if(finish == false && p.mouseX >= OFFSET && p.mouseX < p.width - OFFSET){
 				pickFill(bricks[0]);
-				p.rect(nearestBrickX(p.mouseX), nearestBrickY(p.mouseY), BRICK_WIDTH, BRICK_HEIGHT);
+				drawBrick(screenToX(p.mouseX), screenToY(p.mouseY));
+				for(var i = 0; i < ar.length; i++){
+					drawBrick(screenToX(p.mouseX) + ar[i][0], screenToY(p.mouseY) + ar[i][1]);
+				}
 			}
 
 			p.fill(0);
@@ -83,13 +88,22 @@ $(document).on("page:change", function(){
 			}
 		};
 
+		function drawBrick(x, y){
+			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT)
+		}
+
 		p.mouseClicked = function(){
 			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * COLUMNS && p.mouseY > 0 && p.mouseY < p.height && !finish){
 				//console.log("Placing a brick at " + screenToX(p.mouseX) + ", " + screenToY(p.mouseY));
 
 				placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
+				for(var i = 0; i < ar.length; i++){
+					placedBricks.push([bricks[0], screenToX(p.mouseX) + ar[i][0], screenToY(p.mouseY) + ar[i][1]]);
+				}
 				bricks.shift();
+				generateArrangement();
 				if(bricks.length == 0){
+					console.log(placedBricks);
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
@@ -158,6 +172,27 @@ $(document).on("page:change", function(){
 
 		function nearestBrickY(y){
 			return yToScreen(screenToY(y));
+		}
+
+		function generateArrangement(){
+			for(var i = 0; i < 2; i++){
+				ar[i] = []
+				for(var j = 0; j < 2; j++){
+					ar[i][j] = Math.floor(Math.random()*3-1);
+				}
+			}
+			//Don't put a new brick on top of my old brick!
+			if(ar[0][0] == 0 && ar[0][1] == 0){
+				ar[0][0] = 1;
+			}
+			if(ar[1][0] == 0 && ar[1][1] == 0){
+				ar[1][0] = -1;
+			}
+			//If the first and second brick are in the same place
+			//Throw away one of them
+			if(ar[0][0] == ar[1][0] && ar[0][1] == ar[1][1]){
+				ar.shift();
+			}
 		}
 
 
