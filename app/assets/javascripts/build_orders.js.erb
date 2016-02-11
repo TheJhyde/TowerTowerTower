@@ -21,6 +21,11 @@ $(document).on("page:change", function(){
 		const BRICKS = <%= Rails.configuration.x.shipment %>;
 		const COLUMNS = <%= Rails.configuration.x.bricks_layer %>;
 		const BPL = <%= Rails.configuration.x.level_height %>; //That's Bricks Per Level, of course
+		
+		// const BRICK_WIDTH = 40;
+		// const BRICK_HEIGHT = 40;
+		// const COLUMNS = 10;
+		// const BPL = 6;
 		var OFFSET;
 
 		var finish = false;
