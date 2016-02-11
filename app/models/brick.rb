@@ -3,11 +3,11 @@ include Magick
 class Brick < ActiveRecord::Base
 	belongs_to :user
 
-	@@brick_width = 16
-	@@brick_height = 6
-	@@offset = 10
-	@@pic_height = 1000
-	@@pic_width = 100
+	@@brick_width = Rails.configuration.x.brick_width/5
+	@@brick_height = Rails.configuration.x.brick_height/5
+	@@offset = 
+	@@pic_height = Rails.configuration.x.screen_height * Rails.configuration.x.max_levels
+	@@pic_width = Rails.configuration.x.screen_width/5
 
 	def self.gravity
 		Brick.where.not(y: 0).each do |brick|

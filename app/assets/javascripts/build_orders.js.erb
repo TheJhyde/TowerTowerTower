@@ -16,11 +16,12 @@ $(document).on("page:change", function(){
 	//p5 inside the above page check instead of just globally.
 	var sketch = function(p){
 
-		const BRICK_WIDTH = 80;
-		const BRICK_HEIGHT = 35;
-		const BRICKS = 3;
-		const ROWS = 5;
-		var OFFSET = 100;
+		const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
+		const BRICK_HEIGHT = <%= Rails.configuration.x.brick_height %>;
+		const BRICKS = <%= Rails.configuration.x.shipment %>;
+		const COLUMNS = <%= Rails.configuration.x.bricks_layer %>;
+		const BPL = <%= Rails.configuration.x.level_height %>; //That's Bricks Per Level, of course
+		var OFFSET;
 
 		var finish = false;
 
@@ -30,13 +31,11 @@ $(document).on("page:change", function(){
 		var level = 0;
 		//This should be based on how high the tower is somehow
 		//But that's a task for later
-		var maxLevel = 10;
+		var maxLevel = <%= Rails.configuration.x.max_levels %>;
 
 		p.setup = function(){
-			//Where does that five come from? I don't know
-			//Probably something to go with pixels?
-			OFFSET = (p.width * 5 - 5 * BRICK_WIDTH)/2;
-			canvas = p.createCanvas(500, 500);
+			canvas = p.createCanvas(500, <%= Rails.configuration.x.screen_height %>);
+			OFFSET = (p.width - BRICK_WIDTH * COLUMNS)/2;
 			canvas.parent("canvas");
 			loadTower(level);
 
@@ -56,13 +55,16 @@ $(document).on("page:change", function(){
 			}
 			//Draws the bricks which the player just placed
 			for(var i = 0; i < placedBricks.length; i++){
-				pickFill(placedBricks[i][0]);
-				p.rect(xToScreen(placedBricks[i][1]), yToScreen(placedBricks[i][2]), BRICK_WIDTH, BRICK_HEIGHT);
+				//Only place the brick if we're on the right level
+				if(placedBricks[i][2] > level * BPL && placedBricks[i][2] < (level+1) * BPL){
+					pickFill(placedBricks[i][0]);
+					p.rect(xToScreen(placedBricks[i][1]), yToScreen(placedBricks[i][2]), BRICK_WIDTH, BRICK_HEIGHT);
+				}
 
 			}
 
 			//Draws the brick you're about to place, if you haven't placed all the bricks yet
-			if(finish == false && p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * ROWS){
+			if(finish == false && p.mouseX >= OFFSET && p.mouseX < p.width - OFFSET){
 				pickFill(bricks[0]);
 				p.rect(nearestBrickX(p.mouseX), nearestBrickY(p.mouseY), BRICK_WIDTH, BRICK_HEIGHT);
 			}
@@ -77,9 +79,9 @@ $(document).on("page:change", function(){
 		};
 
 		p.mouseClicked = function(){
-			console.log("A mouse sure got clicked!");
-			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * ROWS && p.mouseY > 0 && p.mouseY < p.height && !finish){
-				console.log("Placing a brick");
+			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * COLUMNS && p.mouseY > 0 && p.mouseY < p.height && !finish){
+				//console.log("Placing a brick at " + screenToX(p.mouseX) + ", " + screenToY(p.mouseY));
+
 				placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
 				bricks.shift();
 				if(bricks.length == 0){
@@ -121,6 +123,7 @@ $(document).on("page:change", function(){
 		function loadTower(requestedLevel){
 			$.get('/tower.json', {level: requestedLevel}, function(data){
 				tower = data;
+				//console.log(tower.length);
 			});
 		}
 
@@ -131,7 +134,7 @@ $(document).on("page:change", function(){
 		}
 
 		function yToScreen(y){
-			return p.height - (y+1) * BRICK_HEIGHT;
+			return p.height - (y+1 - level * BPL) * BRICK_HEIGHT ;
 		}
 
 		// Converts the screen position to the nearest x,y position
@@ -140,7 +143,7 @@ $(document).on("page:change", function(){
 		}
 
 		function screenToY(y){
-			return Math.floor((p.height-y)/BRICK_HEIGHT);
+			return Math.floor((p.height-y)/BRICK_HEIGHT) + level * BPL;
 		}
 
 		//gives the screen coordinates of the nearest brick, based on a given screen coord

@@ -2,7 +2,7 @@ class BuildOrdersController < ApplicationController
 	before_action :has_actions, only: [:new]
 
 	def new
-		@tower = Brick.all
+		#@tower = Brick.all
 		@glyphs = Glyph.all
 		@orders = BuildOrder.where(used: nil)
 	end

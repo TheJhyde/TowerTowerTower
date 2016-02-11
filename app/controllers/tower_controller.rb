@@ -4,7 +4,6 @@ class TowerController < ApplicationController
 		top = (params["level"].to_i + 1) * Rails.configuration.x.level_height
 		@tower = Brick.where(y: (bottom..top))
 		respond_to do |format|
-      		format.html
       		format.json {render json: @tower }
     	end
 	end
