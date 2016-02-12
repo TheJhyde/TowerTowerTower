@@ -16,7 +16,8 @@
 		</div>
 		<div id = "siderbar">
 			<div id = "global_stats" class = "box">
-				Total Tower Levels: <%= @towers %></br>
+				Tower Height: <%= @towers %> stories</br>
+				Total Bricks: <%= @bricks %></br>
 			</div>
 			<div id = "links" class = "box">
 				<%= link_to "Build Tower", new_build_order_path %><br/>
@@ -32,9 +33,10 @@
 	<div id = "news_feed">
 		<h3>Updates</h3>
 		<ul>
-			<% current_user.news_items.order(created_at: :desc).each do |news| %>
+			<% @news_items.each do |news| %>
 				<li class = "<%= news.msg_type %>"><%= news.created_at.strftime("%_m/%-d, %l:%M %p")%>: <%= news.message.html_safe %></li>
 			<% end %>
 		</ul>
+		<%= will_paginate @news_items %>
 	</div>
 <% end %>

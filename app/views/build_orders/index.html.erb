@@ -1,11 +1,13 @@
 <h1>Build Orders</h1>
 <div>
-	<b>Total Build Orders:</b> <%= @orders.count %><br/>
-	<b>Total Unused Build Orders:</b> <%= @orders.where(used: nil).count %>
+	<b>Total Build Orders:</b> <%= @build_orders.count %><br/>
+	<b>Total Unused Build Orders:</b> <%= @build_orders.where(used: nil).count %>
 </div>
 
+<%= will_paginate %>
+
 <hr>
-<% @orders.order(created_at: :DESC).each do |order| %>
+<% @build_orders.order(created_at: :DESC).each do |order| %>
 	<p>
 		User: <% if order.user.nil? %>Anonymous<% else %><%= order.user.name%><% end %><br>
 		Created: <%= order.created_at %><br>
@@ -14,3 +16,5 @@
 		<hr>
 	</p>
 <% end %>
+
+<%= will_paginate %>

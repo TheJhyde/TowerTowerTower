@@ -32,7 +32,7 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def index
-		@orders = BuildOrder.all
+		@build_orders = BuildOrder.paginate(page: params[:page], per_page: 10)
 	end
 
 	private
