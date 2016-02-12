@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :users
   resources :account_activations, only: [:edit]
-  resources :build_orders, only: [:new, :create]
+  resources :build_orders, only: [:new, :create, :index]
   resources :tower, only: [:index]
   resources :tower_pics, only: [:show, :index]
   get 'build_orders/finished' => 'build_orders#finished'

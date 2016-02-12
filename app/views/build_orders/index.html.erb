@@ -1,0 +1,16 @@
+<h1>Build Orders</h1>
+<div>
+	<b>Total Build Orders:</b> <%= @orders.count %><br/>
+	<b>Total Unused Build Orders:</b> <%= @orders.where(used: nil).count %>
+</div>
+
+<hr>
+<% @orders.order(created_at: :DESC).each do |order| %>
+	<p>
+		User: <% if order.user.nil? %>Anonymous<% else %><%= order.user.name%><% end %><br>
+		Created: <%= order.created_at %><br>
+		Used: <%= order.used %><br>
+		And then what the actual shipment was should go here someplace
+		<hr>
+	</p>
+<% end %>

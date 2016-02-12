@@ -2,7 +2,6 @@ class BuildOrdersController < ApplicationController
 	before_action :has_actions, only: [:new]
 
 	def new
-		#@tower = Brick.all
 		@glyphs = Glyph.all
 		@orders = BuildOrder.where(used: nil)
 	end
@@ -30,6 +29,10 @@ class BuildOrdersController < ApplicationController
 			flash[:danger] = "There was an error!"
 			render 'new'
 		end
+	end
+
+	def index
+		@orders = BuildOrder.all
 	end
 
 	private
