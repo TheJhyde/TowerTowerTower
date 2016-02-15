@@ -5,9 +5,9 @@ class Brick < ActiveRecord::Base
 
 	@@brick_width = Rails.configuration.x.brick_width/5
 	@@brick_height = Rails.configuration.x.brick_height/5
-	@@offset = 
-	@@pic_height = Rails.configuration.x.screen_height * Rails.configuration.x.max_levels
 	@@pic_width = Rails.configuration.x.screen_width/5
+	@@offset = (@@brick_width * Rails.configuration.x.bricks_layer - @@pic_width)/2
+	@@pic_height = Rails.configuration.x.screen_height * Rails.configuration.x.max_levels
 
 	def self.gravity
 		Brick.where.not(y: 0).order(:y).each do |brick|
@@ -24,7 +24,7 @@ class Brick < ActiveRecord::Base
 
 	def self.draw_tower
 		#An empty image
-		picture = Image.new(@@pic_width, @@pic_height){self.background_color = "white"}
+		picture = Image.new(@@pic_width, @@pic_height){self.background_color = "rgb(200,200,200)"}
 		#A drawing thing
 		tower = Magick::Draw.new
 		tower.stroke("black")
@@ -46,13 +46,13 @@ class Brick < ActiveRecord::Base
 		picture.write(file_name)
 
 		#Send picture to be stored on the Amazon S3 I've got for this project
-		s3 = Aws::S3::Resource.new(region:'us-east-1')
-		obj = s3.bucket('towerbricklightning').object("tower/#{file_name}")
-		obj.upload_file(file_name)
-		TowerPic.create(file: file_name)
+		# s3 = Aws::S3::Resource.new(region:'us-east-1')
+		# obj = s3.bucket('towerbricklightning').object("tower/#{file_name}")
+		# obj.upload_file(file_name)
+		# TowerPic.create(file: file_name)
 
 		#Delete the photo so it doesn't clutter up the place/interfer with heroku in anyway
-		File.delete(file_name)
+		#File.delete(file_name)
 
 	end
 
