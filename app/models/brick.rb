@@ -6,7 +6,7 @@ class Brick < ActiveRecord::Base
 	@@brick_width = Rails.configuration.x.brick_width/5
 	@@brick_height = Rails.configuration.x.brick_height/5
 	@@pic_width = Rails.configuration.x.screen_width/5
-	@@offset = (@@brick_width * Rails.configuration.x.bricks_layer - @@pic_width)/2
+	@@offset = (@@pic_width - @@brick_width * Rails.configuration.x.bricks_layer)/2
 	@@pic_height = Rails.configuration.x.screen_height * Rails.configuration.x.max_levels
 
 	def self.gravity
