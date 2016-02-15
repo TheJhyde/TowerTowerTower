@@ -222,6 +222,25 @@ aside{
 	}
 }
 
+/* tower */
+#tower_pic{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#tower_prev{
+	float: left;
+	display: inline;
+	margin: 20px;
+}
+
+#tower_next{
+	float: right;
+	display: inline;
+	margin: 10px;
+}
+
 /* typography */
 h1, h2, h3, h4, h5, h6{
 	line-height: 1;

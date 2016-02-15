@@ -1,12 +1,16 @@
 <% provide(:title, "The Tower - #{@pic.created_at.strftime("%_m/%d")}") %>
-<div id = "tower_pic">
-	<%= image_tag "#{Rails.configuration.x.img_url}tower/#{@pic.file.downcase}" %>
+<div id = "tower_div">
+	<%= image_tag "#{Rails.configuration.x.img_url}tower/#{@pic.file.downcase}", id: "tower_pic" %>
 </div>
 
 <% unless @previous.nil? %>
-	<%= link_to "PREVIOUS", @previous %>
+	<div id = "tow_prev">
+		<%= link_to "PREVIOUS", @previous %>
+	</div>
 <% end %>
 
 <% unless @next.nil? %>
-	<%= link_to "NEXT", @next %>
+	<div id = "tower_next">
+		<%= link_to "NEXT", @next %>
+	</div>
 <% end %>
