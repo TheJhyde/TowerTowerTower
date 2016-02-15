@@ -1,7 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  string: 
+  message: "Hello hello!"
+  colors: "111"
+  x: "123"
+  y: "567"
 
 two:
-  string: 
+  message: "Hello goodbye!"
+  colors: "001"
+  x: "321"
+  y: "999"
+
