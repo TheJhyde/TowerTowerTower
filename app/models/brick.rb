@@ -46,13 +46,13 @@ class Brick < ActiveRecord::Base
 		picture.write(file_name)
 
 		#Send picture to be stored on the Amazon S3 I've got for this project
-		# s3 = Aws::S3::Resource.new(region:'us-east-1')
-		# obj = s3.bucket('towerbricklightning').object("tower/#{file_name}")
-		# obj.upload_file(file_name)
-		# TowerPic.create(file: file_name)
+		s3 = Aws::S3::Resource.new(region:'us-east-1')
+		obj = s3.bucket('towerbricklightning').object("tower/#{file_name}")
+		obj.upload_file(file_name)
+		TowerPic.create(file: file_name)
 
-		#Delete the photo so it doesn't clutter up the place/interfer with heroku in anyway
-		#File.delete(file_name)
+		#Delete the photo so it doesn't clutter up the place/interfer with heroku somehow
+		File.delete(file_name)
 
 	end
 
