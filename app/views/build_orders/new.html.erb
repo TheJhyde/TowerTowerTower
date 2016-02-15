@@ -19,6 +19,8 @@
 				<% end %>
 				<% unless order.user.nil? %>
 					- <%= order.user.name %>
+				<% else %>
+					- A Mysterious Stranger
 				<% end %>
 			</li>
 		<% end %>

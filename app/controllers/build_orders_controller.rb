@@ -20,11 +20,21 @@ class BuildOrdersController < ApplicationController
 		@order.x = params["build_order"]["x"].split(" ").map{|x| x.to_i}
 		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
 		@order.colors = params["build_order"]["colors"].split(" ").map{|x| x.to_i}
-		@order.user = current_user
+		if logged_in?
+			@order.user = current_user
+		end
+
 		if @order.save
-			flash[:success] = "You have placed your bricks!"
-			current_user.update(actions: current_user.actions - 1)
-			redirect_to '/'
+			if logged_in?
+				flash[:success] = "You have placed your bricks!"
+				current_user.update(actions: current_user.actions - 1)
+			else
+				flash[:success] = "Bricks placed! Want to see what happened to them? 
+					Sign up now!"
+				session["acted"] = 1
+				session["build_order"] = @order.id
+			end
+			redirect_to signup_path
 		else
 			flash[:danger] = "There was an error!"
 			render 'new'

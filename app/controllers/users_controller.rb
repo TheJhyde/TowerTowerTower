@@ -20,6 +20,9 @@ class UsersController < ApplicationController
   	@user.user_name = @user.name.downcase.delete " " #spooky
     @user.news_items << NewsItem.first
     @user.actions = Rails.configuration.x.starting_actions
+    unless session["build_order"].nil?
+      @user.build_orders << BuildOrder.find(session["build_order"])
+    end
   	if @user.save
       log_in @user
   		flash[:success] = "Welcome #{@user.name}"

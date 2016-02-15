@@ -46,9 +46,16 @@ module SessionsHelper
 	end
 
 	def has_actions
-		unless current_user.actions > 0
-			flash[:danger] = "You are out of actions for day. :("
-      		redirect_to '/'
+		if logged_in?
+			unless current_user.actions > 0
+				flash[:danger] = "You are out of actions for day. :("
+	      		redirect_to '/'
+			end
+		else
+			if session["acted"] == 1
+				flash[:danger] = "You've already built the tower once. Sign up to build again!"
+	      		redirect_to '/'
+			end
 		end
 	end
 
