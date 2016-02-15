@@ -24,9 +24,10 @@ class UsersController < ApplicationController
       @user.build_orders << BuildOrder.find(session["build_order"])
     end
   	if @user.save
-      log_in @user
-  		flash[:success] = "Welcome #{@user.name}"
-  		#I would like this to redirect to the /username page, not /id
+      UserMailer.account_activation(@user).deliver_now
+      # log_in @user
+  		# flash[:success] = "Welcome #{@user.name}"
+      flash[:info] = "Check your e-mail to activate your account and start playing!"
   		redirect_to '/'
   	else
   		@user.name = nil #This is a little hackey
