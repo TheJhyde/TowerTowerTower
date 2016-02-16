@@ -24,7 +24,7 @@ class UsersController < ApplicationController
       @user.build_orders << BuildOrder.find(session["build_order"])
     end
   	if @user.save
-      UserMailer.account_activation(@user).deliver_now
+      @user.send_activation_email
       # log_in @user
   		# flash[:success] = "Welcome #{@user.name}"
       flash[:info] = "Check your e-mail to activate your account and start playing!"

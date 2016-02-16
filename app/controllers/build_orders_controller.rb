@@ -28,13 +28,14 @@ class BuildOrdersController < ApplicationController
 			if logged_in?
 				flash[:success] = "You have placed your bricks!"
 				current_user.update(actions: current_user.actions - 1)
+				redirect_to root_path
 			else
 				flash[:success] = "Bricks placed! Want to see what happened to them? 
 					Sign up now!"
 				session["acted"] = 1
 				session["build_order"] = @order.id
+				redirect_to signup_path
 			end
-			redirect_to signup_path
 		else
 			flash[:danger] = "There was an error!"
 			render 'new'

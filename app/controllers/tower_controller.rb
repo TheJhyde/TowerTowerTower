@@ -5,11 +5,7 @@ class TowerController < ApplicationController
 		@tower = Brick.where(y: (bottom..top))
 		respond_to do |format|
       		format.json {render json: @tower }
+      		format.html
     	end
-	end
-
-	def show
-		#Probably for the hidden shows
-		#Sssssshhh, tell no one
 	end
 end
