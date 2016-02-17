@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   root 'static_pages#home'
-  #get 'static_pages/about'
   get 'about' => 'static_pages#about'
   get 'admin' => 'static_pages#admin'
   get 'report' => 'static_pages#report'
@@ -13,7 +12,8 @@ Rails.application.routes.draw do
   resources :users
   resources :account_activations, only: [:edit]
   resources :build_orders, only: [:new, :create, :index]
+  get 'build_orders/finished' => 'build_orders#finished'
   resources :tower, only: [:index]
   resources :tower_pics, only: [:show, :index]
-  get 'build_orders/finished' => 'build_orders#finished'
+  resources :password_resets, only: [:new, :create, :edit, :update]
 end
