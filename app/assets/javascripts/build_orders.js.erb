@@ -4,6 +4,12 @@ $(document).on("page:change", function(){
 		return
 	}
 
+	//If there's already a canvas loaded, don't load this page
+	if($("canvas").size() > 0){
+		console.log("There is more than one canvas");
+		return false;
+	}
+
 	$(document).on('click', '.glyph', function(){
 	  var $glyph = $(this)
 	  $('#text_area').append($glyph.find("img").prop('outerHTML'));
@@ -102,11 +108,10 @@ $(document).on("page:change", function(){
 				bricks.shift();
 				generateArrangement();
 				if(bricks.length == 0){
-					console.log(placedBricks);
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
-					$("#alert").text("Write a message so other builders know where you placed your bricks.");
+					$("#alerts").html("<h4>Instructions</h4>Write a message so other builders know where you placed your bricks.");
 					$.get('finished.js', function(){
 						var colors = "";
 						var x = "";

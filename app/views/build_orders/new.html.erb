@@ -1,10 +1,15 @@
 <% provide(:title, "TOWER TOWER TOWER") %>
+<% provide(:head, javascript_include_tag("build_orders")) %>
 <div id="craft">
 	<div id="canvas"></div>
 </div>
 
 <div id = "panel">
-	<div id = "alerts">Place your bricks on the tower to build it higher!</div>
+	<div id = "alerts">
+		<h4>Instructions</h4>
+		Place your bricks on the tower to build it higher!
+	</div>
+	<br/>
 	<div id = "bricks">
 		<b>BRICKS</b><br/>
 	</div>
