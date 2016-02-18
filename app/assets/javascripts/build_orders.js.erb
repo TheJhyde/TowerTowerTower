@@ -106,6 +106,7 @@ $(document).on("page:change", function(){
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
+					$("#alert").text("Write a message so other builders know where you placed your bricks.");
 					$.get('finished.js', function(){
 						var colors = "";
 						var x = "";
