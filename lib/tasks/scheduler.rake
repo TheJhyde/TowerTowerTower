@@ -9,9 +9,8 @@ end
 
 desc "This task is called more often, to keep things moving"
 task :hourly_tasks => :environment do
-  updates = []
   puts "Resolve all the build orders"
-  updates = BuildOrder.resolve_orders(updates)
+  updates = BuildOrder.resolve_orders
   puts "Makes unsupported bricks fall."
   updates = Brick.gravity(updates)
   puts "Writing all news updates"

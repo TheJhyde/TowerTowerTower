@@ -6,7 +6,7 @@ class BuildOrder < ActiveRecord::Base
 	serialize :x, Array
 	serialize :y, Array
 
-	def self.resolve_orders(news)
+	def self.resolve_orders(news = [])
 		BuildOrder.where(used: nil).order(:created_at).each do |order|
 			placed_bricks = 0;
 			destroyed_bricks = 0;
