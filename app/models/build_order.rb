@@ -17,8 +17,13 @@ class BuildOrder < ActiveRecord::Base
 
 					Brick.where(x: order.x[i], y: order.y[i]).each do |brick|
 						unless brick.user.nil?
-							brick.user.news_items << NewsItem.create(msg_type: "update", 
-								message: "A brick you placed was destroyed by a brick placed by #{order.user.name}")
+							if order.user.nil?
+								brick.user.news_items << NewsItem.create(msg_type: "update", 
+									message: "A brick you placed was destroyed by a brick placed by a mysterious stranger.")
+							else
+								brick.user.news_items << NewsItem.create(msg_type: "update", 
+									message: "A brick you placed was destroyed by a brick placed by #{order.user.name}")
+							end
 						end
 						brick.destroy
 					end
@@ -37,7 +42,9 @@ class BuildOrder < ActiveRecord::Base
 				msg += "Your bricks destroyed #{pluralize(destroyed_bricks, 'brick')} in a collision."
 			end
 
-			order.user.news_items << NewsItem.create(msg_type: "update", message: msg)
+			unless order.user.nil?
+				order.user.news_items << NewsItem.create(msg_type: "update", message: msg)
+			end
 
 			order.update(used: DateTime.now)
 		end
