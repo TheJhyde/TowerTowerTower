@@ -9,17 +9,19 @@ class Brick < ActiveRecord::Base
 	@@offset = (@@pic_width - @@brick_width * Rails.configuration.x.bricks_layer)/2
 	@@pic_height = Rails.configuration.x.screen_height * Rails.configuration.x.max_levels
 
-	def self.gravity
+	def self.gravity(news)
 		Brick.where.not(y: 0).order(:y).each do |brick|
 			#If there are no brick underneath, that is
 			if Brick.where(x: ((brick.x-1)..(brick.x+1)), y: brick.y - 1).length == 0
 				unless brick.user.nil?
-					brick.user.news_items << NewsItem.create(msg_type: "update", 
-						message: "One of your bricks fell and was destroyed.")
+					# brick.user.news_items << NewsItem.create(msg_type: "update", 
+					# 	message: "One of your bricks fell and was destroyed.")
+					news = NewsItem.add_to(news, brick.user.id, "fell")
 				end
 				brick.destroy
 			end
 		end
+		return news
 	end
 
 	def self.draw_tower
