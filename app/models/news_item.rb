@@ -14,8 +14,6 @@ class NewsItem < ActiveRecord::Base
 
 	def self.write_updates(news)
 		news.each do |user_hash|
-			puts user_hash
-			puts 
 			user = User.find(user_hash["user"].to_i)
 			msg = ""
 			if user_hash["placed"] > 0

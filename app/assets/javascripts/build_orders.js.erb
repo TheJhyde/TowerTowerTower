@@ -61,11 +61,14 @@ $(document).on("page:change", function(){
 		p.draw = function(){
 			p.background(200);
 			//Draws the bricks from the tower
+			p.stroke(0);
 			for(var i = 0; i < tower.length; i++){
 				pickFill(tower[i]["color"]);
 				drawBrick(tower[i]["x"], tower[i]["y"]);
 			}
 			//Draws the bricks which the player just placed
+			p.stroke(255);
+			p.strokeWeight(2);
 			for(var i = 0; i < placedBricks.length; i++){
 				//Only place the brick if we're on the right level
 				if(placedBricks[i][2] >= level * BPL && placedBricks[i][2] <= (level+1) * BPL){
@@ -158,7 +161,7 @@ $(document).on("page:change", function(){
 		}
 
 		function yToScreen(y){
-			return p.height - (y+1 - level * BPL) * BRICK_HEIGHT ;
+			return p.height - (y+1 - level * (BPL - 2)) * BRICK_HEIGHT ;
 		}
 
 		// Converts the screen position to the nearest x,y position
@@ -167,7 +170,7 @@ $(document).on("page:change", function(){
 		}
 
 		function screenToY(y){
-			return Math.floor((p.height-y)/BRICK_HEIGHT) + level * BPL;
+			return Math.floor((p.height-y)/BRICK_HEIGHT) + level * (BPL -2);
 		}
 
 		//gives the screen coordinates of the nearest brick, based on a given screen coord
