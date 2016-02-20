@@ -48,13 +48,22 @@ module SessionsHelper
 	def has_actions
 		if logged_in?
 			unless current_user.actions > 0
-				flash[:danger] = "You are out of actions for day. :("
+				flash[:danger] = "You are out of actions for day. You'll get more actions at noon EST."
 	      		redirect_to '/'
 			end
 		else
-			if session["acted"] == 1
-				flash[:danger] = "You've already built the tower once. Sign up to build again!"
-	      		redirect_to '/'
+			if session["acted"].nil?
+				session["acted"] = 0;
+				session["acted_date"] = DateTime.now.utc.to_i;
+			else
+				if session["acted_date"] < 1.day.ago.utc.to_i
+					session["acted"] = 0;
+					session["acted_date"] = DateTime.now.utc.to_i;
+				end
+				if session["acted"] >= Rails.configuration.x.stranger_actions
+					flash[:danger] = "You've already built the tower. Sign up or come back tomorrow build more!"
+		      		redirect_to '/'
+		      	end
 			end
 		end
 	end

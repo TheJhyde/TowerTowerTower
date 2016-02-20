@@ -26,16 +26,14 @@ class BuildOrdersController < ApplicationController
 
 		if @order.save
 			if logged_in?
-				flash[:success] = "You have placed your bricks!"
+				flash[:success] = "You have placed your bricks! Your order will be resolved at #{(DateTime.now + 1.hour).strftime("%l %p")}. You have #{current_user.actions} actions left for the day."
 				current_user.update(actions: current_user.actions - 1)
-				redirect_to root_path
 			else
-				flash[:success] = "Bricks placed! Want to see what happened to them? 
-					Sign up now!"
-				session["acted"] = 1
+				flash[:success] = "Bricks placed! Your order will be resolved at #{(DateTime.now + 1.hour).strftime("%l %p")}. Want to see what happened to your bricks? Sign up to find out!"
+				session["acted"] = session["acted"] + 1;
 				session["build_order"] = @order.id
-				redirect_to signup_path
 			end
+			redirect_to new_build_order_path
 		else
 			flash[:danger] = "There was an error!"
 			render 'new'

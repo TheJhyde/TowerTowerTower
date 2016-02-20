@@ -118,40 +118,66 @@ $(document).on("page:change", function(){
 
 		p.mouseClicked = function(){
 			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * COLUMNS && p.mouseY > 0 && p.mouseY < p.height && !finish){
-				//console.log("Placing a brick at " + screenToX(p.mouseX) + ", " + screenToY(p.mouseY));
-
 				placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
 				for(var i = 0; i < ar.length; i++){
 					placedBricks.push([bricks[0], screenToX(p.mouseX) + ar[i][0], screenToY(p.mouseY) + ar[i][1]]);
 				}
-				bricks.shift();
-				generateArrangement();
-				if(bricks.length == 0){
-					finish = true;
-					$("#bricks").hide();
-					$("#messages").hide();
-					$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks.");
-					$.get('finished.js', function(){
-						var colors = "";
-						var x = "";
-						var y = "";
-						for(var i = 0; i < placedBricks.length; i++){
-							colors += placedBricks[i][0] + " ";
-							x += placedBricks[i][1] + " ";
-							y += placedBricks[i][2] + " ";
-						}
-						$("#build_order_colors").val(colors);
-						$("#build_order_x").val(x);
-						$("#build_order_y").val(y);
-					});
-				}
-				updateBricks();
+				//This happens automatically because there's only one shipment
+				finish = true;
+				$("#bricks").hide();
+				$("#messages").hide();
+				$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks. Press S to move your brick.");
+				$.get('finished.js', function(){
+					var colors = "";
+					var x = "";
+					var y = "";
+					for(var i = 0; i < placedBricks.length; i++){
+						colors += placedBricks[i][0] + " ";
+						x += placedBricks[i][1] + " ";
+						y += placedBricks[i][2] + " ";
+					}
+					$("#build_order_colors").val(colors);
+					$("#build_order_x").val(x);
+					$("#build_order_y").val(y);
+				});
 			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 10 && p.mouseY < 30 && level < maxLevel){
 				level++;
 				loadTower(level);
 			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 35 && p.mouseY < 55 && level > 0){
 				level--;
 				loadTower(level);
+			}
+		}
+
+		//What the best way to convert keys into rotations?
+		p.keyPressed = function(){
+			//console.log(p.keyCode);
+			//Rotate one way if you press a or left arrow
+			if(p.keyCode == 65 || p.keyCode == 37){
+				for(var i = 0; i < ar.length; i++){
+					var new_ar = [0, 0];
+					new_ar[0] = ar[i][1] * -1;
+					new_ar[1] = ar[i][0];
+					ar[i] = new_ar;
+				}
+			//rotate the other way if you press d or right arrow
+			}else if(p.keyCode == 68 || p.keyCode == 39){
+				for(var i = 0; i < ar.length; i++){
+					var new_ar = [0, 0];
+					new_ar[1] = ar[i][0] * -1;
+					new_ar[0] = ar[i][1];
+					ar[i] = new_ar;
+				}
+			}else if(p.keyCode == 83 && finish){
+				finish = false;
+				placedBricks = [];
+				$("#bricks").show();
+				$("#messages").show();
+				//Throwing this away probably isn't the best approach
+				//But it's the approach I'm doing.
+				$("#message_form").remove();
+				$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick.");
+
 			}
 		}
 
