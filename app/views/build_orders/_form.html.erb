@@ -1,20 +1,22 @@
-<p id = 'message'>
-	Write your message here:
-</p>
-<p id = 'text_area' >
+<div id = "message_form">
+	<p id = 'message'>
+		Write your message here:
+	</p>
+	<p id = 'text_area' >
 
-</p>
+	</p>
 
-<%= form_for(@order) do |f| %>
-	<%= f.label :message %>
-	<%= f.hidden_field :message, :value => "" %>
-	<%= f.hidden_field :colors, :value => "" %>
-	<%= f.hidden_field :x, :value => "" %>
-	<%= f.hidden_field :y, :value => "" %>
+	<%= form_for(@order) do |f| %>
+		<%= f.label :message %>
+		<%= f.hidden_field :message, :value => "" %>
+		<%= f.hidden_field :colors, :value => "" %>
+		<%= f.hidden_field :x, :value => "" %>
+		<%= f.hidden_field :y, :value => "" %>
 
-	<%= f.submit 'Submit', class: 'btn btn-primary' %>
-<% end %>
+		<%= f.submit 'Submit', class: 'btn btn-primary' %>
+	<% end %>
 
-<div id = "keyboard">
-	<%= render partial: 'shared/glyph_button', collection: glyphs.order(:meaning), as: :glyph %>
+	<div id = "keyboard">
+		<%= render partial: 'shared/glyph_button', collection: glyphs.order(:meaning), as: :glyph %>
+	</div>
 </div>

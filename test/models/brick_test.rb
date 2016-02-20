@@ -5,15 +5,14 @@ class BrickTest < ActiveSupport::TestCase
 		@brick = Brick.first
 	end
 
+	#The simplest imaginable test - there is a brick with no support, it should fall
 	test "bricks should fall without support" do
-		#The simplest imaginable test - there is a brick with no support, it should fall
 		Brick.create(x: 3, y: 100, color: 3)
 		Brick.gravity
 		assert_equal(1, Brick.count, "The new brick should have been destroyed")
 	end
 
 	test "bricks on level zero shouldn't fall" do
-		#The simplest imaginable test - there is a brick with no support, it should fall
 		Brick.create(x: 3, y: 0, color: 3)
 		Brick.gravity
 		assert_equal(2, Brick.count, "The new brick should have been destroyed")

@@ -1,3 +1,4 @@
-$("#panel").append("<%= escape_javascript(
-	render partial: 'form', locals: {glyphs: @glyphs}
-	) %>");
+//I only want to append this if it isn't already there
+if($("#message_form").size() == 0){
+	$("#panel").append("<%= escape_javascript( render partial: 'form', locals: {glyphs: @glyphs}) %>");	
+}

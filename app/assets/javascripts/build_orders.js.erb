@@ -11,12 +11,28 @@ $(document).on("page:change", function(){
 	}
 
 	$(document).on('click', '.glyph', function(){
-	  var $glyph = $(this)
-	  $('#text_area').append($glyph.find("img").prop('outerHTML'));
+	  var $glyph = $(this);
+	  var $image = $glyph.find("img").clone();
+	  $('#text_area').append($image);
 	  $('#build_order_message').val(function(index, value){
 	    return value + $glyph.find("p").attr("id") + " ";
 	  });
 	});
+
+	$(document).on('click', "#text_area .glyph_image", function(){
+		var msgIndex = $(this).index();
+		console.log(msgIndex);
+
+		$('#build_order_message').val(function(index, value){
+	    	glyphs = value.split(' ');
+	    	glyphs = glyphs.filter(function(glyph){
+	    		return glyph.length != 0;
+	    	});
+	    	glyphs.splice(msgIndex, 1);
+	    	return glyphs.join(" ") + " ";
+	  	});
+	  	$(this).remove();
+	})
 
 	//Ok, this is a little awkward looking but it lets me run 
 	//p5 inside the above page check instead of just globally.
