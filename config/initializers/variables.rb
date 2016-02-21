@@ -20,17 +20,8 @@ Tbl::Application.config.x.no_clay = -1
 #Tower variables
 Tbl::Application.config.x.brick_height = 40
 Tbl::Application.config.x.brick_width = 40
-
-Tbl::Application.config.x.bricks_layer = 10 #How many bricks there are in each level
-
-Tbl::Application.config.x.screen_height = 500
-Tbl::Application.config.x.screen_width = 
-	Rails.configuration.x.brick_width * (Rails.configuration.x.bricks_layer + 2)
-
-#How many bricks there are on each level
-Tbl::Application.config.x.level_height = 
-	(Rails.configuration.x.screen_height/Rails.configuration.x.brick_height).floor + 1
+Tbl::Application.config.x.bricks_layer = 10 #How many bricks there are in each row of the tower
+Tbl::Application.config.x.level_height = 12; #How many bricks there are on each level
 
 Tbl::Application.config.x.shipment = 1 #Players get this many bricks in each shipment
-
 Tbl::Application.config.x.max_levels = 10

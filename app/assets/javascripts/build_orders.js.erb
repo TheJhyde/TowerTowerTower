@@ -10,6 +10,7 @@ $(document).on("page:change", function(){
 		return false;
 	}
 
+	//Adds glyphs to the message when you click on the keyboard
 	$(document).on('click', '.glyph', function(){
 	  var $glyph = $(this);
 	  var $image = $glyph.find("img").clone();
@@ -20,6 +21,7 @@ $(document).on("page:change", function(){
 	  });
 	});
 
+	//Removes glyphs from the message when you click on them 
 	$(document).on('click', "#text_area .glyph_image", function(){
 		var msgIndex = $(this).index();
 		console.log(msgIndex);
@@ -35,8 +37,7 @@ $(document).on("page:change", function(){
 	  	$(this).remove();
 	})
 
-	//Ok, this is a little awkward looking but it lets me run 
-	//p5 inside the above page check instead of just globally.
+	//The P5 sketch in all it's glory
 	var sketch = function(p){
 		const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
 		const BRICK_HEIGHT = <%= Rails.configuration.x.brick_height %>;
@@ -47,24 +48,26 @@ $(document).on("page:change", function(){
 		// const BRICK_WIDTH = 40;
 		// const BRICK_HEIGHT = 40;
 		// const COLUMNS = 10;
-		// const BPL = 6;
-		// const BRICKS = 2
+		//const BPL = 12;
+		//const BRICKS = 2
 		var OFFSET;
-
-		var finish = false;
 
 		var tower = [];
 		var bricks = [];
 		var placedBricks = [];
 		var level = 0;
 		var ar = [];
-		//This should be based on how high the tower is somehow
-		//But that's a task for later
+		var finish = false;
+
 		var maxLevel = <%= Rails.configuration.x.max_levels %>;
 
 		p.setup = function(){
-			canvas = p.createCanvas(500, <%= Rails.configuration.x.screen_height %>);
+			canvas = p.createCanvas(p.windowWidth - 550, BRICK_HEIGHT * BPL);
 			OFFSET = (p.width - BRICK_WIDTH * COLUMNS)/2;
+			console.log("Width: " + p.width);
+			console.log("Brick width: " + BRICK_WIDTH);
+			console.log("Columns: " + COLUMNS);
+			console.log("Offset: " + OFFSET);
 			canvas.parent("canvas");
 			loadTower(level);
 
