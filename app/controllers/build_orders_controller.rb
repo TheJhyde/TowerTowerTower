@@ -42,6 +42,7 @@ class BuildOrdersController < ApplicationController
 
 	def index
 		@build_orders = BuildOrder.paginate(page: params[:page], per_page: 10)
+		@glyphs = Glyph.all
 	end
 
 	private

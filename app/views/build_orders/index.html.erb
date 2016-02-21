@@ -12,7 +12,10 @@
 		User: <% if order.user.nil? %>Anonymous<% else %><%= order.user.name%><% end %><br>
 		Created: <%= order.created_at %><br>
 		Used: <%= order.used %><br>
-		And then what the actual shipment was should go here someplace
+		Message: 
+		<% order.message.split(" ").each do |glyph| %>
+			<%= render partial: 'shared/glyph_read', locals: {glyph: @glyphs.find(glyph)} %>
+		<% end %>
 		<hr>
 	</p>
 <% end %>
