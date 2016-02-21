@@ -34,7 +34,9 @@ class BuildOrder < ActiveRecord::Base
 				else
 					#Then there isn't a brick there. Add it to the tower.
 					#placed_bricks += 1
-					news = NewsItem.add_to(news, order.user.id, "placed")
+					unless order.user.nil?
+						news = NewsItem.add_to(news, order.user.id, "placed")
+					end
 					Brick.create(x: order.x[i], y: order.y[i], color: color, user: order.user)
 				end
 			end
