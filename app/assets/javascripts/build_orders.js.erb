@@ -126,7 +126,7 @@ $(document).on("page:change", function(){
 				finish = true;
 				$("#bricks").hide();
 				$("#messages").hide();
-				$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks. Press S to move your brick.");
+				$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks. Press S or click on your brick to move it.");
 				$.get('finished.js', function(){
 					var colors = "";
 					var x = "";
@@ -146,7 +146,18 @@ $(document).on("page:change", function(){
 			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 35 && p.mouseY < 55 && level > 0){
 				level--;
 				loadTower(level);
+			}else if (withinPlaced() && finish){
+				moveBricks();
 			}
+		}
+
+		function withinPlaced(){
+			for(var i = 0; i < placedBricks.length; i++){
+				if(screenToX(p.mouseX) == placedBricks[i][1] && screenToY(p.mouseY) == placedBricks[i][2]){
+					return true;
+				}
+			}
+			return false;
 		}
 
 		//What the best way to convert keys into rotations?
@@ -169,16 +180,20 @@ $(document).on("page:change", function(){
 					ar[i] = new_ar;
 				}
 			}else if(p.keyCode == 83 && finish){
-				finish = false;
-				placedBricks = [];
-				$("#bricks").show();
-				$("#messages").show();
-				//Throwing this away probably isn't the best approach
-				//But it's the approach I'm doing.
-				$("#message_form").remove();
-				$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick.");
-
+				moveBricks();
 			}
+		}
+
+
+		function moveBricks(){
+			finish = false;
+			placedBricks = [];
+			$("#bricks").show();
+			$("#messages").show();
+			//Throwing this away probably isn't the best approach
+			//But it's the approach I'm doing.
+			$("#message_form").remove();
+			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick.");
 		}
 
 		function updateBricks(){
