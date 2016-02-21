@@ -13,6 +13,7 @@ $(document).on("page:change", function(){
 	$(document).on('click', '.glyph', function(){
 	  var $glyph = $(this);
 	  var $image = $glyph.find("img").clone();
+	  $image.addClass("msg_glyph");
 	  $('#text_area').append($image);
 	  $('#build_order_message').val(function(index, value){
 	    return value + $glyph.find("p").attr("id") + " ";

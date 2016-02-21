@@ -130,10 +130,11 @@ input{
     text-align: center;
     font-size: 40%;
     word-wrap: break-word;
+    cursor: pointer;
 }
 
-.glyph_image{
-
+.msg_glyph{
+	cursor: pointer;
 }
 
 /* header */
