@@ -24,7 +24,6 @@ $(document).on("page:change", function(){
 	//Removes glyphs from the message when you click on them 
 	$(document).on('click', "#text_area .glyph_image", function(){
 		var msgIndex = $(this).index();
-		console.log(msgIndex);
 
 		$('#build_order_message').val(function(index, value){
 	    	glyphs = value.split(' ');
@@ -51,6 +50,7 @@ $(document).on("page:change", function(){
 		//const BPL = 12;
 		//const BRICKS = 2
 		var OFFSET;
+		var USER_ID;
 
 		var tower = [];
 		var bricks = [];
@@ -64,10 +64,6 @@ $(document).on("page:change", function(){
 		p.setup = function(){
 			canvas = p.createCanvas(p.windowWidth - 550, BRICK_HEIGHT * BPL);
 			OFFSET = (p.width - BRICK_WIDTH * COLUMNS)/2;
-			console.log("Width: " + p.width);
-			console.log("Brick width: " + BRICK_WIDTH);
-			console.log("Columns: " + COLUMNS);
-			console.log("Offset: " + OFFSET);
 			canvas.parent("canvas");
 			loadTower(level);
 
@@ -76,6 +72,10 @@ $(document).on("page:change", function(){
 			}
 			updateBricks();
 			generateArrangement();
+			$.get('/session.json', function(data){
+				USER_ID = data;
+			});
+
 		};
 
 		p.draw = function(){
@@ -85,6 +85,9 @@ $(document).on("page:change", function(){
 			for(var i = 0; i < tower.length; i++){
 				pickFill(tower[i]["color"]);
 				drawBrick(tower[i]["x"], tower[i]["y"]);
+				if(tower[i]["user_id"] == USER_ID){
+					p.line(xToScreen(tower[i]["x"]), yToScreen(tower[i]["y"]), xToScreen(tower[i]["x"]+1), yToScreen(tower[i]["y"]-1));
+				}
 			}
 			//Draws the bricks which the player just placed
 			p.stroke(255);
@@ -166,7 +169,6 @@ $(document).on("page:change", function(){
 
 		//What the best way to convert keys into rotations?
 		p.keyPressed = function(){
-			//console.log(p.keyCode);
 			//Rotate one way if you press a or left arrow
 			if(p.keyCode == 65 || p.keyCode == 37){
 				for(var i = 0; i < ar.length; i++){
@@ -211,7 +213,6 @@ $(document).on("page:change", function(){
 		function loadTower(requestedLevel){
 			$.get('/tower.json', {level: requestedLevel}, function(data){
 				tower = data;
-				//console.log(tower.length);
 			});
 		}
 

@@ -4,8 +4,11 @@ Rails.application.routes.draw do
   get 'admin' => 'static_pages#admin'
   get 'report' => 'static_pages#report'
   post 'submit' => 'static_pages#submit'
+
   get 'signup' => 'users#new'
+
   get 'login' => 'sessions#new'
+  get 'session' => 'sessions#index'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
 

@@ -18,4 +18,11 @@ class SessionsController < ApplicationController
   	log_out if logged_in?
   	redirect_to root_url
   end
+
+  def index
+    @user = current_user.id
+    respond_to do |format|
+          format.json {render json: @user }
+      end
+  end
 end

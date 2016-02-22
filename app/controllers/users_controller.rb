@@ -9,8 +9,8 @@ class UsersController < ApplicationController
   def show
   	@user = User.find_by id: params[:id]
   	if @user.nil?
-		@user = User.find_by user_name: params[:id]
-	end
+  		@user = User.find_by user_name: params[:id]
+  	end
   	#debugger
   end
 
