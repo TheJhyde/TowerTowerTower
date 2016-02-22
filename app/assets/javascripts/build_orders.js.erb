@@ -45,9 +45,9 @@ $(document).on("page:change", function(){
 		const COLUMNS = <%= Rails.configuration.x.bricks_layer %>;
 		const BPL = <%= Rails.configuration.x.level_height %>; //That's Bricks Per Level, of course
 		
-		// const BRICK_WIDTH = 40;
-		// const BRICK_HEIGHT = 40;
-		// const COLUMNS = 10;
+		//const BRICK_WIDTH = 40;
+		//const BRICK_HEIGHT = 40;
+		//const COLUMNS = 10;
 		//const BPL = 12;
 		//const BRICKS = 2
 		var OFFSET;
@@ -91,7 +91,7 @@ $(document).on("page:change", function(){
 			p.strokeWeight(2);
 			for(var i = 0; i < placedBricks.length; i++){
 				//Only place the brick if we're on the right level
-				if(placedBricks[i][2] >= level * BPL && placedBricks[i][2] <= (level+1) * BPL){
+				if(placedBricks[i][2] >= level * BPL - 2 && placedBricks[i][2] <= (level+1) * BPL + 2){
 					pickFill(placedBricks[i][0]);
 					drawBrick(placedBricks[i][1], placedBricks[i][2]);
 				}
