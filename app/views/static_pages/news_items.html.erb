@@ -1,0 +1,12 @@
+<h1>News Items</h3>
+<%= will_paginate @news_items %>
+<ul>
+	<% @news_items.each do |news| %>
+		<li>
+			<%= news.created_at.strftime("%_m/%-d, %l:%M %p")%>: <%= news.message.html_safe %><br/>
+			<b>Type:</b>  <%= news.msg_type %><br/>
+			<b>For:</b> <%= news.users.pluck(:name).to_sentence %>
+		</li>
+	<% end %>
+</ul>
+<%= will_paginate @news_items %>

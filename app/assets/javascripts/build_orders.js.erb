@@ -59,7 +59,7 @@ $(document).on("page:change", function(){
 		var ar = [];
 		var finish = false;
 
-		var maxLevel = <%= Rails.configuration.x.max_levels %>;
+		const maxLevel = <%= Rails.configuration.x.max_levels %>;
 
 		p.setup = function(){
 			canvas = p.createCanvas(p.windowWidth - 550, BRICK_HEIGHT * BPL);

@@ -1,5 +1,6 @@
 class BuildOrdersController < ApplicationController
 	before_action :has_actions, only: [:new]
+	before_action :check_admin, only: [:index]
 
 	def new
 		@glyphs = Glyph.all

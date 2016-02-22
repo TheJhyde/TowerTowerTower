@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'admin' => 'static_pages#admin'
   get 'report' => 'static_pages#report'
   post 'submit' => 'static_pages#submit'
+  get 'news_items' => 'static_pages#news_items'
 
   get 'signup' => 'users#new'
 

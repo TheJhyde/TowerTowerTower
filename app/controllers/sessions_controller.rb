@@ -20,7 +20,11 @@ class SessionsController < ApplicationController
   end
 
   def index
-    @user = current_user.id
+    if logged_in?
+      @user = current_user.id
+    else
+      @user = -1
+    end
     respond_to do |format|
           format.json {render json: @user }
       end

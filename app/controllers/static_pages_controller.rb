@@ -1,5 +1,5 @@
 class StaticPagesController < ApplicationController
-  before_action :check_admin, only: [:admin]
+  before_action :check_admin, only: [:admin, :news_items]
 
   #The home page, with all the global stats
   def home
@@ -26,7 +26,7 @@ class StaticPagesController < ApplicationController
   	@message = NewsItem.new(error_params)
     #No shenagins, you hear!
     @message.message = ActionView::Base.full_sanitizer.sanitize(@message.message)
-    #Gives this message to all users
+    #Gives this message to all admins
   	@message.users << User.where(admin: true)
   	@message.msg_type = "error_report"
   	if @message.save
@@ -36,6 +36,10 @@ class StaticPagesController < ApplicationController
   		flash[:danger] = "There was an error with the error reporting. That's just fucked up."
   		render 'report'
   	end
+  end
+
+  def news_items
+        @news_items = NewsItem.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
   end
 
   private
