@@ -32,6 +32,7 @@ $(document).on("page:change", function(){
 		var level = 0;
 		var ar = [];
 		var finish = false;
+		var oneBrick;
 
 		const maxLevel = <%= Rails.configuration.x.max_levels %>;
 
@@ -41,10 +42,13 @@ $(document).on("page:change", function(){
 			canvas.parent("canvas");
 			loadTower(level);
 
+			oneBrick = new Brick(5, 5, p, 0);
+			console.log("Build Order 5 y: " + yToScreen(5));
+
+
 			for(var i = 0; i < BRICKS; i++){
 				bricks.push(Math.floor(Math.random() * 3));
 			}
-			updateBricks();
 			generateArrangement();
 			$.get('/session.json', function(data){
 				USER_ID = data;
@@ -63,6 +67,8 @@ $(document).on("page:change", function(){
 					p.line(xToScreen(tower[i]["x"]), yToScreen(tower[i]["y"]), xToScreen(tower[i]["x"]+1), yToScreen(tower[i]["y"]-1));
 				}
 			}
+
+			oneBrick.draw(p);
 			//Draws the bricks which the player just placed
 			p.stroke(255);
 			p.strokeWeight(2);
@@ -164,14 +170,6 @@ $(document).on("page:change", function(){
 			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick.");
 		}
 
-		function updateBricks(){
-			var msg = "<b>BRICKS</b><br/>"
-			for(var i = 0; i < bricks.length; i++){
-				msg += "You have a " +colorWord(bricks[i])+ " brick.<br/>"
-			}
-			$("#bricks").html(msg);
-		}
-
 		function loadTower(requestedLevel){
 			$.get('/tower.json', {level: requestedLevel}, function(data){
 				tower = data;
@@ -244,23 +242,6 @@ $(document).on("page:change", function(){
 					p.fill(0);
 			}
 		}
-
-		function colorWord(color){
-			switch (color){
-				case 0:
-					return "red";
-					break;
-				case 1:
-					return "green";
-					break;
-				case 2:
-					return "blue";
-					break;
-				default:
-					return "ERROR";
-			}
-		}
 	};
-
 	var myp5 = new p5(sketch);
 });
