@@ -10,32 +10,6 @@ $(document).on("page:change", function(){
 		return false;
 	}
 
-	//Adds glyphs to the message when you click on the keyboard
-	$(document).on('click', '.glyph', function(){
-	  var $glyph = $(this);
-	  var $image = $glyph.find("img").clone();
-	  $image.addClass("msg_glyph");
-	  $('#text_area').append($image);
-	  $('#build_order_message').val(function(index, value){
-	    return value + $glyph.find("p").attr("id") + " ";
-	  });
-	});
-
-	//Removes glyphs from the message when you click on them 
-	$(document).on('click', "#text_area .glyph_image", function(){
-		var msgIndex = $(this).index();
-
-		$('#build_order_message').val(function(index, value){
-	    	glyphs = value.split(' ');
-	    	glyphs = glyphs.filter(function(glyph){
-	    		return glyph.length != 0;
-	    	});
-	    	glyphs.splice(msgIndex, 1);
-	    	return glyphs.join(" ") + " ";
-	  	});
-	  	$(this).remove();
-	})
-
 	//The P5 sketch in all it's glory
 	var sketch = function(p){
 		const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
@@ -134,19 +108,7 @@ $(document).on("page:change", function(){
 				$("#bricks").hide();
 				$("#messages").hide();
 				$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks. Press S or click on your brick to move it.");
-				$.get('finished.js', function(){
-					var colors = "";
-					var x = "";
-					var y = "";
-					for(var i = 0; i < placedBricks.length; i++){
-						colors += placedBricks[i][0] + " ";
-						x += placedBricks[i][1] + " ";
-						y += placedBricks[i][2] + " ";
-					}
-					$("#build_order_colors").val(colors);
-					$("#build_order_x").val(x);
-					$("#build_order_y").val(y);
-				});
+				loadKeyboard();
 			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 10 && p.mouseY < 30 && level < maxLevel){
 				level++;
 				loadTower(level);

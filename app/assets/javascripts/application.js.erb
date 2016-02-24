@@ -1,0 +1,55 @@
+//= require jquery
+//= require jquery_ujs
+//= require bootstrap
+//= require p5
+//= require p5.dom
+//= require build_orders
+//= require turbolinks
+//= require_self
+
+//Attaches event handlers to the glyphs to add and substract glyphs
+//I should put some kind of check in here to see if it already has the handlers
+function readGlyphs(){
+	//Adds glyphs to the message when you click on the keyboard
+	$(document).on('click', '.glyph', function(){
+	  var $glyph = $(this);
+	  var $image = $glyph.find("img").clone();
+	  $image.addClass("msg_glyph");
+	  $('#text_area').append($image);
+	  $('#build_order_message').val(function(index, value){
+	    return value + $glyph.find("p").attr("id") + " ";
+	  });
+	});
+
+	//Removes glyphs from the message when you click on them 
+	$(document).on('click', "#text_area .glyph_image", function(){
+		var msgIndex = $(this).index();
+
+		$('#build_order_message').val(function(index, value){
+	    	glyphs = value.split(' ');
+	    	glyphs = glyphs.filter(function(glyph){
+	    		return glyph.length != 0;
+	    	});
+	    	glyphs.splice(msgIndex, 1);
+	    	return glyphs.join(" ") + " ";
+	  	});
+	  	$(this).remove();
+	});
+}
+
+function loadKeyboard(){
+	$.get('finished.js', function(){
+		readGlyphs();
+		var colors = "";
+		var x = "";
+		var y = "";
+		for(var i = 0; i < placedBricks.length; i++){
+			colors += placedBricks[i][0] + " ";
+			x += placedBricks[i][1] + " ";
+			y += placedBricks[i][2] + " ";
+		}
+		$("#build_order_colors").val(colors);
+		$("#build_order_x").val(x);
+		$("#build_order_y").val(y);
+	});
+}
