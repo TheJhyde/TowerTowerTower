@@ -25,9 +25,8 @@ class UsersController < ApplicationController
     end
   	if @user.save
       @user.send_activation_email
-      # log_in @user
-  		# flash[:success] = "Welcome #{@user.name}"
-      flash[:info] = "Check your e-mail to activate your account and start playing!"
+      log_in @user
+  		flash[:success] = "Welcome #{@user.name}"
   		redirect_to '/'
   	else
   		@user.name = nil #This is a little hackey

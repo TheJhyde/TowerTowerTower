@@ -1,5 +1,5 @@
 class BuildOrdersController < ApplicationController
-	before_action :has_actions, only: [:new]
+	before_action :has_actions, only: [:new, :create]
 	before_action :check_admin, only: [:index]
 
 	def new

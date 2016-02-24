@@ -11,6 +11,16 @@ $gray-medium-light: #eaeaea;
 	box-sizing: border-box;
 }
 
+/* alerts */
+.alert{
+	width: 60%;
+	text-align: center;
+	font-size: 1.1em;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+}
+
 /* brick making */
 #craft{
 	/*width: 100%;*/
@@ -121,20 +131,24 @@ input{
 
 /* glyphs */
 .glyph{
-	height: 60px;
-    width: 60px;
+	height: 75px;
+    width: 75px;
     margin: 1px;
     display: inline-block;
     background-color: #F38630;
     border-radius: 5px;
     text-align: center;
-    font-size: 40%;
+    font-size: 0.7em;
     word-wrap: break-word;
     cursor: pointer;
 }
 
 .msg_glyph{
 	cursor: pointer;
+}
+
+#text_area{
+	height: 50px;
 }
 
 /* header */

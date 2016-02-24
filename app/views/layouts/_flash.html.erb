@@ -1,5 +1,6 @@
 <% flash.each do |message_type, message| %>
 	<div class = "alert alert-<%=message_type%>" >
 		<%= message %>
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 	</div>
 <% end %>

@@ -8,7 +8,7 @@ Tbl::Application.config.x.img_url = "https://s3.amazonaws.com/towerbricklightnin
 Tbl::Application.config.x.max_actions = 20
 Tbl::Application.config.x.daily_actions = 6
 Tbl::Application.config.x.starting_actions = 6
-Tbl::Application.config.x.stranger_actions = 3 #how many times people not logged in can play per day
+Tbl::Application.config.x.stranger_actions = 2 #how many times people not logged in can play per day
 
 #Clay types
 Tbl::Application.config.x.clay_types = 3 #How many kinds of clay there are

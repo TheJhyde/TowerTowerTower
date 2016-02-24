@@ -61,7 +61,7 @@ module SessionsHelper
 					session["acted_date"] = DateTime.now.utc.to_i;
 				end
 				if session["acted"] >= Rails.configuration.x.stranger_actions
-					flash[:danger] = "You've already built the tower. Sign up or come back tomorrow build more!"
+					flash[:success] = "Bricks placed! You've used up your actions for the day. Sign up or come back tomorrow build more!"
 		      		redirect_to '/'
 		      	end
 			end
