@@ -38,16 +38,16 @@ function readGlyphs(){
 	});
 }
 
-function loadKeyboard(){
+function loadKeyboard(bricks){
 	$.get('finished.js', function(){
 		readGlyphs();
 		var colors = "";
 		var x = "";
 		var y = "";
-		for(var i = 0; i < placedBricks.length; i++){
-			colors += placedBricks[i][0] + " ";
-			x += placedBricks[i][1] + " ";
-			y += placedBricks[i][2] + " ";
+		for(var i = 0; i < bricks.length; i++){
+			colors += bricks[i].color() + " ";
+			x += bricks[i].x() + " ";
+			y += bricks[i].y() + " ";
 		}
 		$("#build_order_colors").val(colors);
 		$("#build_order_x").val(x);

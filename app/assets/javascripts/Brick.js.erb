@@ -1,45 +1,74 @@
 //I'm put this class in tower because the tower controller handles all the bricks
 
-function Brick(x, y, p, color){
+function Brick(startX, startY, p, color){
 	const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
 	const BRICK_HEIGHT = <%= Rails.configuration.x.brick_height %>;
 	const COLUMNS = <%= Rails.configuration.x.bricks_layer %>;
 	const BPL = <%= Rails.configuration.x.level_height %>;
 
-	var OFFSET = (p.width - BRICK_WIDTH * COLUMNS)/2;
-	Brick.level = 0;
+	Brick.towerWidth = BRICK_WIDTH * COLUMNS;
+	Brick.offset = (p.width - BRICK_WIDTH * COLUMNS)/2;
 
-	this.screenX = xToScreen(x);
-	this.screenY = yToScreen(y);
-	console.log("Brick 5 y: " + yToScreen(5));
+	var x = startX;
+	var y = startY;
+	var screenX = xToScreen(x);
+	var screenY = yToScreen(y);
 
-	function xToScreen(x){
-		return x * BRICK_WIDTH + OFFSET;
+	this.update = function(newX, newY, offsetX, offsetY){
+		x = screenToX(newX) + offsetX;
+		y = screenToY(newY) + offsetY;
+		screenX = xToScreen(x);
+		screenY = yToScreen(y);
 	}
 
-	function yToScreen(y){
-		return p.height - (y+1 - Brick.level * (BPL - 2)) * BRICK_HEIGHT ;
+	//Does this brick appear on the level currently being shown?
+	this.onLevel = function(){
+		if(y >= Brick.level * BPL - 2 && y <= (Brick.level+1) * BPL + 2){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	this.isWithin = function(mouseX, mouseY){
+		if(screenToX(mouseX) == x && screenToY(mouseY) == y){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	this.x = function(){
+		return x;
+	}
+
+	this.y = function(){
+		return y;
+	}
+
+	this.color = function(){
+		return color;
+	}
+
+	//Given an coordinate, shows where on the screen to draw
+	function xToScreen(thisX){
+		return thisX * BRICK_WIDTH + Brick.offset;
+	}
+
+	function yToScreen(thisY){
+		return p.height - (thisY+1 - Brick.level * (BPL - 2)) * BRICK_HEIGHT ;
 	}
 
 	// Converts the screen position to the nearest x,y position
 	function screenToX(x){
-		return Math.floor((x-OFFSET)/BRICK_WIDTH);
+		return Math.floor((x - Brick.offset)/BRICK_WIDTH);
 	}
 
 	function screenToY(y){
-		return Math.floor((p.height-y)/BRICK_HEIGHT) + this.constructor.level * (BPL -2);
+		return Math.floor((p.height-y)/BRICK_HEIGHT) + Brick.level * (BPL -2);
 	}
 
-	//gives the screen coordinates of the nearest brick, based on a given screen coord
-	function nearestBrickX(x){
-		return xToScreen(screenToX(x));
-	}
-
-	function nearestBrickY(y){
-		return yToScreen(screenToY(y));
-	}
-
-	this.pickFill = function(){
+	function pickFill(){
 		switch (color){
 			case 0:
 				p.fill(200, 0, 0);
@@ -55,8 +84,8 @@ function Brick(x, y, p, color){
 		}
 	}
 
-	this.draw = function(p5){
-		this.pickFill();
-		p5.rect(screenX, screenY, BRICK_WIDTH, BRICK_HEIGHT);
+	this.draw = function(){
+		pickFill();
+		p.rect(screenX, screenY, BRICK_WIDTH, BRICK_HEIGHT);
 	}
 }

@@ -1,55 +1,41 @@
 $(document).on("page:change", function(){
-	//Check if we're on the right page
-	if($(".build_orders.new").length == 0){
-		return
-	}
-
-	//If there's already a canvas loaded, don't load this page
-	if($("canvas").size() > 0){
-		console.log("There is more than one canvas");
+	//If there's already a canvas loaded or it's the wrong page, don't load this page
+	if($("canvas").size() > 0 || $(".build_orders.new").length == 0){
 		return false;
 	}
 
 	//The P5 sketch in all it's glory
 	var sketch = function(p){
-		const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
-		const BRICK_HEIGHT = <%= Rails.configuration.x.brick_height %>;
 		const BRICKS = <%= Rails.configuration.x.shipment %>;
-		const COLUMNS = <%= Rails.configuration.x.bricks_layer %>;
-		const BPL = <%= Rails.configuration.x.level_height %>; //That's Bricks Per Level, of course
+		const maxLevel = <%= Rails.configuration.x.max_levels %>;
+		const SHIPMENTSIZE = <%= Rails.configuration.x.shipment_size %>
 		
 		//const BRICK_WIDTH = 40;
 		//const BRICK_HEIGHT = 40;
 		//const COLUMNS = 10;
 		//const BPL = 12;
 		//const BRICKS = 2
-		var OFFSET;
+
 		var USER_ID;
-
 		var tower = [];
-		var bricks = [];
-		var placedBricks = [];
-		var level = 0;
-		var ar = [];
+		var newBricks = [];
 		var finish = false;
-		var oneBrick;
+		var ar = [];
 
-		const maxLevel = <%= Rails.configuration.x.max_levels %>;
-
+		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
-			canvas = p.createCanvas(p.windowWidth - 550, BRICK_HEIGHT * BPL);
-			OFFSET = (p.width - BRICK_WIDTH * COLUMNS)/2;
+			canvas = p.createCanvas(p.windowWidth - 550, <%= Rails.configuration.x.brick_height %> * <%= Rails.configuration.x.level_height %>);
 			canvas.parent("canvas");
-			loadTower(level);
 
-			oneBrick = new Brick(5, 5, p, 0);
-			console.log("Build Order 5 y: " + yToScreen(5));
+			Brick.level = 0;
+			loadTower(Brick.level);
 
-
-			for(var i = 0; i < BRICKS; i++){
-				bricks.push(Math.floor(Math.random() * 3));
+			var color = Math.floor(Math.random() * 3);
+			for(var i = 0; i < SHIPMENTSIZE; i++){
+				newBricks.push(new Brick(-1, -1, p, color));
 			}
 			generateArrangement();
+
 			$.get('/session.json', function(data){
 				USER_ID = data;
 			});
@@ -61,81 +47,56 @@ $(document).on("page:change", function(){
 			//Draws the bricks from the tower
 			p.stroke(0);
 			for(var i = 0; i < tower.length; i++){
-				pickFill(tower[i]["color"]);
-				drawBrick(tower[i]["x"], tower[i]["y"]);
-				if(tower[i]["user_id"] == USER_ID){
-					p.line(xToScreen(tower[i]["x"]), yToScreen(tower[i]["y"]), xToScreen(tower[i]["x"]+1), yToScreen(tower[i]["y"]-1));
-				}
+				tower[i].draw();
 			}
 
-			oneBrick.draw(p);
 			//Draws the bricks which the player just placed
 			p.stroke(255);
 			p.strokeWeight(2);
-			for(var i = 0; i < placedBricks.length; i++){
+			for(var i = 0; i < newBricks.length; i++){
 				//Only place the brick if we're on the right level
-				if(placedBricks[i][2] >= level * BPL - 2 && placedBricks[i][2] <= (level+1) * BPL + 2){
-					pickFill(placedBricks[i][0]);
-					drawBrick(placedBricks[i][1], placedBricks[i][2]);
-				}
-
-			}
-
-			//Draws the brick you're about to place, if you haven't placed all the bricks yet
-			if(finish == false && p.mouseX >= OFFSET && p.mouseX < p.width - OFFSET){
-				pickFill(bricks[0]);
-				drawBrick(screenToX(p.mouseX), screenToY(p.mouseY));
-				for(var i = 0; i < ar.length; i++){
-					drawBrick(screenToX(p.mouseX) + ar[i][0], screenToY(p.mouseY) + ar[i][1]);
+				if(newBricks[i].onLevel()){
+					newBricks[i].draw();
 				}
 			}
 
+			//Makes these bigger maybe? Or a nicer color?
 			p.fill(0);
-			if(level < maxLevel){
+			p.stroke(0);
+			if(Brick.level < maxLevel){
 				p.triangle(25, 10, 5, 30, 45, 30);
 			}
-			if(level > 0){
+			if(Brick.level > 0){
 				p.triangle(5, 35, 45, 35, 25, 55);
 			}
 		};
 
-		function drawBrick(x, y){
-			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT)
-		}
-
 		p.mouseClicked = function(){
-			if(p.mouseX > OFFSET && p.mouseX < OFFSET + BRICK_WIDTH * COLUMNS && p.mouseY > 0 && p.mouseY < p.height && !finish){
-				placedBricks.push([bricks[0], screenToX(p.mouseX), screenToY(p.mouseY)]);
-				for(var i = 0; i < ar.length; i++){
-					placedBricks.push([bricks[0], screenToX(p.mouseX) + ar[i][0], screenToY(p.mouseY) + ar[i][1]]);
+			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
+				if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 10 && p.mouseY < 30 && Brick.level < maxLevel){
+					Brick.level++;
+					loadTower(Brick.level);
+				}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 35 && p.mouseY < 55 && Brick.level > 0){
+					Brick.level--;
+					loadTower(Brick.level);
+				}else if(!finish){
+					finish = true;
+					$("#bricks").hide();
+					$("#messages").hide();
+					$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks. Press S or click on your brick to move it. Click on the orange squares to add glyphs to your message and on the glyphs you've added to delete them.");
+					loadKeyboard(newBricks);
+				}else if (withinPlaced(p.mouseX, p.mouseY) && finish){
+					moveBricks();
 				}
-				//This happens automatically because there's only one shipment
-				finish = true;
-				$("#bricks").hide();
-				$("#messages").hide();
-				$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks. Press S or click on your brick to move it.");
-				loadKeyboard();
-			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 10 && p.mouseY < 30 && level < maxLevel){
-				level++;
-				loadTower(level);
-			}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 35 && p.mouseY < 55 && level > 0){
-				level--;
-				loadTower(level);
-			}else if (withinPlaced() && finish){
-				moveBricks();
 			}
 		}
 
-		function withinPlaced(){
-			for(var i = 0; i < placedBricks.length; i++){
-				if(screenToX(p.mouseX) == placedBricks[i][1] && screenToY(p.mouseY) == placedBricks[i][2]){
-					return true;
-				}
+		p.mouseMoved = function(){
+			if(p.mouseY < p.height && p.mouseY > 0 && p.mouseX > Brick.offset && p.mouseX < (Brick.offset + Brick.towerWidth) && !finish){
+				updateBricks(p.mouseX, p.mouseY);
 			}
-			return false;
-		}
+		};
 
-		//What the best way to convert keys into rotations?
 		p.keyPressed = function(){
 			//Rotate one way if you press a or left arrow
 			if(p.keyCode == 65 || p.keyCode == 37){
@@ -145,6 +106,7 @@ $(document).on("page:change", function(){
 					new_ar[1] = ar[i][0];
 					ar[i] = new_ar;
 				}
+				updateBricks(p.mouseX, p.mouseY);
 			//rotate the other way if you press d or right arrow
 			}else if(p.keyCode == 68 || p.keyCode == 39){
 				for(var i = 0; i < ar.length; i++){
@@ -153,59 +115,18 @@ $(document).on("page:change", function(){
 					new_ar[0] = ar[i][1];
 					ar[i] = new_ar;
 				}
+				updateBricks(p.mouseX, p.mouseY);
 			}else if(p.keyCode == 83 && finish){
 				moveBricks();
+				updateBricks(p.mouseX, p.mouseY);
 			}
-		}
+		};
 
-
-		function moveBricks(){
-			finish = false;
-			placedBricks = [];
-			$("#bricks").show();
-			$("#messages").show();
-			//Throwing this away probably isn't the best approach
-			//But it's the approach I'm doing.
-			$("#message_form").remove();
-			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick.");
-		}
-
-		function loadTower(requestedLevel){
-			$.get('/tower.json', {level: requestedLevel}, function(data){
-				tower = data;
-			});
-		}
-
-		//----------------------------POSITIONAL FUNCTIONS--------------------------------
-		// Converts a x coordinate from the database to a screen value
-		function xToScreen(x){
-			return x * BRICK_WIDTH + OFFSET;
-		}
-
-		function yToScreen(y){
-			return p.height - (y+1 - level * (BPL - 2)) * BRICK_HEIGHT ;
-		}
-
-		// Converts the screen position to the nearest x,y position
-		function screenToX(x){
-			return Math.floor((x-OFFSET)/BRICK_WIDTH);
-		}
-
-		function screenToY(y){
-			return Math.floor((p.height-y)/BRICK_HEIGHT) + level * (BPL -2);
-		}
-
-		//gives the screen coordinates of the nearest brick, based on a given screen coord
-		function nearestBrickX(x){
-			return xToScreen(screenToX(x));
-		}
-
-		function nearestBrickY(y){
-			return yToScreen(screenToY(y));
-		}
-
+		//------------------------------------------OTHER FUNCTIONS------------------------------------
+				
+		//Generates the arrangement of bricks. Kind of hacky.
 		function generateArrangement(){
-			for(var i = 0; i < 2; i++){
+			for(var i = 0; i < SHIPMENTSIZE-1; i++){
 				ar[i] = []
 				for(var j = 0; j < 2; j++){
 					ar[i][j] = Math.floor(Math.random()*3-1);
@@ -225,23 +146,44 @@ $(document).on("page:change", function(){
 			}
 		}
 
+		//Is the given screen coordinates inside the new bricks?
+		function withinPlaced(x, y){
+			for(var i = 0; i < newBricks.length; i++){
+				if(newBricks[i].isWithin(y, y)){
+					return true;
+				}
+			}
+			return false;
+		}
 
-		//-------------------------------COLORS FUNCTION---------------------------------
-		function pickFill(color){
-			switch (color){
-				case 0:
-					p.fill(200, 0, 0);
-					break;
-				case 1:
-					p.fill(0, 200, 0);
-					break;
-				case 2:
-					p.fill(0, 0, 200);
-					break;
-				default:
-					p.fill(0);
+		//Takes the new bricks and moves them to the given coordinates
+		function updateBricks(x, y){
+			newBricks[0].update(x, y, 0, 0);
+			for(var i = 0; i < ar.length; i++){
+				newBricks[i+1].update(x, y, ar[i][0], ar[i][1]);
 			}
 		}
+
+		//Removes the keyboard and lets you move the bricks again
+		function moveBricks(){
+			finish = false;
+			$("#bricks").show();
+			$("#messages").show();
+			//Throwing this away probably isn't the best approach
+			//But it's the approach I'm doing.
+			$("#message_form").remove();
+			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick.");
+		}
+
+		//Loads the tower from the server
+		function loadTower(requestedLevel){
+			$.get('/tower.json', {level: requestedLevel}, function(data){
+				for(var i = 0; i < data.length; i++){
+					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+				}
+			});
+		}
 	};
+
 	var myp5 = new p5(sketch);
 });

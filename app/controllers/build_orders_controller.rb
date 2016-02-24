@@ -27,8 +27,8 @@ class BuildOrdersController < ApplicationController
 
 		if @order.save
 			if logged_in?
-				flash[:success] = "You have placed your bricks! Your order will be resolved at #{(DateTime.now + 1.hour).strftime("%l %p")}. You have #{current_user.actions} actions left for the day."
 				current_user.update(actions: current_user.actions - 1)
+				flash[:success] = "You have placed your bricks! Your order will be resolved at #{(DateTime.now + 1.hour).strftime("%l %p")}. You have #{current_user.actions} actions left for the day."
 			else
 				flash[:success] = "Bricks placed! Your order will be resolved at #{(DateTime.now + 1.hour).strftime("%l %p")}. Want to see what happened to your bricks? Sign up to find out!"
 				session["acted"] = session["acted"] + 1;

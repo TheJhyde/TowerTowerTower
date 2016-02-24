@@ -24,4 +24,5 @@ Tbl::Application.config.x.bricks_layer = 10 #How many bricks there are in each r
 Tbl::Application.config.x.level_height = 12; #How many bricks there are on each level
 
 Tbl::Application.config.x.shipment = 1 #Players get this many bricks in each shipment
+Tbl::Application.config.x.shipment_size = 3 #How many squares there are in each shipment
 Tbl::Application.config.x.max_levels = 10
