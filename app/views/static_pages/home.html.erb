@@ -3,17 +3,18 @@
 	<div class = "center jumbotron">
 		<h1>Tower Brick Lightning</h1>
 		<p>
-			Long ago, there were the Gods. And they were kind of jerks! They kept cursing people all the time: blighting the land, killing our crops, making bees follow us around all the time, melting our skin, all sorts of mean stuff. One day we got tired of that and decided to build a great big tower, so we could travel up to the heavens and punch the gods right in the kisser!
+			You and your friends and a bunch of strangers are building a tower to the heavens, to escape because you have been mistreated.
 		</p>
 		<p>
-			However, the Gods caught wise to this plan and cursed us again! Now we can't communicate! But are we gonna let that stop us? No way! We ain't quitters. We're going to build that tower all the same!
+			Those who wish to stop you have put a curse on you, limiting your communication. You must try to work together and build the tower despite these limits.
 		</p>
 		<p>
-			Tower Brick Lightning is a massively multiplayer browser based game about confusion, construction, and communication. Work with your fellow builders to build the tower up to the heavens, while trying to collaborate best you can despite the limitations the gods have cursed you with.
+			Tower Brick Lightning is a massively multiplayer browser based game about construction, confusion, and collaboration. Work with your fellow builders to get the tower to the heavens, while trying to collaborate best you can despite your curses.
 		</p>
-		<%= link_to "Play now!", new_build_order_path, class: "btn btn-lg btn-primary" %>
+		<%= link_to "Play Now", new_build_order_path, class: "btn btn-lg btn-primary" %>
 
-		<%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %>
+		<%= link_to "Sign Up", signup_path, class: "btn btn-lg btn-primary" %>
+		<%= link_to "Learn More", about_path, class: "btn btn-lg btn-primary" %>
 	</div>
 <% else %>
 	<h1><%= current_user.name %></h1>

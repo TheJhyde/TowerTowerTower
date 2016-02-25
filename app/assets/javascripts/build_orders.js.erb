@@ -58,22 +58,23 @@ $(document).on("page:change", function(){
 			}
 
 			//Makes these bigger maybe? Or a nicer color?
-			p.fill(0);
+			p.fill(255);
 			p.stroke(0);
+			p.strokeWeight(5);
 			if(Brick.level < maxLevel){
-				p.triangle(25, 10, 5, 30, 45, 30);
+				p.triangle(5, 40, 65, 40, 35, 10);
 			}
 			if(Brick.level > 0){
-				p.triangle(5, 35, 45, 35, 25, 55);
+				p.triangle(5, 50, 65, 50, 35, 80);
 			}
 		};
 
 		p.mouseClicked = function(){
 			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
-				if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 10 && p.mouseY < 30 && Brick.level < maxLevel){
+				if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 10 && p.mouseY < 40 && Brick.level < maxLevel){
 					Brick.level++;
 					loadTower(Brick.level);
-				}else if(p.mouseX > 5 && p.mouseX < 45 && p.mouseY > 35 && p.mouseY < 55 && Brick.level > 0){
+				}else if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 50 && p.mouseY < 80 && Brick.level > 0){
 					Brick.level--;
 					loadTower(Brick.level);
 				}else if(!finish){
