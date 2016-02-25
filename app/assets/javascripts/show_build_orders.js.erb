@@ -12,10 +12,11 @@ $(document).on("page:change", function(){
 		var tower = [];
 		var orderIndex = 0;
 		var collisions = [];
+		var falling = [];
 
 		var lastOrder;
 		var orderPause = 1000;
-		var state = 0;
+		var state;
 
 		p.setup = function(){
 			canvas = p.createCanvas(p.windowWidth - 550, <%= Rails.configuration.x.brick_height %> * <%= Rails.configuration.x.level_height %>);
@@ -23,10 +24,15 @@ $(document).on("page:change", function(){
 
 			Brick.level = 0;
 			p.background(200);
-			loadTower(Brick.level, 1);
+			loadTower(Brick.level, 0);
 
-			$.get('/build_orders/1.json', function(data){
+			$.get('/build_orders/0.json', function(data){
 				orders = data;
+				if(orders.length > 0){
+					state = 10;
+				}else{
+					state = 0;
+				}
 			});
 			lastOrder = Date.now();
 		};
@@ -68,8 +74,12 @@ $(document).on("page:change", function(){
 				if(state == 0){
 					resolveOrder();
 				}else if(state == 1){
-
-					//bricks fall
+					for(var i = orderBricks.length - 1; i > 0; i--){
+						falling[i].update(falling[i].x(), falling[i].y - 0.1);
+						if(falling[i].y < 0){
+							falling.slice(i, 1);
+						}
+					}
 				}
 				lastOrder = Date.now();
 			}
@@ -94,7 +104,6 @@ $(document).on("page:change", function(){
 				for(var i = 0; i < data.length; i++){
 					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
 				}
-				tower.sort(function(a, b){a.y() - b.y()});
 			});
 		}
 
@@ -117,6 +126,7 @@ $(document).on("page:change", function(){
 			orderIndex++;
 			if(orderIndex >= orders.length){
 				state++;
+				fillFalling();
 			}
 		}
 
@@ -129,6 +139,28 @@ $(document).on("page:change", function(){
 				}
 			}
 			return -1;
+		}
+
+		function fillFalling(){
+			//Sort in reverse order, with the lowest bricks at the back
+			orderBricks.sort(function(a, b){b.y() - a.y()});
+			//Then go through it backwards
+			for(var i = orderBricks.length - 1; i > 0; i--){
+				if(!hasSupport(orderBricks[i].x(), orderBricks[i].y())){
+					falling.push(orderBricks[i]);
+					//Backwards because we'll be removing some bricks
+					orderBricks.slice(i, 1);
+				}
+			}
+		}
+
+		function hasSupport(x, y){
+			for(var i = -1; i < 1; i++){
+				if(hasBrick(x + i, y - 1, tower) != -1 || hasBrick(x+i, y-1, orderBricks) != -1){
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 

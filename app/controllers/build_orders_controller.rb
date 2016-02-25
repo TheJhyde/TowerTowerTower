@@ -53,7 +53,7 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def show
-		@orders = BuildOrder.where(["used < ? AND used > ?", 1.hour.ago, 2.hour.ago])
+		@orders = BuildOrder.where(["used < ? AND used > ?", params[:id].to_i, (params[:id].to_i+1).hour.ago])
 		@glyphs = Glyph.all
 		respond_to do |format|
       		format.json {render json: @orders }

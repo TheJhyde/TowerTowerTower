@@ -5,7 +5,7 @@ class TowerController < ApplicationController
 		if params["hour"].nil?
 			@tower = Brick.where(y: (bottom..top))
 		else
-			@tower = Brick.where(["created_at < ?", 1.hour.ago]).where(y: (bottom..top))
+			@tower = Brick.where(["created_at < ?", (params["hour"].to_i+1).hour.ago]).where(y: (bottom..top))
 		end
 		respond_to do |format|
       		format.json {render json: @tower }
