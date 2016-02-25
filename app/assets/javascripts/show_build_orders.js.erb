@@ -1,0 +1,136 @@
+$(document).on("page:change", function(){
+	//If there's already a canvas loaded or it's the wrong page, don't load this page
+	if($("canvas").size() > 0 || $(".build_orders.show").length == 0){
+		return false;
+	}
+
+	var sketch = function(p){
+		const maxLevel = <%= Rails.configuration.x.max_levels %>;
+
+		var orders = [];
+		var orderBricks = [];
+		var tower = [];
+		var orderIndex = 0;
+		var collisions = [];
+
+		var lastOrder;
+		var orderPause = 1000;
+		var state = 0;
+
+		p.setup = function(){
+			canvas = p.createCanvas(p.windowWidth - 550, <%= Rails.configuration.x.brick_height %> * <%= Rails.configuration.x.level_height %>);
+			canvas.parent("canvas");
+
+			Brick.level = 0;
+			p.background(200);
+			loadTower(Brick.level, 1);
+
+			$.get('/build_orders/1.json', function(data){
+				orders = data;
+			});
+			lastOrder = Date.now();
+		};
+
+		p.draw = function(){
+			p.background(200);
+
+			//Draws the bricks from the tower
+			p.stroke(0);
+			p.strokeWeight(1);
+			for(var i = 0; i < tower.length; i++){
+				tower[i].draw();
+			}
+
+			for(var i = 0; i < collisions.length; i++){
+				collisions[i].draw();
+			}
+
+			//Draws the bricks which the player already placed
+			p.stroke(255);
+			p.strokeWeight(2);
+			for(var i = 0; i < orderBricks.length; i++){
+				orderBricks[i].draw();
+			}
+
+			//The triangles
+			p.fill(255);
+			p.stroke(0);
+			p.strokeWeight(5);
+			if(Brick.level < maxLevel){
+				p.triangle(5, 40, 65, 40, 35, 10);
+			}
+			if(Brick.level > 0){
+				p.triangle(5, 50, 65, 50, 35, 80);
+			}
+
+			if(Date.now() - orderPause > lastOrder){
+				collisions = [];
+				if(state == 0){
+					resolveOrder();
+				}else if(state == 1){
+
+					//bricks fall
+				}
+				lastOrder = Date.now();
+			}
+		};
+
+		p.mouseClicked = function(){
+			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
+				if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 10 && p.mouseY < 40 && Brick.level < maxLevel){
+					Brick.level++;
+					loadTower(Brick.level, 1);
+				}else if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 50 && p.mouseY < 80 && Brick.level > 0){
+					Brick.level--;
+					loadTower(Brick.level, 1);
+				}
+			}
+		}
+
+		//Loads the tower from the server
+		function loadTower(requestedLevel, requestedHour){
+			tower = [];
+			$.get('/tower.json', {level: requestedLevel, hour: requestedHour}, function(data){
+				for(var i = 0; i < data.length; i++){
+					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+				}
+				tower.sort(function(a, b){a.y() - b.y()});
+			});
+		}
+
+		function resolveOrder(){
+			var nextOrder = orders[orderIndex];
+			$("#messages ul li:nth-child(" + (orderIndex + 1) + ")").addClass("resolved");
+			for(var i = 0; i < nextOrder["x"].length; i++){
+				var towerIndex = hasBrick(nextOrder["x"][i], nextOrder["y"][i], tower);
+				var placedIndex = hasBrick(nextOrder["x"][i], nextOrder["y"][i], orderBricks);
+				if(towerIndex != -1){
+					tower.splice(towerIndex, 1);
+					collisions.push(new Brick(nextOrder["x"][i], nextOrder["y"][i], p, 5));
+				}else if(placedIndex != -1){
+					orderBricks.splice(placedIndex, 1);
+					collisions.push(new Brick(nextOrder["x"][i], nextOrder["y"][i], p, 5));
+				}else{
+					orderBricks.push(new Brick(nextOrder["x"][i], nextOrder["y"][i], p, nextOrder["colors"][i]));
+				}
+			}
+			orderIndex++;
+			if(orderIndex >= orders.length){
+				state++;
+			}
+		}
+
+		//I'm pretty sure that like half of all entry level computer sciences courses
+		//Have the sole purpose of avoiding writing programs like this.
+		function hasBrick(x, y, array){
+			for(var i = 0; i < array.length; i++){
+				if(array[i].x() == x && array[i].y() == y){
+					return i;
+				}
+			}
+			return -1;
+		}
+	}
+
+	var myp5 = new p5(sketch);
+});

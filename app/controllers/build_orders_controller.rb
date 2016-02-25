@@ -52,6 +52,15 @@ class BuildOrdersController < ApplicationController
 		@glyphs = Glyph.all
 	end
 
+	def show
+		@orders = BuildOrder.where(["used < ? AND used > ?", 1.hour.ago, 2.hour.ago])
+		@glyphs = Glyph.all
+		respond_to do |format|
+      		format.json {render json: @orders }
+      		format.html
+    	end
+	end
+
 	private
 		def build_order_params
 			params.require(:build_order).permit(:message, :colors, :x, :y)

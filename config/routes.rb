@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   resources :users
   resources :account_activations, only: [:edit]
-  resources :build_orders, only: [:new, :create, :index]
+  resources :build_orders, only: [:new, :create, :index, :show]
   get 'build_orders/finished' => 'build_orders#finished'
   resources :tower, only: [:index]
   resources :tower_pics, only: [:show, :index]
