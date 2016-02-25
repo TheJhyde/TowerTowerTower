@@ -54,10 +54,7 @@ $(document).on("page:change", function(){
 			p.stroke(255);
 			p.strokeWeight(2);
 			for(var i = 0; i < newBricks.length; i++){
-				//Only place the brick if we're on the right level
-				if(newBricks[i].onLevel()){
-					newBricks[i].draw();
-				}
+				newBricks[i].draw();
 			}
 
 			//Makes these bigger maybe? Or a nicer color?
@@ -177,6 +174,7 @@ $(document).on("page:change", function(){
 
 		//Loads the tower from the server
 		function loadTower(requestedLevel){
+			tower = [];
 			$.get('/tower.json', {level: requestedLevel}, function(data){
 				for(var i = 0; i < data.length; i++){
 					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));

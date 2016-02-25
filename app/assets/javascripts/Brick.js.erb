@@ -1,5 +1,3 @@
-//I'm put this class in tower because the tower controller handles all the bricks
-
 function Brick(startX, startY, p, color){
 	const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
 	const BRICK_HEIGHT = <%= Rails.configuration.x.brick_height %>;
@@ -8,6 +6,7 @@ function Brick(startX, startY, p, color){
 
 	Brick.towerWidth = BRICK_WIDTH * COLUMNS;
 	Brick.offset = (p.width - BRICK_WIDTH * COLUMNS)/2;
+	Brick.level;
 
 	var x = startX;
 	var y = startY;
@@ -22,8 +21,8 @@ function Brick(startX, startY, p, color){
 	}
 
 	//Does this brick appear on the level currently being shown?
-	this.onLevel = function(){
-		if(y >= Brick.level * BPL - 2 && y <= (Brick.level+1) * BPL + 2){
+	function onLevel(){
+		if(y >= Brick.level * BPL - 2 && y <= (Brick.level+1) * BPL){
 			return true;
 		}else{
 			return false;
@@ -65,7 +64,7 @@ function Brick(startX, startY, p, color){
 	}
 
 	function screenToY(y){
-		return Math.floor((p.height-y)/BRICK_HEIGHT) + Brick.level * (BPL -2);
+		return Math.floor((p.height-y)/BRICK_HEIGHT) + Brick.level * (BPL - 2);
 	}
 
 	function pickFill(){
@@ -85,7 +84,9 @@ function Brick(startX, startY, p, color){
 	}
 
 	this.draw = function(){
-		pickFill();
-		p.rect(screenX, screenY, BRICK_WIDTH, BRICK_HEIGHT);
+		if(onLevel()){
+			pickFill();
+			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT);
+		}
 	}
 }

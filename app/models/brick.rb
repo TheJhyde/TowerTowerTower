@@ -7,7 +7,7 @@ class Brick < ActiveRecord::Base
 	@@brick_height = Rails.configuration.x.brick_height/5
 	@@pic_width = @@brick_width * (Rails.configuration.x.bricks_layer + 2)
 	@@offset = (@@pic_width - @@brick_width * Rails.configuration.x.bricks_layer)/2
-	@@pic_height = Rails.configuration.x.screen_height * Rails.configuration.x.max_levels
+	@@pic_height = Rails.configuration.x.level_height * @@brick_width * Rails.configuration.x.max_levels
 
 	def self.gravity(news = [])
 		Brick.where.not(y: 0).order(:y).each do |brick|
