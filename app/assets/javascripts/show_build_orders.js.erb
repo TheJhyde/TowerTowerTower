@@ -24,16 +24,33 @@ $(document).on("page:change", function(){
 
 			Brick.level = 0;
 			p.background(200);
-			loadTower(Brick.level, 0);
+			//loadTower(Brick.level, 0);
 
-			$.get('/build_orders/0.json', function(data){
-				orders = data;
-				if(orders.length > 0){
+			data = [
+				{"x": 1, "y": 1, "color": 1},
+				{"x": 1, "y": 0, "color": 2},
+				{"x": 2, "y": 0, "color": 1},
+				{"x": 3, "y": 0, "color": 0}
+			];
+		 	for(var i = 0; i < data.length; i++){
+		 		tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+		 	}
+
+			// $.get('/build_orders/0.json', function(data){
+			// 	orders = data;
+				orders = [
+					{colors: [1, 1, 1], x: [1, 2, 3], y: [1, 1, 1]}, //collide with tower
+					{colors: [1, 1, 1], x: [1, 2, 3], y: [2, 2, 1]}, //collide with other placed bricks
+					{colors: [1, 1, 1], x: [1, 2, 3], y: [5, 5, 5]}, //falls
+					{colors: [0, 0, 0], x: [5, 5, 5], y: [4, 5, 6]}, //falls, can't support itself
+					{colors: [2, 2, 2], x: [5, 6, 7], y: [0, 0, 0]}  //on the ground floor, shouldn't fall
+				];
+				if(orders.length <= 0){
 					state = 10;
 				}else{
 					state = 0;
 				}
-			});
+			// });
 			lastOrder = Date.now();
 		};
 
@@ -58,52 +75,33 @@ $(document).on("page:change", function(){
 				orderBricks[i].draw();
 			}
 
-			//The triangles
-			p.fill(255);
-			p.stroke(0);
-			p.strokeWeight(5);
-			if(Brick.level < maxLevel){
-				p.triangle(5, 40, 65, 40, 35, 10);
-			}
-			if(Brick.level > 0){
-				p.triangle(5, 50, 65, 50, 35, 80);
-			}
-
-			if(Date.now() - orderPause > lastOrder){
+			if(Date.now() - orderPause > lastOrder && state == 0){
 				collisions = [];
-				if(state == 0){
+				if(orderIndex >= orders.length){
+					state++;
+					fillFalling();
+				}else{
 					resolveOrder();
-				}else if(state == 1){
-					for(var i = orderBricks.length - 1; i > 0; i--){
-						falling[i].update(falling[i].x(), falling[i].y - 0.1);
-						if(falling[i].y < 0){
-							falling.slice(i, 1);
-						}
+					lastOrder = Date.now();
+				}
+			}else if(state == 1){
+				for(var i = falling.length - 1; i >= 0; i--){
+					falling[i].fall();
+					falling[i].draw();
+					if(falling[i].y < 0){
+						falling.slice(i, 1);
 					}
 				}
-				lastOrder = Date.now();
 			}
 		};
-
-		p.mouseClicked = function(){
-			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
-				if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 10 && p.mouseY < 40 && Brick.level < maxLevel){
-					Brick.level++;
-					loadTower(Brick.level, 1);
-				}else if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 50 && p.mouseY < 80 && Brick.level > 0){
-					Brick.level--;
-					loadTower(Brick.level, 1);
-				}
-			}
-		}
 
 		//Loads the tower from the server
 		function loadTower(requestedLevel, requestedHour){
 			tower = [];
 			$.get('/tower.json', {level: requestedLevel, hour: requestedHour}, function(data){
-				for(var i = 0; i < data.length; i++){
-					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
-				}
+			 	for(var i = 0; i < data.length; i++){
+			 		tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+			 	}
 			});
 		}
 
@@ -124,10 +122,6 @@ $(document).on("page:change", function(){
 				}
 			}
 			orderIndex++;
-			if(orderIndex >= orders.length){
-				state++;
-				fillFalling();
-			}
 		}
 
 		//I'm pretty sure that like half of all entry level computer sciences courses
@@ -143,10 +137,10 @@ $(document).on("page:change", function(){
 
 		function fillFalling(){
 			//Sort in reverse order, with the lowest bricks at the back
-			orderBricks.sort(function(a, b){b.y() - a.y()});
+			orderBricks.sort(function(a, b){return b.y() - a.y()});
 			//Then go through it backwards
-			for(var i = orderBricks.length - 1; i > 0; i--){
-				if(!hasSupport(orderBricks[i].x(), orderBricks[i].y())){
+			for(var i = orderBricks.length - 1; i >= 0; i--){
+				if(!hasSupport(orderBricks[i].x(), orderBricks[i].y()) && orderBricks[i].y() != 0){
 					falling.push(orderBricks[i]);
 					//Backwards because we'll be removing some bricks
 					orderBricks.slice(i, 1);
@@ -155,9 +149,14 @@ $(document).on("page:change", function(){
 		}
 
 		function hasSupport(x, y){
-			for(var i = -1; i < 1; i++){
-				if(hasBrick(x + i, y - 1, tower) != -1 || hasBrick(x+i, y-1, orderBricks) != -1){
-					return true;
+			for(var i = -1; i < 2; i++){
+				if(hasBrick(x+i, y - 1, tower) != -1 || hasBrick(x+i, y-1, orderBricks) != -1){
+					//This shouldn't be necessary, since I'm removing the falling bricks in fallFalling
+					//But for some reason it is necessary.
+					//This whole section could honestly stand to be rewritten
+					if(hasBrick(x+i, y-1, falling)== -1){
+						return true;
+					}
 				}
 			}
 			return false;

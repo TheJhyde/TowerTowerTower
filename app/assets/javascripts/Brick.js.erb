@@ -29,6 +29,10 @@ function Brick(startX, startY, p, color){
 		}
 	}
 
+	this.fall = function(){
+		y -= 0.1;
+	}
+
 	this.isWithin = function(mouseX, mouseY){
 		if(screenToX(mouseX) == x && screenToY(mouseY) == y){
 			return true;
