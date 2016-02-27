@@ -17,40 +17,45 @@ $(document).on("page:change", function(){
 		var lastOrder;
 		var orderPause = 1000;
 		var state;
+		var time;
 
 		p.setup = function(){
+			var url = window.location.href;
+			time = parseInt(url.slice(url.lastIndexOf("/")+1));
+
 			canvas = p.createCanvas(p.windowWidth - 550, <%= Rails.configuration.x.brick_height %> * <%= Rails.configuration.x.level_height %>);
 			canvas.parent("canvas");
 
 			Brick.level = 0;
 			p.background(200);
-			//loadTower(Brick.level, 0);
+			loadTower(Brick.level);
 
-			data = [
-				{"x": 1, "y": 1, "color": 1},
-				{"x": 1, "y": 0, "color": 2},
-				{"x": 2, "y": 0, "color": 1},
-				{"x": 3, "y": 0, "color": 0}
-			];
-		 	for(var i = 0; i < data.length; i++){
-		 		tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
-		 	}
+			// data = [
+			// 	{"x": 1, "y": 1, "color": 1},
+			// 	{"x": 1, "y": 0, "color": 2},
+			// 	{"x": 2, "y": 0, "color": 1},
+			// 	{"x": 3, "y": 0, "color": 0}
+			// ];
+		 // 	for(var i = 0; i < data.length; i++){
+		 // 		tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+		 // 	}
 
-			// $.get('/build_orders/0.json', function(data){
-			// 	orders = data;
-				orders = [
-					{colors: [1, 1, 1], x: [1, 2, 3], y: [1, 1, 1]}, //collide with tower
-					{colors: [1, 1, 1], x: [1, 2, 3], y: [2, 2, 1]}, //collide with other placed bricks
-					{colors: [1, 1, 1], x: [1, 2, 3], y: [5, 5, 5]}, //falls
-					{colors: [0, 0, 0], x: [5, 5, 5], y: [4, 5, 6]}, //falls, can't support itself
-					{colors: [2, 2, 2], x: [5, 6, 7], y: [0, 0, 0]}  //on the ground floor, shouldn't fall
-				];
+			$.get('/build_orders/' + time + '.json', function(data){
+				orders = data;
+				// orders = [
+				// 	{colors: [1, 1, 1], x: [1, 2, 3], y: [1, 1, 1]}, //collide with tower
+				// 	{colors: [1, 1, 1], x: [1, 2, 3], y: [2, 2, 1]}, //collide with other placed bricks
+				// 	{colors: [1, 1, 1], x: [1, 2, 3], y: [5, 5, 5]}, //falls
+				// 	{colors: [0, 0, 0], x: [5, 5, 5], y: [4, 5, 6]}, //falls, can't support itself
+				// 	{colors: [2, 2, 2], x: [5, 6, 7], y: [0, 0, 0]}, //on the ground floor, shouldn't fall
+				// 	{colors: [1, 1, 1], x: [5, 6, 7], y: [1, 2, 3]}
+				// ];
 				if(orders.length <= 0){
 					state = 10;
 				}else{
 					state = 0;
 				}
-			// });
+			});
 			lastOrder = Date.now();
 		};
 
@@ -96,9 +101,9 @@ $(document).on("page:change", function(){
 		};
 
 		//Loads the tower from the server
-		function loadTower(requestedLevel, requestedHour){
+		function loadTower(requestedLevel){
 			tower = [];
-			$.get('/tower.json', {level: requestedLevel, hour: requestedHour}, function(data){
+			$.get('/tower.json', {level: requestedLevel, time: time}, function(data){
 			 	for(var i = 0; i < data.length; i++){
 			 		tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
 			 	}

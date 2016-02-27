@@ -23,3 +23,8 @@
 		</ul>
 	</div>
 </div>
+
+<%= link_to "Previous", build_order_path(@prev) %>
+<% unless @next == 0 %>
+	<%= link_to "Next", build_order_path(@next) %>
+<% end %>

@@ -53,11 +53,27 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def show
-		@orders = BuildOrder.where(["used < ? AND used > ?", params[:id].to_i, (params[:id].to_i+1).hour.ago])
-		@glyphs = Glyph.all
-		respond_to do |format|
-      		format.json {render json: @orders }
-      		format.html
+		if params[:id] == "0"
+			last_order = BuildOrder.where.not(used: nil).order(:used).last.used
+			redirect_to "/build_orders/#{last_order.to_i}"
+		else
+			last_order = Time.at(params[:id].to_i + 1).to_datetime
+			@orders = BuildOrder.where(used: ((last_order - 1.hour)..last_order))
+			@glyphs = Glyph.all
+			#What happens if this gets too low?
+			@prev = BuildOrder.where(["used < ?", (last_order - 5.minutes)]).last.used.to_i;
+			#This is always putting out the same value reagrdless of what last_order is
+			#Not even the most recent one, which is weird
+			next_order = BuildOrder.where(["used > ?", (last_order + 5.minutes)]).order(:used).first
+			unless next_order.nil?
+				@next = next_order.used.to_i
+			else
+				@next = 0;
+			end
+			respond_to do |format|
+	      		format.json {render json: @orders }
+	      		format.html
+	    	end
     	end
 	end
 
