@@ -53,6 +53,11 @@ function Brick(startX, startY, p, color){
 		return color;
 	}
 
+
+	this.level = function(){
+		return (y - y % BPL) / BPL;
+	}
+
 	//Given an coordinate, shows where on the screen to draw
 	function xToScreen(thisX){
 		return thisX * BRICK_WIDTH + Brick.offset;

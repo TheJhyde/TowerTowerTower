@@ -33,4 +33,18 @@ class BuildOrder < ActiveRecord::Base
 		end
 		return news
 	end
+
+	def self.getOrders(level, date)
+		if date == 0
+			orders = BuildOrder.where(used: nil)
+		else
+			last_order = Time.at(date).to_datetime
+			orders = BuildOrder.where( used: last_order..(last_order + 5.minute) )
+		end
+
+		bottom = level * (Rails.configuration.x.level_height - 2) 
+		top = bottom + Rails.configuration.x.level_height
+
+		orders.select{|order| order.y.any?{|y| y >= bottom && y <= top} }
+	end
 end

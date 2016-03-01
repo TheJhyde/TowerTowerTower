@@ -55,3 +55,8 @@ function loadKeyboard(bricks){
 		$("#build_order_y").val(y);
 	});
 }
+
+function loadOrders(level, date){
+	$("#messages").html("");
+	$.get('/build_orders/get_orders/0.js', {level: level});
+}

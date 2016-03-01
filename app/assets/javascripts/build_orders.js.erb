@@ -4,7 +4,6 @@ $(document).on("page:change", function(){
 		return false;
 	}
 
-	//The P5 sketch in all it's glory
 	var sketch = function(p){
 		const BRICKS = <%= Rails.configuration.x.shipment %>;
 		const maxLevel = <%= Rails.configuration.x.max_levels %>;
@@ -29,6 +28,7 @@ $(document).on("page:change", function(){
 
 			Brick.level = 0;
 			loadTower(Brick.level);
+			loadOrders(Brick.level, 0);
 
 			var color = Math.floor(Math.random() * 3);
 			for(var i = 0; i < SHIPMENTSIZE; i++){
@@ -39,7 +39,6 @@ $(document).on("page:change", function(){
 			$.get('/session.json', function(data){
 				USER_ID = data;
 			});
-
 		};
 
 		p.draw = function(){
@@ -74,9 +73,11 @@ $(document).on("page:change", function(){
 				if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 10 && p.mouseY < 40 && Brick.level < maxLevel){
 					Brick.level++;
 					loadTower(Brick.level);
+					loadOrders(Brick.level);
 				}else if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 50 && p.mouseY < 80 && Brick.level > 0){
 					Brick.level--;
 					loadTower(Brick.level);
+					loadOrders(Brick.level);
 				}else if(!finish){
 					finish = true;
 					$("#bricks").hide();

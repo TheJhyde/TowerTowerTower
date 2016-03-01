@@ -69,11 +69,12 @@ $(document).on("page:change", function(){
 				tower[i].draw();
 			}
 
+			//Draws all the collisions
 			for(var i = 0; i < collisions.length; i++){
 				collisions[i].draw();
 			}
 
-			//Draws the bricks which the player already placed
+			//Draws the bricks which have already been placed
 			p.stroke(255);
 			p.strokeWeight(2);
 			for(var i = 0; i < orderBricks.length; i++){
@@ -84,7 +85,7 @@ $(document).on("page:change", function(){
 				collisions = [];
 				if(orderIndex >= orders.length){
 					state++;
-					fillFalling();
+					fillFalling(Brick.level);
 				}else{
 					resolveOrder();
 					lastOrder = Date.now();
@@ -110,6 +111,7 @@ $(document).on("page:change", function(){
 			});
 		}
 
+		//Takes the next order from the list and lists it
 		function resolveOrder(){
 			var nextOrder = orders[orderIndex];
 			$("#messages ul li:nth-child(" + (orderIndex + 1) + ")").addClass("resolved");
@@ -126,6 +128,11 @@ $(document).on("page:change", function(){
 					orderBricks.push(new Brick(nextOrder["x"][i], nextOrder["y"][i], p, nextOrder["colors"][i]));
 				}
 			}
+			if(orderBricks[orderBricks.length - 1].level() != Brick.level){
+				//I would like a slight pause between moving up loading this brick. Hm....
+				Brick.level = orderBricks[orderBricks.length - 1].level();
+				loadTower(Brick.level);
+			}
 			orderIndex++;
 		}
 
@@ -140,12 +147,12 @@ $(document).on("page:change", function(){
 			return -1;
 		}
 
-		function fillFalling(){
+		function fillFalling(level){
 			//Sort in reverse order, with the lowest bricks at the back
 			orderBricks.sort(function(a, b){return b.y() - a.y()});
 			//Then go through it backwards
 			for(var i = orderBricks.length - 1; i >= 0; i--){
-				if(!hasSupport(orderBricks[i].x(), orderBricks[i].y()) && orderBricks[i].y() != 0){
+				if(!hasSupport(orderBricks[i].x(), orderBricks[i].y()) && orderBricks[i].y() != 0 && orderBricks[i].level() == level){
 					falling.push(orderBricks[i]);
 					//Backwards because we'll be removing some bricks
 					orderBricks.slice(i, 1);

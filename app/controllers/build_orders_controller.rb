@@ -3,8 +3,6 @@ class BuildOrdersController < ApplicationController
 	before_action :check_admin, only: [:index]
 
 	def new
-		@glyphs = Glyph.all
-		@orders = BuildOrder.where(used: nil)
 	end
 
 	def finished
@@ -55,25 +53,34 @@ class BuildOrdersController < ApplicationController
 	def show
 		if params[:id] == "0"
 			last_order = BuildOrder.where.not(used: nil).order(:used).last.used
-			redirect_to "/build_orders/#{last_order.to_i}"
+			first_last_order = BuildOrder.where(["used >= ?", (last_order - 5.minute)]).order(:used).first.used
+			redirect_to "/build_orders/#{first_last_order.to_i}"
 		else
-			last_order = Time.at(params[:id].to_i + 1).to_datetime
-			@orders = BuildOrder.where(used: ((last_order - 1.hour)..last_order))
+			last_order = Time.at(params[:id].to_i).to_datetime
+			@orders = BuildOrder.where(used: (last_order..(last_order + 5.minute)))
 			@glyphs = Glyph.all
 			#What happens if this gets too low?
-			@prev = BuildOrder.where(["used < ?", (last_order - 5.minutes)]).last.used.to_i;
-			#This is always putting out the same value reagrdless of what last_order is
-			#Not even the most recent one, which is weird
-			next_order = BuildOrder.where(["used > ?", (last_order + 5.minutes)]).order(:used).first
-			unless next_order.nil?
-				@next = next_order.used.to_i
-			else
-				@next = 0;
-			end
+			prev_order = BuildOrder.where(["used < ?", last_order]).order(:used).last.used;
+			@prev = BuildOrder.where(["used > ?", (prev_order - 5.minute)]).order(:used).first;
+			@next = BuildOrder.where(["used > ?", (last_order + 5.minutes)]).order(:used).first
 			respond_to do |format|
 	      		format.json {render json: @orders }
 	      		format.html
 	    	end
+    	end
+	end
+
+	def get_orders
+		@orders = BuildOrder.getOrders(params[:level].to_i, params[:id].to_i)		
+		# if params[:id] == "0"
+		# 	@orders = BuildOrder.where(used: nil)
+		# else
+		# 	last_order = Time.at(params[:id].to_i).to_datetime
+		# 	@orders = BuildOrder.where(used: (last_order..(last_order + 5.minute)))
+		# end
+		@glyphs = Glyph.all
+		respond_to do |format|
+      		format.js
     	end
 	end
 
