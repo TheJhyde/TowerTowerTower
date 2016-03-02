@@ -7,17 +7,17 @@ $(document).on("page:change", function(){
 	var sketch = function(p){
 		const maxLevel = <%= Rails.configuration.x.max_levels %>;
 
-		var orders = [];
-		var orderBricks = [];
-		var tower = [];
-		var orderIndex = 0;
-		var collisions = [];
-		var falling = [];
+		var orders = []; //a list of all the build orders, in JSON format
+		var orderBricks = []; //all of the bricks added from orders
+		var tower = []; //all of the tower's bricks
+		var orderIndex = 0; //Where we are in the brick order
+		var collisions;
+		var falling;
 
 		var lastOrder;
 		var orderPause = 1000;
-		var state;
-		var time;
+		var state; //What the game is currently doing
+		var time; //The date that's currently being processed
 
 		p.setup = function(){
 			var url = window.location.href;
@@ -27,9 +27,7 @@ $(document).on("page:change", function(){
 			canvas.parent("canvas");
 
 			Brick.level = 0;
-			p.background(200);
-			loadTower(Brick.level);
-
+			resetBricks(Brick.level);
 			// data = [
 			// 	{"x": 1, "y": 1, "color": 1},
 			// 	{"x": 1, "y": 0, "color": 2},
@@ -39,24 +37,6 @@ $(document).on("page:change", function(){
 		 // 	for(var i = 0; i < data.length; i++){
 		 // 		tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
 		 // 	}
-
-			$.get('/build_orders/' + time + '.json', function(data){
-				orders = data;
-				// orders = [
-				// 	{colors: [1, 1, 1], x: [1, 2, 3], y: [1, 1, 1]}, //collide with tower
-				// 	{colors: [1, 1, 1], x: [1, 2, 3], y: [2, 2, 1]}, //collide with other placed bricks
-				// 	{colors: [1, 1, 1], x: [1, 2, 3], y: [5, 5, 5]}, //falls
-				// 	{colors: [0, 0, 0], x: [5, 5, 5], y: [4, 5, 6]}, //falls, can't support itself
-				// 	{colors: [2, 2, 2], x: [5, 6, 7], y: [0, 0, 0]}, //on the ground floor, shouldn't fall
-				// 	{colors: [1, 1, 1], x: [5, 6, 7], y: [1, 2, 3]}
-				// ];
-				if(orders.length <= 0){
-					state = 10;
-				}else{
-					state = 0;
-				}
-			});
-			lastOrder = Date.now();
 		};
 
 		p.draw = function(){
@@ -81,6 +61,17 @@ $(document).on("page:change", function(){
 				orderBricks[i].draw();
 			}
 
+			//Makes these bigger maybe? Or a nicer color?
+			p.fill(255);
+			p.stroke(0);
+			p.strokeWeight(5);
+			if(Brick.level < maxLevel){
+				p.triangle(5, 40, 65, 40, 35, 10);
+			}
+			if(Brick.level > 0){
+				p.triangle(5, 50, 65, 50, 35, 80);
+			}
+
 			if(Date.now() - orderPause > lastOrder && state == 0){
 				collisions = [];
 				if(orderIndex >= orders.length){
@@ -101,6 +92,29 @@ $(document).on("page:change", function(){
 			}
 		};
 
+		p.mouseClicked = function(){
+			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
+				if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 10 && p.mouseY < 40 && Brick.level < maxLevel){
+					Brick.level++;
+					resetBricks(Brick.level);
+				}else if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 50 && p.mouseY < 80 && Brick.level > 0){
+					Brick.level--;
+					resetBricks(Brick.level);
+				}
+			}
+		}
+
+		function resetBricks(level){
+			collisions = [];
+			orderBricks = [];
+			falling = [];
+			orderIndex = 0;
+			loadTower(level);
+			loadOrders(level);
+			getOrders(level);
+			lastOrder = Date.now();
+		}
+
 		//Loads the tower from the server
 		function loadTower(requestedLevel){
 			tower = [];
@@ -108,6 +122,22 @@ $(document).on("page:change", function(){
 			 	for(var i = 0; i < data.length; i++){
 			 		tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
 			 	}
+			});
+		}
+
+		function getOrders(level){
+			orders = [];
+			$.get('/build_orders/' + time + '.json', function(data){
+				for(var i = 0; i < data.length; i++){
+					if(data[i]["y"][0] >= level * <%= Rails.configuration.x.level_height %> - 2 && data[i]["y"][0] <= (level + 1) * <%= Rails.configuration.x.level_height %>){
+						orders.push(data[i]);
+					}
+				}
+				if(orders.length <= 0){
+					state = 10;
+				}else{
+					state = 0;
+				}
 			});
 		}
 
@@ -127,11 +157,6 @@ $(document).on("page:change", function(){
 				}else{
 					orderBricks.push(new Brick(nextOrder["x"][i], nextOrder["y"][i], p, nextOrder["colors"][i]));
 				}
-			}
-			if(orderBricks[orderBricks.length - 1].level() != Brick.level){
-				//I would like a slight pause between moving up loading this brick. Hm....
-				Brick.level = orderBricks[orderBricks.length - 1].level();
-				loadTower(Brick.level);
 			}
 			orderIndex++;
 		}

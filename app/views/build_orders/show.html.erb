@@ -1,26 +1,12 @@
 <% provide(:title, "WHAT HAPPENED") %>
-<%# provide(:head, javascript_include_tag("build_orders")) %>
+<h3>Orders from <%= @last_order.strftime("%-m/%-d, %l %p") %></h3>
 <div id="craft">
 	<div id="canvas"></div>
 </div>
 
 <div id = "panel">
 	<div id = "messages">
-		<h3>Build Orders</h3>
-		<ul>
-		<% @orders.each do |order| %>
-			<li>
-				<% order.message.split(" ").each do |glyph| %>
-					<%= render partial: 'shared/glyph_read', locals: {glyph: @glyphs.find(glyph)} %>
-				<% end %>
-				<% unless order.user.nil? %>
-					- <%= order.user.name %>
-				<% else %>
-					- A Mysterious Stranger
-				<% end %>
-			</li>
-		<% end %>
-		</ul>
+
 	</div>
 </div>
 

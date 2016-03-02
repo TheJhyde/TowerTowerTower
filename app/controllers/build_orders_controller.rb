@@ -52,17 +52,17 @@ class BuildOrdersController < ApplicationController
 
 	def show
 		if params[:id] == "0"
-			last_order = BuildOrder.where.not(used: nil).order(:used).last.used
-			first_last_order = BuildOrder.where(["used >= ?", (last_order - 5.minute)]).order(:used).first.used
+			@last_order = BuildOrder.where.not(used: nil).order(:used).last.used
+			first_last_order = BuildOrder.where(["used >= ?", (@last_order - 5.minute)]).order(:used).first.used
 			redirect_to "/build_orders/#{first_last_order.to_i}"
 		else
-			last_order = Time.at(params[:id].to_i).to_datetime
-			@orders = BuildOrder.where(used: (last_order..(last_order + 5.minute)))
+			@last_order = Time.at(params[:id].to_i).to_datetime
+			@orders = BuildOrder.where(used: (@last_order..(@last_order + 5.minute)))
 			@glyphs = Glyph.all
 			#What happens if this gets too low?
-			prev_order = BuildOrder.where(["used < ?", last_order]).order(:used).last.used;
+			prev_order = BuildOrder.where(["used < ?", @last_order]).order(:used).last.used;
 			@prev = BuildOrder.where(["used > ?", (prev_order - 5.minute)]).order(:used).first;
-			@next = BuildOrder.where(["used > ?", (last_order + 5.minutes)]).order(:used).first
+			@next = BuildOrder.where(["used > ?", (@last_order + 5.minutes)]).order(:used).first
 			respond_to do |format|
 	      		format.json {render json: @orders }
 	      		format.html
