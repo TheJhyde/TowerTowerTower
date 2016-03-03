@@ -76,16 +76,21 @@ function Brick(startX, startY, p, color){
 		return Math.floor((p.height-y)/BRICK_HEIGHT) + Brick.level * (BPL - 2);
 	}
 
-	function pickFill(){
+	function pickFill(placed){
+		if(placed){
+			var a = 100;
+		}else{
+			var a = 255;
+		}
 		switch (color){
 			case 0:
-				p.fill(200, 0, 0);
+				p.fill(200, 0, 0, a);
 				break;
 			case 1:
-				p.fill(0, 200, 0);
+				p.fill(0, 200, 0, a);
 				break;
 			case 2:
-				p.fill(0, 0, 200);
+				p.fill(0, 0, 200, a);
 				break;
 			default:
 				p.fill(0);
@@ -93,8 +98,12 @@ function Brick(startX, startY, p, color){
 	}
 
 	this.draw = function(){
+		draw(false);
+	}
+
+	this.draw = function(placed){
 		if(onLevel()){
-			pickFill();
+			pickFill(placed);
 			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT);
 		}
 	}

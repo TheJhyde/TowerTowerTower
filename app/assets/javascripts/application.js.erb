@@ -60,3 +60,13 @@ function loadOrders(level, date){
 	$("#messages").html("");
 	$.get('/build_orders/get_orders/' + date + '.js', {level: level});
 }
+
+function nextHour(){
+	var d = new Date();
+	var hour = d.getHours();
+	if(hour <= 12){
+		return (hour + 1) + " AM"
+	}else{
+		return (hour - 11) + " PM"
+	}
+}

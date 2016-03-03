@@ -21,6 +21,11 @@ $(document).on("page:change", function(){
 		var finish = false;
 		var ar = [];
 
+		//Triangle variables
+		var arrowW = 50;
+		var arrowH= 150;
+		var o = 15;
+
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
 			canvas = p.createCanvas(p.windowWidth - 550, <%= Rails.configuration.x.brick_height %> * <%= Rails.configuration.x.level_height %>);
@@ -42,7 +47,8 @@ $(document).on("page:change", function(){
 		};
 
 		p.draw = function(){
-			p.background(200);
+			//p.background(200);
+			p.background(p.lerpColor(p.color(200), p.color(0), Brick.level/maxLevel));
 			//Draws the bricks from the tower
 			p.stroke(0);
 			for(var i = 0; i < tower.length; i++){
@@ -51,9 +57,9 @@ $(document).on("page:change", function(){
 
 			//Draws the player's bricks
 			p.stroke(255);
-			p.strokeWeight(5);
+			p.strokeWeight(3);
 			for(var i = 0; i < newBricks.length; i++){
-				newBricks[i].draw();
+				newBricks[i].draw(finish);
 			}
 
 			//Makes these bigger maybe? Or a nicer color?
@@ -61,20 +67,20 @@ $(document).on("page:change", function(){
 			p.stroke(0);
 			p.strokeWeight(5);
 			if(Brick.level < maxLevel){
-				p.triangle(5, 40, 65, 40, 35, 10);
+				p.triangle(o + arrowW/2, o, o, o + arrowH, o + arrowW, o + arrowH);
 			}
 			if(Brick.level > 0){
-				p.triangle(5, 50, 65, 50, 35, 80);
+				p.triangle(o + arrowW/2, (o+arrowH)*2, o, o*2 + arrowH, o + arrowW, o*2 + arrowH);
 			}
 		};
 
 		p.mouseClicked = function(){
 			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
-				if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 10 && p.mouseY < 40 && Brick.level < maxLevel){
+				if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o && p.mouseY < o + arrowH && Brick.level < maxLevel){
 					Brick.level++;
 					loadTower(Brick.level);
 					loadOrders(Brick.level);
-				}else if(p.mouseX > 5 && p.mouseX < 65 && p.mouseY > 50 && p.mouseY < 80 && Brick.level > 0){
+				}else if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o*2 + arrowH && p.mouseY < (o+arrowH)*2 && Brick.level > 0){
 					Brick.level--;
 					loadTower(Brick.level);
 					loadOrders(Brick.level);
@@ -82,7 +88,7 @@ $(document).on("page:change", function(){
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
-					$("#alerts").html("<h4>Instructions</h4>Use the glyphs to write a message so other builders know where you placed your bricks. Press S or click on your brick to move it. Click on the orange squares to add glyphs to your message and on the glyphs you've added to delete them.");
+					$("#alerts").html("<h4>Instructions</h4>Your bricks will be added to the tower at " + nextHour() +" - until then no one will be able to see them. Use the glyphs to write a message so other builders know where you placed your bricks. Press S or click on your brick to move it. Click on the orange squares to add glyphs to your message and on the glyphs you've added to delete them.");
 					loadKeyboard(newBricks);
 				}else if (withinPlaced(p.mouseX, p.mouseY) && finish){
 					moveBricks();
@@ -148,7 +154,7 @@ $(document).on("page:change", function(){
 		//Is the given screen coordinates inside the new bricks?
 		function withinPlaced(x, y){
 			for(var i = 0; i < newBricks.length; i++){
-				if(newBricks[i].isWithin(y, y)){
+				if(newBricks[i].isWithin(x, y)){
 					return true;
 				}
 			}
@@ -171,7 +177,7 @@ $(document).on("page:change", function(){
 			//Throwing this away probably isn't the best approach
 			//But it's the approach I'm doing.
 			$("#message_form").remove();
-			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick.");
+			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick. Click on the arrows to move up and down the tower.");
 		}
 
 		//Loads the tower from the server
