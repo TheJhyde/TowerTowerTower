@@ -71,13 +71,7 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def get_orders
-		@orders = BuildOrder.getOrders(params[:level].to_i, params[:id].to_i)		
-		# if params[:id] == "0"
-		# 	@orders = BuildOrder.where(used: nil)
-		# else
-		# 	last_order = Time.at(params[:id].to_i).to_datetime
-		# 	@orders = BuildOrder.where(used: (last_order..(last_order + 5.minute)))
-		# end
+		@orders = BuildOrder.getOrders(params[:level].to_i, params[:id].to_i)
 		@glyphs = Glyph.all
 		respond_to do |format|
       		format.js

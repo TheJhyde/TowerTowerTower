@@ -58,5 +58,5 @@ function loadKeyboard(bricks){
 
 function loadOrders(level, date){
 	$("#messages").html("");
-	$.get('/build_orders/get_orders/0.js', {level: level});
+	$.get('/build_orders/get_orders/' + date + '.js', {level: level});
 }

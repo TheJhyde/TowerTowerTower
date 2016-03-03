@@ -6,10 +6,12 @@
 				<% if logged_in? %>
 					<li class = "text">Actions: <%= current_user.actions %></li>
 				<% end %>
+				<li class = "text">Orders resolve in <%= distance_of_time_in_words(DateTime.now, 
+					DateTime.now.at_end_of_hour) %></li>
 				<li><%= link_to "Home", 	root_path %></li>
 				<li><%= link_to "About", 	about_path %></li>
 				<li><%= link_to "Build Tower", new_build_order_path %></li>
-				<li><%= link_to "See Tower", tower_pics_path %></li>
+				<!-- <li><%= link_to "See Tower", tower_pics_path %></li> -->
 				<% if logged_in? %>
 					<li><%= link_to "Log Out", logout_path, method: "delete" %></li>
 				<% else %>

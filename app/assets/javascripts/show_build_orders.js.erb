@@ -110,7 +110,7 @@ $(document).on("page:change", function(){
 			falling = [];
 			orderIndex = 0;
 			loadTower(level);
-			loadOrders(level);
+			loadOrders(level, time);
 			getOrders(level);
 			lastOrder = Date.now();
 		}
