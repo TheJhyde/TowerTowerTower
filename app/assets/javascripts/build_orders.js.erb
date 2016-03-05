@@ -1,4 +1,4 @@
-$(document).on("page:change", function(){
+$(document).ready(function(){
 	//If there's already a canvas loaded or it's the wrong page, don't load this page
 	if($("canvas").size() > 0 || $(".build_orders.new").length == 0){
 		return false;
