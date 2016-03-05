@@ -2,12 +2,39 @@
 <%# provide(:head, javascript_include_tag("build_orders")) %>
 <div id="craft">
 	<div id="canvas"></div>
+	<div id="controls">
+		<div id = "up" class = "button">
+			<%= image_tag "#{Rails.configuration.x.img_url}glyphs/up_top.png", width: 50 %><br/>
+			Move Up Tower
+		</div>
+
+		<div id = "left" class = "button">
+			<%= image_tag "#{Rails.configuration.x.img_url}glyphs/left.png", width: 50 %><br/>
+			Press A to Rotate Brick Right
+		</div>
+
+		<div id = "remove" class = "button">
+			<%= image_tag "#{Rails.configuration.x.img_url}glyphs/no_not_never.png", width: 50 %><br/>
+			Press S to move your brick.
+		</div>
+
+		<div id = "right" class = "button">
+			<%= image_tag "#{Rails.configuration.x.img_url}glyphs/right.png", width: 50 %><br/>
+			Press D To Rotate Brick Left
+		</div>
+
+		<div id = "down" class = "button">
+			<%= image_tag "#{Rails.configuration.x.img_url}glyphs/down.png", width: 50 %><br/>
+			Move Down Tower
+		</div>
+
+	</div>
 </div>
 
 <div id = "panel">
 	<div id = "alerts">
 		<h4>Instructions</h4>
-		Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick. Click on the arrows to move up and down the tower.
+		Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Bricks without support will fall down and break.
 	</div>
 	<br/>
 

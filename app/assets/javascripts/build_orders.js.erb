@@ -44,13 +44,22 @@ $(document).on("page:change", function(){
 			$.get('/session.json', function(data){
 				USER_ID = data;
 			});
+
+			$("#remove").hide();
 		};
 
 		p.draw = function(){
 			//p.background(200);
 			p.background(p.lerpColor(p.color(200), p.color(0), Brick.level/maxLevel));
+
+			//draws the boundaries of the tower
+			p.strokeWeight(0);
+			p.fill(p.color(0, 0, 0, 70));
+			p.rect(Brick.offset, 0, Brick.towerWidth, p.height)
+
 			//Draws the bricks from the tower
 			p.stroke(0);
+			p.strokeWeight(1);
 			for(var i = 0; i < tower.length; i++){
 				tower[i].draw();
 			}
@@ -62,33 +71,37 @@ $(document).on("page:change", function(){
 				newBricks[i].draw(finish);
 			}
 
-			//Makes these bigger maybe? Or a nicer color?
-			p.fill(255);
-			p.stroke(0);
-			p.strokeWeight(5);
-			if(Brick.level < maxLevel){
-				p.triangle(o + arrowW/2, o, o, o + arrowH, o + arrowW, o + arrowH);
-			}
-			if(Brick.level > 0){
-				p.triangle(o + arrowW/2, (o+arrowH)*2, o, o*2 + arrowH, o + arrowW, o*2 + arrowH);
-			}
+			// //Makes these bigger maybe? Or a nicer color?
+			// p.fill(255);
+			// p.stroke(0);
+			// p.strokeWeight(5);
+			// if(Brick.level < maxLevel){
+			// 	p.triangle(o + arrowW/2, o, o, o + arrowH, o + arrowW, o + arrowH);
+			// }
+			// if(Brick.level > 0){
+			// 	p.triangle(o + arrowW/2, (o+arrowH)*2, o, o*2 + arrowH, o + arrowW, o*2 + arrowH);
+			// }
 		};
 
 		p.mouseClicked = function(){
 			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
-				if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o && p.mouseY < o + arrowH && Brick.level < maxLevel){
-					Brick.level++;
-					loadTower(Brick.level);
-					loadOrders(Brick.level);
-				}else if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o*2 + arrowH && p.mouseY < (o+arrowH)*2 && Brick.level > 0){
-					Brick.level--;
-					loadTower(Brick.level);
-					loadOrders(Brick.level);
-				}else if(!finish){
+				// if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o && p.mouseY < o + arrowH && Brick.level < maxLevel){
+				// 	Brick.level++;
+				// 	loadTower(Brick.level);
+				// 	loadOrders(Brick.level);
+				// }else if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o*2 + arrowH && p.mouseY < (o+arrowH)*2 && Brick.level > 0){
+				// 	Brick.level--;
+				// 	loadTower(Brick.level);
+				// 	loadOrders(Brick.level);
+				//}else if(!finish){
+				if(!finish){
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
-					$("#alerts").html("<h4>Instructions</h4>Your bricks will be added to the tower at " + nextHour() +" - until then no one will be able to see them. Use the glyphs to write a message so other builders know where you placed your bricks. Press S or click on your brick to move it. Click on the orange squares to add glyphs to your message and on the glyphs you've added to delete them.");
+					$("#alerts").html("<h4>Instructions</h4>Your bricks will be added to the tower at " + nextHour() +" - until then no one will be able to see them. Use the glyphs to write a message so other builders know where you placed your bricks.");
+					$("#left").hide();
+					$("#right").hide();
+					$("#remove").show();
 					loadKeyboard(newBricks);
 				}else if (withinPlaced(p.mouseX, p.mouseY) && finish){
 					moveBricks();
@@ -177,7 +190,10 @@ $(document).on("page:change", function(){
 			//Throwing this away probably isn't the best approach
 			//But it's the approach I'm doing.
 			$("#message_form").remove();
-			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Press A or D to rotate your brick. Click on the arrows to move up and down the tower.");
+			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Bricks without support will fall down and break.");
+			$("#left").show();
+			$("#right").show();
+			$("#remove").hide();
 		}
 
 		//Loads the tower from the server
@@ -189,6 +205,24 @@ $(document).on("page:change", function(){
 				}
 			});
 		}
+
+		$(document).on('click', '#up', function(){
+			console.log("up!");
+			if(Brick.level < maxLevel){
+				Brick.level++;
+				loadTower(Brick.level);
+				loadOrders(Brick.level);
+			}
+		});
+
+		$(document).on('click', '#down', function(){
+			console.log("down!");
+			if(Brick.level > 0){
+				Brick.level--;
+				loadTower(Brick.level);
+				loadOrders(Brick.level);
+			}
+		});
 	};
 
 	var myp5 = new p5(sketch);

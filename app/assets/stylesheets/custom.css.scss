@@ -130,7 +130,7 @@ input{
 }
 
 /* glyphs */
-.glyph{
+.button{
 	height: 75px;
     width: 75px;
     margin: 1px;
@@ -154,6 +154,15 @@ input{
 .resolved{
 	font-weight: bold;
 }
+
+// Controls
+#controls{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	text-align: center;
+}
+
 
 /* header */
 #logo {
