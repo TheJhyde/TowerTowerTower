@@ -102,9 +102,44 @@ function Brick(startX, startY, p, color){
 	}
 
 	this.draw = function(placed){
-		if(onLevel()){
+		if(onLevel() && x >= 0 && x < COLUMNS){
 			pickFill(placed);
 			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT);
 		}
+	}
+}
+
+function BrickCluster(){
+	const SHIPMENTSIZE = <%= Rails.configuration.x.shipment_size %>;
+
+	var arrangment = generateArrangement();
+	var bricks = 
+
+	//Generates the arrangement of bricks. Kind of hacky.
+	function generateArrangement(){
+		var ar = []
+		for(var i = 0; i < SHIPMENTSIZE-1; i++){
+			ar[i] = []
+			for(var j = 0; j < 2; j++){
+				ar[i][j] = Math.floor(Math.random()*3-1);
+			}
+		}
+		//Don't put a new brick on top of my old brick!
+		if(ar[0][0] == 0 && ar[0][1] == 0){
+			ar[0][0] = 1;
+		}
+		if(ar[1][0] == 0 && ar[1][1] == 0){
+			ar[1][0] = -1;
+		}
+		//If the first and second brick are in the same place
+		//Throw away one of them
+		if(ar[0][0] == ar[1][0] && ar[0][1] == ar[1][1]){
+			ar.shift();
+		}
+		return ar;
+	}
+
+	this.draw = function(){
+
 	}
 }

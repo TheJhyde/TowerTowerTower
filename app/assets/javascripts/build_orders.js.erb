@@ -76,30 +76,10 @@ $(document).ready(function(){
 			for(var i = 0; i < newBricks.length; i++){
 				newBricks[i].draw(finish);
 			}
-
-			// //Makes these bigger maybe? Or a nicer color?
-			// p.fill(255);
-			// p.stroke(0);
-			// p.strokeWeight(5);
-			// if(Brick.level < maxLevel){
-			// 	p.triangle(o + arrowW/2, o, o, o + arrowH, o + arrowW, o + arrowH);
-			// }
-			// if(Brick.level > 0){
-			// 	p.triangle(o + arrowW/2, (o+arrowH)*2, o, o*2 + arrowH, o + arrowW, o*2 + arrowH);
-			// }
 		};
 
 		p.mouseClicked = function(){
 			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
-				// if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o && p.mouseY < o + arrowH && Brick.level < maxLevel){
-				// 	Brick.level++;
-				// 	loadTower(Brick.level);
-				// 	loadOrders(Brick.level);
-				// }else if(p.mouseX > o && p.mouseX < o + arrowW && p.mouseY > o*2 + arrowH && p.mouseY < (o+arrowH)*2 && Brick.level > 0){
-				// 	Brick.level--;
-				// 	loadTower(Brick.level);
-				// 	loadOrders(Brick.level);
-				//}else if(!finish){
 				if(!finish){
 					finish = true;
 					$("#bricks").hide();
