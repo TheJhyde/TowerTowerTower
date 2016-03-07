@@ -162,6 +162,11 @@ $(document).ready(function(){
 
 		//Takes the new bricks and moves them to the given coordinates
 		function updateBricks(x, y){
+			for(var i = 0; i < ar.length; i++){
+				if(!Brick.withinTower(x, ar[i][0])){
+					return false;
+				}
+			}
 			newBricks[0].update(x, y, 0, 0);
 			for(var i = 0; i < ar.length; i++){
 				newBricks[i+1].update(x, y, ar[i][0], ar[i][1]);
@@ -171,15 +176,16 @@ $(document).ready(function(){
 		//Removes the keyboard and lets you move the bricks again
 		function moveBricks(){
 			finish = false;
+
+			$("#remove").hide();
+
 			$("#bricks").show();
 			$("#messages").show();
-			//Throwing this away probably isn't the best approach
-			//But it's the approach I'm doing.
-			$("#message_form").remove();
-			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Bricks without support will fall down and break.");
 			$("#left").show();
 			$("#right").show();
-			$("#remove").hide();
+
+			$("#message_form").remove();
+			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Bricks without support will fall down and break.");
 		}
 
 		//Loads the tower from the server
@@ -192,6 +198,15 @@ $(document).ready(function(){
 			});
 		}
 
+		function setBackground(level){
+			var index = Math.min(level, backgrounds.length - 1);
+			background = p.loadImage("../" + backgrounds[index]);
+		}
+
+		//-------------------------------------------------------------------------------------------------
+		//------------------------------------------------JQUERY EVENT HANDLERS----------------------------
+		//-------------------------------------------------------------------------------------------------
+		
 		$(document).on('click', '#up', function(){
 			if(Brick.level < maxLevel){
 				Brick.level++;
@@ -209,11 +224,6 @@ $(document).ready(function(){
 				setBackground(Brick.level);
 			}
 		});
-
-		function setBackground(level){
-			var index = Math.min(level, backgrounds.length - 1);
-			background = p.loadImage("../" + backgrounds[index]);
-		}
 	};
 
 	var myp5 = new p5(sketch);

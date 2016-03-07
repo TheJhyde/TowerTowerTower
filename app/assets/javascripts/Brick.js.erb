@@ -53,9 +53,12 @@ function Brick(startX, startY, p, color){
 		return color;
 	}
 
-
 	this.level = function(){
 		return (y - y % BPL) / BPL;
+	}
+
+	Brick.withinTower = function(x, offset){
+		return screenToX(x) + offset >= 0 && screenToX(x) + offset < COLUMNS;
 	}
 
 	//Given an coordinate, shows where on the screen to draw
