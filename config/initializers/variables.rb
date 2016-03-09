@@ -20,8 +20,9 @@ Tbl::Application.config.x.no_clay = -1
 #Tower variables
 Tbl::Application.config.x.brick_height = 40
 Tbl::Application.config.x.brick_width = 40
-Tbl::Application.config.x.bricks_layer = 10 #How many bricks there are in each row of the tower
-Tbl::Application.config.x.level_height = 12; #How many bricks there are on each level
+Tbl::Application.config.x.bricks_layer = 100 #How many bricks there are in each row of the tower
+Tbl::Application.config.x.level_height = 12 #How many bricks there are on each level
+Tbl::Application.config.x.overlap = 2 #How many bricks should overlap on each level
 
 Tbl::Application.config.x.shipment = 1 #Players get this many bricks in each shipment
 Tbl::Application.config.x.shipment_size = 3 #How many squares there are in each shipment

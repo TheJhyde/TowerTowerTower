@@ -54,14 +54,8 @@ $(document).ready(function(){
 		};
 
 		p.draw = function(){
-			//p.background(200);
 			//p.background(p.lerpColor(p.color(200), p.color(0), Brick.level/maxLevel));
 			p.image(background, 0, 0, background.width, background.height, 0, 0, p.width, p.height);
-
-			//draws the boundaries of the tower
-			p.strokeWeight(0);
-			p.fill(p.color(0, 0, 0, 70));
-			p.rect(Brick.offset, 0, Brick.towerWidth, p.height)
 
 			//Draws the bricks from the tower
 			p.stroke(0);
@@ -81,6 +75,7 @@ $(document).ready(function(){
 		p.mouseClicked = function(){
 			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
 				if(!finish){
+					console.log(newBricks[0].x() + ", " + newBricks[0].y());
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
@@ -123,6 +118,11 @@ $(document).ready(function(){
 			}else if(p.keyCode == 83 && finish){
 				moveBricks();
 				updateBricks(p.mouseX, p.mouseY);
+			}else if(p.keyCode == 69){
+				Brick.moveRight();
+				console.log("Offset: " + Brick.offset);
+			}else if(p.keyCode == 81){
+				Brick.moveLeft();
 			}
 		};
 
@@ -198,6 +198,7 @@ $(document).ready(function(){
 			});
 		}
 
+		//Sets the new background
 		function setBackground(level){
 			var index = Math.min(level, backgrounds.length - 1);
 			background = p.loadImage("../" + backgrounds[index]);

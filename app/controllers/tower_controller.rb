@@ -1,6 +1,6 @@
 class TowerController < ApplicationController
 	def index
-		bottom = params["level"].to_i * (Rails.configuration.x.level_height - 2) 
+		bottom = params["level"].to_i * (Rails.configuration.x.level_height - Rails.configuration.x.overlap) 
 		top = bottom + Rails.configuration.x.level_height
 		if params["time"].nil?
 			@tower = Brick.where(y: (bottom..top))
