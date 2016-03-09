@@ -64,7 +64,6 @@ $(document).ready(function(){
 		p.mouseClicked = function(){
 			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
 				if(!finish){
-					console.log(newBricks[0].x() + ", " + newBricks[0].y());
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
@@ -86,32 +85,59 @@ $(document).ready(function(){
 		};
 
 		p.keyPressed = function(){
-			//Rotate one way if you press a or left arrow
-			if(p.keyCode == 65 || p.keyCode == 37){
-				for(var i = 0; i < ar.length; i++){
-					var new_ar = [0, 0];
-					new_ar[0] = ar[i][1] * -1;
-					new_ar[1] = ar[i][0];
-					ar[i] = new_ar;
-				}
-				updateBricks(p.mouseX, p.mouseY);
-			//rotate the other way if you press d or right arrow
-			}else if(p.keyCode == 68 || p.keyCode == 39){
-				for(var i = 0; i < ar.length; i++){
-					var new_ar = [0, 0];
-					new_ar[1] = ar[i][0] * -1;
-					new_ar[0] = ar[i][1];
-					ar[i] = new_ar;
-				}
-				updateBricks(p.mouseX, p.mouseY);
-			}else if(p.keyCode == 83 && finish){
-				moveBricks();
-				updateBricks(p.mouseX, p.mouseY);
-			}else if(p.keyCode == 69){
-				Brick.moveRight();
-				console.log("Offset: " + Brick.offset);
-			}else if(p.keyCode == 81){
-				Brick.moveLeft();
+			switch(p.keyCode){
+				case 65: //A, rotate the bricks
+					if(!finish){
+						for(var i = 0; i < ar.length; i++){
+							var new_ar = [0, 0];
+							new_ar[0] = ar[i][1] * -1;
+							new_ar[1] = ar[i][0];
+							ar[i] = new_ar;
+						}
+						updateBricks(p.mouseX, p.mouseY);
+					}
+					break;
+				case 68: //D, rotate the bricks
+					if(!finish){
+						for(var i = 0; i < ar.length; i++){
+							var new_ar = [0, 0];
+							new_ar[1] = ar[i][0] * -1;
+							new_ar[0] = ar[i][1];
+							ar[i] = new_ar;
+						}
+						updateBricks(p.mouseX, p.mouseY);
+					}
+					break;
+				case 83: //S, pick up bricks
+					if(finish){
+						moveBricks();
+						updateBricks(p.mouseX, p.mouseY);
+					}
+					break;
+				case 39: //Right arrow key, move around tower
+					Brick.moveRight();
+					break;
+				case 37: //Left arrow key, move around tower
+					Brick.moveLeft();
+					break;
+				case 38: //Up arrow key, move up a level
+					if(!maxLevel){
+						Brick.level++;
+						loadTower(Brick.level);
+						loadOrders(Brick.level);
+						setBackground(Brick.level);
+					}
+					break;
+				case 40: //Down arrow key, move down a level
+					if(Brick.level > 0){
+						Brick.level--;
+						loadTower(Brick.level);
+						loadOrders(Brick.level);
+						setBackground(Brick.level);
+					}
+					break;
+				default:
+					//Do nothing
 			}
 		};
 
@@ -202,23 +228,13 @@ $(document).ready(function(){
 		//------------------------------------------------JQUERY EVENT HANDLERS----------------------------
 		//-------------------------------------------------------------------------------------------------
 		
-		$(document).on('click', '#up', function(){
-			if(!maxLevel){
-				Brick.level++;
-				loadTower(Brick.level);
-				loadOrders(Brick.level);
-				setBackground(Brick.level);
-			}
-		});
+		// $(document).on('click', '#up', function(){
+			
+		// });
 
-		$(document).on('click', '#down', function(){
-			if(Brick.level > 0){
-				Brick.level--;
-				loadTower(Brick.level);
-				loadOrders(Brick.level);
-				setBackground(Brick.level);
-			}
-		});
+		// $(document).on('click', '#down', function(){
+			
+		// });
 	};
 
 	var myp5 = new p5(sketch);
