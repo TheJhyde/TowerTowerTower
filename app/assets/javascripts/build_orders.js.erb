@@ -6,25 +6,14 @@ $(document).ready(function(){
 
 	var sketch = function(p){
 		const BRICKS = <%= Rails.configuration.x.shipment %>;
-		const maxLevel = <%= Rails.configuration.x.max_levels %>;
 		const SHIPMENTSIZE = <%= Rails.configuration.x.shipment_size %>
-		
-		//const BRICK_WIDTH = 40;
-		//const BRICK_HEIGHT = 40;
-		//const COLUMNS = 10;
-		//const BPL = 12;
-		//const BRICKS = 2
 
 		var USER_ID;
 		var tower = [];
 		var newBricks = [];
 		var finish = false;
 		var ar = [];
-
-		//Triangle variables
-		var arrowW = 50;
-		var arrowH= 150;
-		var o = 15;
+		var maxLevel = false;
 
 		var background;
 		var backgrounds = ["level_one.jpg", "level_two.jpg", "level_three.jpg", "level_four.jpg", "level_five.jpg", "level_six.jpg"];
@@ -192,8 +181,13 @@ $(document).ready(function(){
 		function loadTower(requestedLevel){
 			tower = [];
 			$.get('/tower.json', {level: requestedLevel}, function(data){
-				for(var i = 0; i < data.length; i++){
-					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+				if(data.length == 0){
+					maxLevel = true;
+				}else{
+					maxLevel = false;
+					for(var i = 0; i < data.length; i++){
+						tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+					}
 				}
 			});
 		}
@@ -209,7 +203,7 @@ $(document).ready(function(){
 		//-------------------------------------------------------------------------------------------------
 		
 		$(document).on('click', '#up', function(){
-			if(Brick.level < maxLevel){
+			if(!maxLevel){
 				Brick.level++;
 				loadTower(Brick.level);
 				loadOrders(Brick.level);
