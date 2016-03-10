@@ -1,5 +1,6 @@
 //= require jquery
 //= require jquery_ujs
+//= require global-js
 //= require bootstrap
 //= require p5
 //= require p5.dom
@@ -60,12 +61,14 @@ function loadOrders(level, date){
 	$.get('/build_orders/get_orders/' + date + '.js', {level: level});
 }
 
-function nextHour(){
-	var d = new Date();
-	var hour = d.getHours();
-	if(hour <= 12){
-		return (hour + 1) + " AM"
-	}else{
-		return (hour - 11) + " PM"
+function nextTime(level){
+	var interval = ((level - level % 2) / 2) * 10;
+	if(interval == 0){
+		return "immediately";
 	}
+	//And then do the rest in here
+	var d = new Date();
+	var next_time = d.getMinutes() - d.getMinutes() % interval + interval
+	d.setMinutes(next_time);
+	return "at " + d.getHours() + ":" + d.getMinutes();
 }

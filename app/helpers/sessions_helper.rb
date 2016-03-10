@@ -60,7 +60,7 @@ module SessionsHelper
 					session["acted"] = 0;
 					session["acted_date"] = DateTime.now.utc.to_i;
 				end
-				if session["acted"] >= Rails.configuration.x.stranger_actions
+				if session["acted"] >= Global.player.stranger_actions
 					flash[:success] = "Bricks placed! You've used up your actions for the day. Sign up or come back tomorrow build more!"
 		      		redirect_to '/'
 		      	end

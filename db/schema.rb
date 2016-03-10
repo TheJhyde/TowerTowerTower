@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217214133) do
+ActiveRecord::Schema.define(version: 20160310195030) do
 
   create_table "bricks", force: :cascade do |t|
     t.integer  "x"
@@ -26,11 +26,12 @@ ActiveRecord::Schema.define(version: 20160217214133) do
     t.string   "message"
     t.string   "colors"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.string   "x"
     t.string   "y"
     t.datetime "used"
+    t.datetime "resolve_at", default: '2016-03-10 19:50:47'
   end
 
   create_table "glyphs", force: :cascade do |t|

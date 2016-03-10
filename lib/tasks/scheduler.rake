@@ -9,10 +9,13 @@ end
 
 desc "This task is called more often, to keep things moving"
 task :hourly_tasks => :environment do
-  puts "Resolve all the build orders"
-  updates = BuildOrder.resolve_orders
-  puts "Makes unsupported bricks fall."
-  updates = Brick.gravity(updates)
-  puts "Writing all news updates"
-  NewsItem.write_updates(updates)
+  #A generous range so that orders can be resolved
+  currentBricks = BuildOrder.where(resolve_at: (DateTime.now - 2.minute)..(DateTime.now + 2.minute), used: nil)
+  BuildOrder.resolve(currentBricks);
+  # puts "Resolve all the build orders"
+  # updates = BuildOrder.resolve_orders
+  # puts "Makes unsupported bricks fall."
+  # updates = Brick.gravity(updates)
+  # puts "Writing all news updates"
+  # NewsItem.write_updates(updates)
 end

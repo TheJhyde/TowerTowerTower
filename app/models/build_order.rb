@@ -6,8 +6,14 @@ class BuildOrder < ActiveRecord::Base
 	serialize :x, Array
 	serialize :y, Array
 
-	def self.resolve_orders(news = [])
-		BuildOrder.where(used: nil).order(:created_at).each do |order|
+	def self.resolve_orders(news = [], bricks)
+		news = place_bricks(news, bricks);
+		news = Brick.gravity(news);
+		NewsItem.write_updates(news);
+	end
+
+	def self.place_bricks(news = [], bricks)
+		bricks.each do |order|
 			order.colors.each_with_index do |color, i|
 				if Brick.where(x: order.x[i], y: order.y[i]).length > 0
 					#Then there's already a brick there - destroy it.
@@ -32,19 +38,5 @@ class BuildOrder < ActiveRecord::Base
 			order.update(used: DateTime.now)
 		end
 		return news
-	end
-
-	def self.getOrders(level, date)
-		if date == 0
-			orders = BuildOrder.where(used: nil)
-		else
-			last_order = Time.at(date).to_datetime
-			orders = BuildOrder.where( used: last_order..(last_order + 5.minute) )
-		end
-
-		bottom = level * (Rails.configuration.x.level_height - 2) 
-		top = bottom + Rails.configuration.x.level_height
-
-		orders.select{|order| order.y.any?{|y| y >= bottom && y <= top} }
 	end
 end

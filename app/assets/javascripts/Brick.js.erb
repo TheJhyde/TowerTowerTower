@@ -1,14 +1,16 @@
 function Brick(startX, startY, p, color){
-	const BRICK_WIDTH = <%= Rails.configuration.x.brick_width %>;
-	const BRICK_HEIGHT = <%= Rails.configuration.x.brick_height %>;
+	const BRICK_WIDTH = <%= Global.tower.brick_width %>;
+	const BRICK_HEIGHT = <%= Global.tower.brick_height %>;
 	//const COLUMNS = <%= Rails.configuration.x.bricks_layer %>;
 	const COLUMNS = 100;
-	const BPL = <%= Rails.configuration.x.level_height %>;
-	const OVERLAP = <%= Rails.configuration.x.overlap %>
+	const BPL = <%= Global.tower.level_height %>;
+	const OVERLAP = <%= Global.tower.overlap %>
 	//const OVERLAP = 2;
 
 	Brick.towerWidth = BRICK_WIDTH * COLUMNS;
-	Brick.offset = (p.width - BRICK_WIDTH * COLUMNS)/2;
+	if(Brick.offset == null){
+		Brick.offset = (p.width - BRICK_WIDTH * COLUMNS)/2;
+	}
 	var leftBound = 10;
 	var rightBound = p.width - (BRICK_WIDTH * COLUMNS) - 5;
 
@@ -130,7 +132,7 @@ function Brick(startX, startY, p, color){
 }
 
 function BrickCluster(){
-	const SHIPMENTSIZE = <%= Rails.configuration.x.shipment_size %>;
+	const SHIPMENTSIZE = <%= Global.tower.shipment_size %>;
 
 	var arrangment = generateArrangement();
 	var bricks = [];

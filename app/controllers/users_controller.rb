@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
     @user.news_items << NewsItem.first
-    @user.actions = Rails.configuration.x.starting_actions
+    @user.actions = Global.player.starting_actions
     unless session["build_order"].nil?
       @user.build_orders << BuildOrder.find(session["build_order"])
     end

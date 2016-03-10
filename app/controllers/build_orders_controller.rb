@@ -25,16 +25,35 @@ class BuildOrdersController < ApplicationController
 		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
 		@order.colors = params["build_order"]["colors"].split(" ").map{|x| x.to_i}
 
+		#calculate the current level
+		#I would like overlaps to default the level below it, but I'll hack out the math for that later
+		level = (@order.y[0] - @order.y[0] % (Global.tower.level_height - Global.tower.overlap)) / (Global.tower.level_height - Global.tower.overlap);
+		#Figure out at what interval it should be resolved
+		interval = (level/2).round * 10
+		#Set @order.resolve_at to that
+		if interval > 0
+			@order.resolve_at = Time.at((Time.now.to_f / interval.minutes).round * interval.minutes + interval.minutes)
+		else
+			@order.resolve_at = DateTime.now
+		end
 		if logged_in?
 			@order.user = current_user
 		end
 
 		if @order.save
+			if(interval == 0)
+				BuildOrder.resolve_orders([@order])
+				resolve_time = "now"
+			else
+				resolve_time = "at #{@order.resolve_at.strftime("%l:%M %p")}"
+			end
+
 			if logged_in?
 				current_user.update(actions: current_user.actions - 1)
-				flash[:success] = "Bricks placed. Your order will be resolved at #{(DateTime.now + 1.hour).strftime("%l %p")}. You have #{current_user.actions} actions left for the day."
+				#Bit of awkward grammar here
+				flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. You have #{current_user.actions} actions left for the day."
 			else
-				flash[:success] = "Bricks placed. Your order will be resolved at #{(DateTime.now + 1.hour).strftime("%l %p")}. Sign up to see what happened to your bricks."
+				flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. Sign up to see what happened to your bricks."
 				session["acted"] = session["acted"] + 1;
 				session["build_order"] = @order.id
 			end
@@ -71,7 +90,17 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def get_orders
-		@orders = BuildOrder.getOrders(params[:level].to_i, params[:id].to_i)
+		if params[:id].to_i == 0
+			@orders = BuildOrder.where(used: nil)
+		else
+			last_order = Time.at(date).to_datetime
+			@orders = BuildOrder.where( used: last_order..(last_order + 5.minute) )
+		end
+
+		bottom = params[:level].to_i * (Global.tower.level_height - Global.tower.offset) 
+		top = bottom + Global.tower.level_height
+		@orders.select{|order| order.y.any?{|y| y >= bottom && y <= top} }
+
 		@glyphs = Glyph.all
 		respond_to do |format|
       		format.js

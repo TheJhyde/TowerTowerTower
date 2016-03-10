@@ -3,11 +3,11 @@ include Magick
 class Brick < ActiveRecord::Base
 	belongs_to :user
 
-	@@brick_width = Rails.configuration.x.brick_width/5
-	@@brick_height = Rails.configuration.x.brick_height/5
-	@@pic_width = @@brick_width * (Rails.configuration.x.bricks_layer + 2)
-	@@offset = (@@pic_width - @@brick_width * Rails.configuration.x.bricks_layer)/2
-	@@pic_height = Rails.configuration.x.level_height * @@brick_width * Rails.configuration.x.max_levels
+	@@brick_width = Global.tower.brick_width/5
+	@@brick_height = Global.tower.brick_height/5
+	@@pic_width = @@brick_width * (Global.tower.bricks_layer + 2)
+	@@offset = (@@pic_width - @@brick_width * Global.tower.bricks_layer)/2
+	@@pic_height = Global.tower.level_height * @@brick_width * Global.tower.max_levels
 
 	def self.gravity(news = [])
 		Brick.where.not(y: 0).order(:y).each do |brick|

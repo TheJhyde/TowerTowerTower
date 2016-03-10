@@ -5,8 +5,8 @@ $(document).ready(function(){
 	}
 
 	var sketch = function(p){
-		const BRICKS = <%= Rails.configuration.x.shipment %>;
-		const SHIPMENTSIZE = <%= Rails.configuration.x.shipment_size %>
+		const BRICKS = <%= Global.tower.shipment %>;
+		const SHIPMENTSIZE = <%= Global.tower.shipment_size %>
 
 		var USER_ID;
 		var tower = [];
@@ -20,7 +20,7 @@ $(document).ready(function(){
 
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
-			canvas = p.createCanvas(p.windowWidth - 550, <%= Rails.configuration.x.brick_height %> * <%= Rails.configuration.x.level_height %>);
+			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height %> * <%= Rails.configuration.x.level_height %>);
 			canvas.parent("canvas");
 
 			Brick.level = 0;
@@ -59,15 +59,30 @@ $(document).ready(function(){
 			for(var i = 0; i < newBricks.length; i++){
 				newBricks[i].draw(finish);
 			}
+
+			p.fill(255);
+			p.stroke(0);
+			p.rect(0, 0, 250, 70);
+			p.fill(0);
+			p.strokeWeight(1);
+			p.textSize(20);
+			p.text("Level: " + Brick.level, 10, 25);
+			var interval = ((Brick.level - Brick.level % 2) / 2) * 10;
+			if(interval == 0){
+				p.text("Update Rate: Immediate", 10, 50);
+			}else{
+				p.text("Update Rate: " + interval + " minutes", 10, 50);
+			}
 		};
 
 		p.mouseClicked = function(){
 			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
 				if(!finish){
+					console.log(newBricks[0].level());
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
-					$("#alerts").html("<h4>Instructions</h4>Your bricks will be added to the tower at " + nextHour() +" - until then no one will be able to see them. Use the glyphs to write a message so other builders know where you placed your bricks.");
+					$("#alerts").html("<h4>Instructions</h4>Your bricks will be added to the tower " + nextTime(Brick.level) +" - until then no one will be able to see them. Use the glyphs to write a message so other builders know where you placed your bricks.");
 					$("#left").hide();
 					$("#right").hide();
 					$("#remove").show();
