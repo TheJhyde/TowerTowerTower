@@ -52,15 +52,12 @@ module SessionsHelper
 	      		redirect_to '/'
 			end
 		else
-			if session["acted"].nil?
-				session["acted"] = 0;
-				session["acted_date"] = DateTime.now.utc.to_i;
+			if session["stranger"].nil?
+				new_stranger = Stranger.create(actions: Global.player.stranger_actions)
+				session["stranger"] = new_stranger.id
 			else
-				if session["acted_date"] < 1.day.ago.utc.to_i
-					session["acted"] = 0;
-					session["acted_date"] = DateTime.now.utc.to_i;
-				end
-				if session["acted"] >= Global.player.stranger_actions
+				stranger = Stranger.find(session["stranger"])
+				if stranger.actions <= 0
 					flash[:success] = "Bricks placed! You've used up your actions for the day. Sign up or come back tomorrow build more!"
 		      		redirect_to '/'
 		      	end

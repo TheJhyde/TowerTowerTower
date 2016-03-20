@@ -39,6 +39,8 @@ class BuildOrdersController < ApplicationController
 		end
 		if logged_in?
 			@order.user = current_user
+		else
+			@order.stranger = Stranger.find(session["stranger"])
 		end
 
 		if @order.save
@@ -55,8 +57,7 @@ class BuildOrdersController < ApplicationController
 				flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. You have #{current_user.actions} actions left for the day."
 			else
 				flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. Sign up to see what happened to your bricks."
-				session["acted"] = session["acted"] + 1;
-				session["build_order"] = @order.id
+				Stranger.find(session["stranger"]).update(actions: Stranger.find(session["stranger"]).actions - 1)
 			end
 			redirect_to new_build_order_path
 		else

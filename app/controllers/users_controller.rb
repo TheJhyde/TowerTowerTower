@@ -20,8 +20,9 @@ class UsersController < ApplicationController
   	@user.user_name = @user.name.downcase.delete " " #spooky
     @user.news_items << NewsItem.first
     @user.actions = Global.player.starting_actions
-    unless session["build_order"].nil?
-      @user.build_orders << BuildOrder.find(session["build_order"])
+    unless session["stranger"].nil?
+      @user.build_orders << Stranger.find(session["stranger"]).build_orders
+      @user.bricks << Stranger.find(session["stranger"]).bricks
     end
   	if @user.save
       @user.send_activation_email

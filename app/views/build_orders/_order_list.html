@@ -8,7 +8,7 @@
 			<% unless order.user.nil? %>
 				- <%= order.user.name %>
 			<% else %>
-				- A Mysterious Stranger
+				- Mysterious Stranger #<%= order.stranger.id%>
 			<% end %>
 		</li>
 	<% end %>

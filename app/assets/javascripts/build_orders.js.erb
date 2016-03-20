@@ -48,7 +48,7 @@ $(document).ready(function(){
 
 			//Draws the bricks from the tower
 			p.stroke(0);
-			//p.strokeWeight(1);
+			p.strokeWeight(1);
 			for(var i = 0; i < tower.length; i++){
 				tower[i].draw();
 			}
@@ -94,7 +94,7 @@ $(document).ready(function(){
 		}
 
 		p.mouseMoved = function(){
-			if(p.mouseY < p.height && p.mouseY > 0 && p.mouseX > Brick.offset && p.mouseX < (Brick.offset + Brick.towerWidth) && !finish){
+			if(p.mouseY < p.height && p.mouseY > 0 && p.mouseX > 0 && p.mouseX < p.width && !finish){
 				updateBricks(p.mouseX, p.mouseY);
 			}
 		};

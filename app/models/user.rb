@@ -50,9 +50,9 @@ class User < ActiveRecord::Base
 	#Adds an action to all users
 	def self.add_actions
 		User.all.each do |user|
-			user.actions += Global.tower.daily_actions
-			if user.actions > Global.tower.max_actions
-				user.actions = Global.tower.max_actions
+			user.actions += Global.player.daily_actions
+			if user.actions > Global.player.max_actions
+				user.actions = Global.play.max_actions
 			end
 			user.save
 		end

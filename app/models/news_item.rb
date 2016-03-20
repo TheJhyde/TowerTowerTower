@@ -26,7 +26,7 @@ class NewsItem < ActiveRecord::Base
 				msg += "#{pluralize(user_hash['fell'], 'of your brick')} fell and were destroyed."
 			end
 			
-			msg += " <a href='/build_orders/0'>See how all the orders were resolved.</a>"
+			#msg += " <a href='/build_orders/0'>See how all the orders were resolved.</a>"
 			user.news_items << NewsItem.create(msg_type: "update", message: msg)
 		end
 	end

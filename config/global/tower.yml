@@ -3,7 +3,7 @@ test:
   brick_width: 40
   bricks_layer: 100
   level_height: 12
-  overlap: 2
+  overlap: 1
   shipment: 1
   shipment_size: 3
   max_levels: 10
@@ -13,7 +13,7 @@ development:
   brick_width: 40
   bricks_layer: 100
   level_height: 12
-  overlap: 2
+  overlap: 1
   shipment: 1
   shipment_size: 3
   max_levels: 10
@@ -23,7 +23,7 @@ production:
   brick_width: 40
   bricks_layer: 100
   level_height: 12
-  overlap: 2
+  overlap: 1
   shipment: 1
   shipment_size: 3
   max_levels: 10

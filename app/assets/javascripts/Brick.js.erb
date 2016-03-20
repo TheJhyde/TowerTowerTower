@@ -1,8 +1,7 @@
 function Brick(startX, startY, p, color, strength){
 	const BRICK_WIDTH = <%= Global.tower.brick_width %>;
 	const BRICK_HEIGHT = <%= Global.tower.brick_height %>;
-	//const COLUMNS = <%= Rails.configuration.x.bricks_layer %>;
-	const COLUMNS = 100;
+	const COLUMNS = <%= Global.tower.brick_height %>;
 	const BPL = <%= Global.tower.level_height %>;
 	const OVERLAP = <%= Global.tower.overlap %>
 	//const OVERLAP = 2;
@@ -19,6 +18,8 @@ function Brick(startX, startY, p, color, strength){
 	var screenX = xToScreen(x);
 	var screenY = yToScreen(y);
 
+	//This function should check if the brick might go out of bounds
+	//And refuse if it does
 	this.update = function(newX, newY, offsetX, offsetY){
 		x = screenToX(newX) + offsetX;
 		y = screenToY(newY) + offsetY;
@@ -41,13 +42,13 @@ function Brick(startX, startY, p, color, strength){
 
 	Brick.moveLeft = function(){
 		if(Brick.offset < leftBound){
-			Brick.offset += 10;
+			Brick.offset += 30;
 		}
 	}
 
 	Brick.moveRight = function(){
 		if(Brick.offset > rightBound){
-			Brick.offset -= 10;
+			Brick.offset -= 30;
 		}
 	}
 
@@ -126,8 +127,8 @@ function Brick(startX, startY, p, color, strength){
 	this.draw = function(placed){
 		if(onLevel() && x >= 0 && x < COLUMNS){
 			pickFill(placed);
-			p.strokeWeight(strength*2+1);
 			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT);
+			//How how how how how how how how how to display strength?
 		}
 	}
 }

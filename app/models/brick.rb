@@ -2,6 +2,7 @@ include Magick
 
 class Brick < ActiveRecord::Base
 	belongs_to :user
+	belongs_to :stranger
 
 	@@brick_width = Global.tower.brick_width/5
 	@@brick_height = Global.tower.brick_height/5
@@ -29,6 +30,7 @@ class Brick < ActiveRecord::Base
 			#Bricks which are too weak for their level are destroyed
 			if brick.strength < (brick.level/3).round
 				brick.destroy
+				#Inform the owners of the bricks
 			end
 		end
 	end
