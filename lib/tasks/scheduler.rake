@@ -5,12 +5,12 @@ task :daily_tasks => :environment do
   puts "Updates mysterious strangers actions"
   Stranger.add_actions
   puts "Drawing today's tower"
-  Brick.draw_tower
+  #Brick.draw_tower
   puts "Done!"
 end
 
-desc "This task is called more often, to keep things moving"
-task :hourly_tasks => :environment do
+desc "Takes all the bricks and runs them"
+task :place_bricks => :environment do
   #A generous range so that orders can be resolved
   currentBricks = BuildOrder.where(resolve_at: (DateTime.now - 2.minute)..(DateTime.now + 2.minute), used: nil)
   BuildOrder.resolve_orders(currentBricks);

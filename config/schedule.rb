@@ -33,7 +33,7 @@ set :environment, "development"
 # 	rake "hourly_tasks"
 # end
 
-every 1.day, :at => '2:39 pm' do
-  rake "hourly_tasks"
-  command "echo 'This is running just fine!!'"
+every '*/5 * * * *' do
+  rake 'place_bricks'
+  rake 'daily_tasks'
 end

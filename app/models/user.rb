@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
 		User.all.each do |user|
 			user.actions += Global.player.daily_actions
 			if user.actions > Global.player.max_actions
-				user.actions = Global.play.max_actions
+				user.actions = Global.player.max_actions
 			end
 			user.save
 		end
