@@ -10,9 +10,9 @@ task :daily_tasks => :environment do
 end
 
 desc "Takes all the bricks and runs them"
-task :place_bricks => :environment do
+task :resolve_orders => :environment do
   #A generous range so that orders can be resolved
-  currentBricks = BuildOrder.where(resolve_at: (DateTime.now - 2.minute)..(DateTime.now + 2.minute), used: nil)
+  currentBricks = BuildOrder.where(used: nil).where("resolve_at < ?", (DateTime.now + 2.minute))
   BuildOrder.resolve_orders(currentBricks);
   # puts "Resolve all the build orders"
   # updates = BuildOrder.resolve_orders

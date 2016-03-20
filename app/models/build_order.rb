@@ -9,7 +9,7 @@ class BuildOrder < ActiveRecord::Base
 	def self.resolve_orders(news = [], bricks)
 		news = place_bricks(news, bricks);
 		news = Brick.gravity(news);
-		new = Brick.check_strength();
+		Brick.check_strength();
 		NewsItem.write_updates(news);
 	end
 
@@ -20,13 +20,10 @@ class BuildOrder < ActiveRecord::Base
 					#Then there's already a brick there
 					Brick.where(x: x, y: order.y[i]).each do |brick|
 						#If they are the same color, make them stronger
-						puts "Brick color #{brick.color} vs order color #{order.colors}"
 						if brick.color == order.colors
-							puts "They are equal"
 							brick.update(strength: brick.strength + 1)
 							#TODO: Tell the brick placer they strengthened a brick
 						else
-							puts "They are not equal"
 							#If they are different colors, make them weaker
 							brick.update(strength: brick.strength - 1)
 							#If strength falls below zero, destroy the brick
