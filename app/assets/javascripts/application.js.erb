@@ -42,11 +42,10 @@ function readGlyphs(){
 function loadKeyboard(bricks){
 	$.get('finished.js', function(){
 		readGlyphs();
-		var colors = "";
+		var colors = bricks[0].color();
 		var x = "";
 		var y = "";
 		for(var i = 0; i < bricks.length; i++){
-			colors += bricks[i].color() + " ";
 			x += bricks[i].x() + " ";
 			y += bricks[i].y() + " ";
 		}

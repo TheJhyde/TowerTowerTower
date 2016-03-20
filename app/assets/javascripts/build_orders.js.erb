@@ -27,9 +27,9 @@ $(document).ready(function(){
 			loadTower(Brick.level);
 			loadOrders(Brick.level, 0);
 
-			var color = Math.floor(Math.random() * 3);
+			var color = Math.floor(Math.random() * 2);
 			for(var i = 0; i < SHIPMENTSIZE; i++){
-				newBricks.push(new Brick(-1, -1, p, color));
+				newBricks.push(new Brick(-1, -1, p, color, 0));
 			}
 			generateArrangement();
 
@@ -48,7 +48,7 @@ $(document).ready(function(){
 
 			//Draws the bricks from the tower
 			p.stroke(0);
-			p.strokeWeight(1);
+			//p.strokeWeight(1);
 			for(var i = 0; i < tower.length; i++){
 				tower[i].draw();
 			}
@@ -139,7 +139,7 @@ $(document).ready(function(){
 					if(!maxLevel){
 						Brick.level++;
 						loadTower(Brick.level);
-						loadOrders(Brick.level);
+						loadOrders(Brick.level, 0);
 						setBackground(Brick.level);
 					}
 					break;
@@ -147,7 +147,7 @@ $(document).ready(function(){
 					if(Brick.level > 0){
 						Brick.level--;
 						loadTower(Brick.level);
-						loadOrders(Brick.level);
+						loadOrders(Brick.level, 0);
 						setBackground(Brick.level);
 					}
 					break;
@@ -227,7 +227,7 @@ $(document).ready(function(){
 				}else{
 					maxLevel = false;
 					for(var i = 0; i < data.length; i++){
-						tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"]));
+						tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]));
 					}
 				}
 			});

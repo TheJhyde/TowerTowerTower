@@ -24,6 +24,15 @@ class Brick < ActiveRecord::Base
 		return news
 	end
 
+	def self.check_strength
+		Brick.all.each do |brick|
+			#Bricks which are too weak for their level are destroyed
+			if brick.strength < (brick.level/3).round
+				brick.destroy
+			end
+		end
+	end
+
 	def self.draw_tower
 		#An empty image
 		picture = Image.new(@@pic_width, @@pic_height){self.background_color = "rgb(200,200,200)"}
@@ -55,7 +64,6 @@ class Brick < ActiveRecord::Base
 
 		#Delete the photo so it doesn't clutter up the place/interfer with heroku somehow
 		File.delete(file_name)
-
 	end
 
 	def x_to_pic

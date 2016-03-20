@@ -23,11 +23,12 @@ class BuildOrdersController < ApplicationController
 		@order.message = params["build_order"]["message"]
 		@order.x = params["build_order"]["x"].split(" ").map{|x| x.to_i}
 		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
-		@order.colors = params["build_order"]["colors"].split(" ").map{|x| x.to_i}
+		@order.colors = params["build_order"]["colors"].to_i
 
 		#calculate the current level
 		#I would like overlaps to default the level below it, but I'll hack out the math for that later
 		level = (@order.y[0] - @order.y[0] % (Global.tower.level_height - Global.tower.overlap)) / (Global.tower.level_height - Global.tower.overlap);
+		@order.level = level
 		#Figure out at what interval it should be resolved
 		interval = (level/2).round * 10
 		#Set @order.resolve_at to that
@@ -64,10 +65,12 @@ class BuildOrdersController < ApplicationController
 		end
 	end
 
+	# Shows all of the build orders
 	def index
 		@build_orders = BuildOrder.paginate(page: params[:page], per_page: 10)
 		@glyphs = Glyph.all
 	end
+
 
 	def show
 		if params[:id] == "0"
@@ -89,17 +92,20 @@ class BuildOrdersController < ApplicationController
     	end
 	end
 
+	#Pulls up a list of orders for display on the site
 	def get_orders
 		if params[:id].to_i == 0
-			@orders = BuildOrder.where(used: nil)
+			#Shows all the build orders that haven't been used yet
+			@orders = BuildOrder.where(level: params[:level].to_i, used: nil)
 		else
+			#shows all the build orders that were used around the given time
 			last_order = Time.at(date).to_datetime
 			@orders = BuildOrder.where( used: last_order..(last_order + 5.minute) )
 		end
 
-		bottom = params[:level].to_i * (Global.tower.level_height - Global.tower.offset) 
-		top = bottom + Global.tower.level_height
-		@orders.select{|order| order.y.any?{|y| y >= bottom && y <= top} }
+		# bottom = params[:level].to_i * (Global.tower.level_height - Global.tower.offset) 
+		# top = bottom + Global.tower.level_height
+		# @orders.select{|order| order.y.any?{|y| y >= bottom && y <= top} }
 
 		@glyphs = Glyph.all
 		respond_to do |format|
