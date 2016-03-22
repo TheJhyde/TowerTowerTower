@@ -7,5 +7,5 @@ module Clockwork
     puts "Running #{job}"
   end
 
-  every(5.minutes, 'Check Build Orders', tz: 'EST') { BuildOrder.resolve_orders }
+  every(5.minutes, 'Check Build Orders', tz: 'EST') { NewsItem.log_called }
 end

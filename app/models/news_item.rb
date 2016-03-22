@@ -43,4 +43,11 @@ class NewsItem < ActiveRecord::Base
 		hash.default = 0
 		news << hash
 	end
+
+	#This is a pointless function that only exists to test scheduler apps
+	#It does something where it's very clear if it happened or not
+	def self.log_called
+		msg = NewsItem.create(msg_type: "news", message: "This function got called, which is a thing you wanted to happen.")
+		User.first.news_items << msg
+	end
 end
