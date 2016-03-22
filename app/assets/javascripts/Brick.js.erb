@@ -1,7 +1,8 @@
 function Brick(startX, startY, p, color, strength){
-	const BRICK_WIDTH = <%= Global.tower.brick_width %>;
+	//const BRICK_WIDTH = <%= Global.tower.brick_width %>;
+	const BRICK_WIDTH = Global["brick_width"];
 	const BRICK_HEIGHT = <%= Global.tower.brick_height %>;
-	const COLUMNS = <%= Global.tower.brick_height %>;
+	const COLUMNS = <%= Global.tower.bricks_layer %>;
 	const BPL = <%= Global.tower.level_height %>;
 	const OVERLAP = <%= Global.tower.overlap %>
 	//const OVERLAP = 2;
@@ -27,15 +28,6 @@ function Brick(startX, startY, p, color, strength){
 		screenY = yToScreen(y);
 	}
 
-	//Does this brick appear on the level currently being shown?
-	function onLevel(){
-		if(y >= Brick.level * (BPL - OVERLAP) && y < Brick.level * (BPL - OVERLAP) + BPL){
-			return true;
-		}else{
-			return false;
-		}
-	}
-
 	this.fall = function(){
 		y -= 0.1;
 	}
@@ -53,11 +45,7 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	this.isWithin = function(mouseX, mouseY){
-		if(screenToX(mouseX) == x && screenToY(mouseY) == y){
-			return true;
-		}else{
-			return false;
-		}
+		return (screenToX(mouseX) == x && screenToY(mouseY) == y)
 	}
 
 	this.x = function(){
@@ -74,11 +62,15 @@ function Brick(startX, startY, p, color, strength){
 
 	//Do I use this function anywhere?
 	this.level = function(){
-		return (y - y % (BPL - OVERLAP)) / (BPL - OVERLAP);
+		return Math.floor((y - 1) / BPL);
 	}
 
 	Brick.withinTower = function(x, offset){
 		return screenToX(x) + offset >= 0 && screenToX(x) + offset < COLUMNS;
+	}
+
+	Brick.onLevel = function(y, offset){
+		return Math.floor((screenToY(y) + offset - 1 ) / BPL) == Brick.level
 	}
 
 	//Given an coordinate, shows where on the screen to draw
@@ -87,7 +79,7 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	function yToScreen(thisY){
-		return p.height - (thisY+1 - Brick.level * (BPL - 2)) * BRICK_HEIGHT ;
+		return p.height - (thisY+1 - Brick.level * BPL) * BRICK_HEIGHT ;
 	}
 
 	// Converts the screen position to the nearest x,y position
@@ -96,7 +88,7 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	function screenToY(y){
-		return Math.floor((p.height-y)/BRICK_HEIGHT) + Brick.level * (BPL - 2);
+		return Math.floor((p.height-y)/BRICK_HEIGHT) + Brick.level * BPL;
 	}
 
 	function pickFill(placed){
@@ -125,7 +117,7 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	this.draw = function(placed){
-		if(onLevel() && x >= 0 && x < COLUMNS){
+		if(x >= 0 && x < COLUMNS){
 			pickFill(placed);
 			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT);
 			//How how how how how how how how how to display strength?

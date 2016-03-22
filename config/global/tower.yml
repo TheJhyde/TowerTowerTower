@@ -1,28 +1,8 @@
-test:
+default:
   brick_height: 40
   brick_width: 40
   bricks_layer: 100
-  level_height: 12
-  overlap: 1
-  shipment: 1
-  shipment_size: 3
-  max_levels: 10
-  offset: 2
-development:
-  brick_height: 40
-  brick_width: 40
-  bricks_layer: 100
-  level_height: 12
-  overlap: 1
-  shipment: 1
-  shipment_size: 3
-  max_levels: 10
-  offset: 2
-production:
-  brick_height: 40
-  brick_width: 40
-  bricks_layer: 100
-  level_height: 12
+  level_height: 10
   overlap: 1
   shipment: 1
   shipment_size: 3

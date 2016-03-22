@@ -42,7 +42,7 @@ class BuildOrder < ActiveRecord::Base
 					unless order.user.nil?
 						news = NewsItem.add_to(news, order.user.id, "placed")
 					end
-					level = (order.y[i] - order.y[i] % (Global.tower.level_height - Global.tower.overlap)) / (Global.tower.level_height - Global.tower.overlap);
+					level = (order.y[i] - 1)/10;
 					Brick.create(x: x, y: order.y[i], color: order.colors, user: order.user, level: level)
 				end
 			end
