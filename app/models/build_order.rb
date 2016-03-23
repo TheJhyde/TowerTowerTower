@@ -9,9 +9,13 @@ class BuildOrder < ActiveRecord::Base
 	def self.resolve_orders
 		bricks = BuildOrder.where(used: nil).where(["resolve_at < ?", (DateTime.now + 2.minute)])
 		news = []
+		puts "Got the bricks, gonna place them all."
 		news = place_bricks(news, bricks);
+		puts "Checking if bricks fall"
 		news = Brick.gravity(news);
+		puts "Check if bricks are strong enough"
 		Brick.check_strength();
+		puts "We did it! Writing the updates"
 		NewsItem.write_updates(news);
 	end
 
@@ -45,9 +49,9 @@ class BuildOrder < ActiveRecord::Base
 						news = NewsItem.add_to(news, order.user.id, "placed")
 					end
 					level = (order.y[i] - 1)/10;
-					puts("I'm going to try and create a brick now")
+					puts "I'm going to try and create a brick now"
 					Brick.create(x: x, y: order.y[i], color: order.colors, user: order.user, level: level)
-					puts("I created a brick, safe and sound")
+					puts "I created a brick, safe and sound"
 				end
 			end
 			order.update(used: DateTime.now)

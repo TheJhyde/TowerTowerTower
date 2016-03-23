@@ -232,7 +232,7 @@ $(document).ready(function(){
 			$("#right").show();
 
 			$("#message_form").remove();
-			$("#alerts").html("<h4>Instructions</h4>Place your bricks on the tower to build it higher! Steer clear of where other builders have put their bricks - if two bricks collide, they'll both be destroyed. Bricks without support will fall down and break.");
+			updateAlert(Brick.level, finish);
 		}
 
 		//Loads the tower from the server
@@ -266,7 +266,7 @@ $(document).ready(function(){
 				}
 			}else if(level == 2){
 				if(placed){
-					$("#instructions").html("Write a message to tell other builders where you've placed your bricks. Click on the glyphs below to write your message. Click on glyphs in the message to delete them. From now on, all bricks must have messages!");
+					$("#instructions").html("You and all other builder's bricks will be added to the tower " + nextTime(level) +". Write a message to tell other builders where you've placed your bricks. Click on the glyphs below to write your message. Click on glyphs in the message to delete them. From now on, all bricks must have messages!");
 				}else{
 					$("#instructions").html("The tower is so high that it now takes time to build! All bricks placed on this level will be placed every five minutes, all at once.");
 				}
@@ -274,16 +274,20 @@ $(document).ready(function(){
 				if(!placed){
 					$("#instructions").html("At this height, heavy winds will destroy any bricks which don't have at least one strength. Use the messages to communicate where you're putting bricks with other builders and overlap bricks of the same color.");
 				}else{
-					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds!");
+					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds! All bricks will be added to the tower " + nextTime(level) +".");
 				}
 			}else if(level == 4){
 				if(!placed){
 					$("#instructions").html("The higher the tower gets, the longer is takes to build. Orders are now resolved every 10 minutes.");
 				}else{
-					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds!");
+					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds! All bricks will be added to the tower " + nextTime(level) +".");
 				}
 			}else{
-				$("#instructions").html("Keep building the tower!");
+				if(!placed){
+					$("#instructions").html("Keep building the tower!");
+				}else{
+					$("#instructions").html("All bricks will be added to the tower " + nextTime(level) +".");
+				}
 			}
 		}
 
