@@ -14,7 +14,6 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def create
-
 		@order = BuildOrder.new
 		@order.message = params["build_order"]["message"]
 		@order.x = params["build_order"]["x"].split(" ").map{|x| x.to_i}

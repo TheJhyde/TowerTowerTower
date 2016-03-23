@@ -4,5 +4,5 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
 
-  Time.zone = 'EST'
+   config.time_zone = 'Eastern Time (US & Canada)'
 end

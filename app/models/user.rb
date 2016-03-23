@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
 		reset_sent_at < 2.hours.ago
 	end
 
-	def daily_tasks
+	def self.daily_tasks
   		User.add_actions
 		Stranger.add_actions
 	end

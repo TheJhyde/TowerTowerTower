@@ -45,7 +45,9 @@ class BuildOrder < ActiveRecord::Base
 						news = NewsItem.add_to(news, order.user.id, "placed")
 					end
 					level = (order.y[i] - 1)/10;
+					puts("I'm going to try and create a brick now")
 					Brick.create(x: x, y: order.y[i], color: order.colors, user: order.user, level: level)
+					puts("I created a brick, safe and sound")
 				end
 			end
 			order.update(used: DateTime.now)
