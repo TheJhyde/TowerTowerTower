@@ -7,26 +7,21 @@ BRING/LIE LARGE/SIZE NO/NOT/NEVER PUSH/DESTROY BOTH NEITHER ROW/SMALL COLUMN/LUC
 CENTER CURSE BOTTOM HOLE LEFT LINE RIGHT WITHIN"
 
 #Adds the glyphs to the database
-# urls = images.split(" ")
-# words = meanings.split(" ")
-# words.each do |word|
-# 	word.upcase!
-# end
-# words.uniq!
+urls = images.split(" ")
+words = meanings.split(" ")
+words.each do |word|
+	word.upcase!
+end
+words.uniq!
 
-# urls.each_with_index do |url, i|
-# 	Glyph.create(url: url, meaning: words[i])
-# end
+urls.each_with_index do |url, i|
+	Glyph.find_or_create_by(url: url, meaning: words[i])
+end
 
-# NewsItem.create(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get updates 
-# 	about the game, check out our <a href ='http://towerbricklightning.tumblr.com/'>tumblr</a>
-# 	 or <a href='https://twitter.com/TBLGame'>twitter</a>.")
-
-# 5.times do |i|
-# 	15.times do |j|
-# 		Brick.create(x: i, y: j, color: rand(3))
-# 	end
-# end
+intro = NewsItem.find_or_create_by(id: 1)
+intro.update(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get updates 
+	about the game, check out our <a href ='http://towerbricklightning.tumblr.com/'>tumblr</a>
+	 or <a href='https://twitter.com/TBLGame'>twitter</a>.")
 
 100.times do |i|
 	new_brick = Brick.find_or_create_by(x: i, y: 0)
@@ -36,3 +31,6 @@ CENTER CURSE BOTTOM HOLE LEFT LINE RIGHT WITHIN"
 	new_brick.strength = 0;
 	new_brick.save
 end
+
+me = User.find_or_create_by(name: "Cool Goat")
+me.update(admin: true, email: "jkhyde86@gmail.com", activated: true, actions: 100, password: User.digest('password'))
