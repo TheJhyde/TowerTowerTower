@@ -1,5 +1,3 @@
-source 'https://rubygems.org'
-
 gem 'rails',        '4.2.5.2'
 gem 'bootstrap-sass', '3.2.0.0'
 gem 'bcrypt',       '3.1.7'
@@ -14,7 +12,8 @@ gem 'sdoc',         '0.4.0', group: :doc
 gem 'rmagick',      '~> 2.15', '>= 2.15.4'
 gem 'aws-sdk',      '~> 2'
 gem 'global', 		'~> 0.1.2'
-gem 'clockwork'
+gem 'clockwork', 	'~> 1.2'
+gem 'rounding', 	'~> 1.0.1'
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'

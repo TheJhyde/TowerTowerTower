@@ -6,7 +6,9 @@ class BuildOrder < ActiveRecord::Base
 	serialize :x, Array
 	serialize :y, Array
 
-	def self.resolve_orders(news = [], bricks)
+	def self.resolve_orders
+		bricks = BuildOrder.where(used: nil).where(["resolve_at < ?", (DateTime.now + 2.minute)])
+		news = []
 		news = place_bricks(news, bricks);
 		news = Brick.gravity(news);
 		Brick.check_strength();

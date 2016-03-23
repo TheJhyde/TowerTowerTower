@@ -14,10 +14,6 @@ class BuildOrdersController < ApplicationController
 	end
 
 	def create
-		if params["build_order"]["message"].empty?
-			flash[:danger] = "Bricks must have a message."
-			redirect_to new_build_order_path and return
-		end
 
 		@order = BuildOrder.new
 		@order.message = params["build_order"]["message"]
@@ -25,18 +21,21 @@ class BuildOrdersController < ApplicationController
 		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
 		@order.colors = params["build_order"]["colors"].to_i
 
-		#calculate the current level
-		#I would like overlaps to default the level below it, but I'll hack out the math for that later
-		level = (@order.y[0] - @order.y[0] % (Global.tower.level_height - Global.tower.overlap)) / (Global.tower.level_height - Global.tower.overlap);
-		@order.level = level
+		@order.level = (@order.y[0] - 1) / Global.tower.level_height;
 		#Figure out at what interval it should be resolved
-		interval = (level/2).round * 10
+
+		if params["build_order"]["message"].empty? && @order.level >= 2
+			flash[:danger] = "Bricks must have a message."
+			redirect_to new_build_order_path and return
+		end
+		interval = (@order.level/2).round * 5
 		#Set @order.resolve_at to that
 		if interval > 0
-			@order.resolve_at = Time.at((Time.now.to_f / interval.minutes).round * interval.minutes + interval.minutes)
+			@order.resolve_at = Time.now.ceil_to(interval.minutes)
 		else
 			@order.resolve_at = DateTime.now
 		end
+
 		if logged_in?
 			@order.user = current_user
 		else
@@ -45,7 +44,7 @@ class BuildOrdersController < ApplicationController
 
 		if @order.save
 			if(interval == 0)
-				BuildOrder.resolve_orders([@order])
+				BuildOrder.resolve_orders()
 				resolve_time = "now"
 			else
 				resolve_time = "at #{@order.resolve_at.strftime("%l:%M %p")}"

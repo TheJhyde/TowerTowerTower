@@ -52,6 +52,9 @@ function loadKeyboard(bricks){
 		$("#build_order_colors").val(colors);
 		$("#build_order_x").val(x);
 		$("#build_order_y").val(y);
+		if(Brick.level < 2){
+			$("#keyboard").hide();
+		}
 	});
 }
 
@@ -61,7 +64,7 @@ function loadOrders(level, date){
 }
 
 function nextTime(level){
-	var interval = ((level - level % 2) / 2) * 10;
+	var interval = ((level - level % 2) / 2) * 5;
 	if(interval == 0){
 		return "immediately";
 	}
@@ -69,5 +72,9 @@ function nextTime(level){
 	var d = new Date();
 	var next_time = d.getMinutes() - d.getMinutes() % interval + interval
 	d.setMinutes(next_time);
-	return "at " + d.getHours() + ":" + d.getMinutes();
+	if( d.getHours() <= 12){
+		return "at " + d.getHours() + ":" + d.getMinutes() + " AM";
+	}else{
+		return "at " + (d.getHours() - 12) + ":" + d.getMinutes() + " PM";
+	}
 }

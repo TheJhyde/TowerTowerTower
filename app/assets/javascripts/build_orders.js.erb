@@ -28,10 +28,10 @@ $(document).ready(function(){
 			loadOrders(Brick.level, 0);
 
 			var color = Math.floor(Math.random() * 2);
-			for(var i = 0; i < SHIPMENTSIZE; i++){
+			generateArrangement();
+			for(var i = 0; i < ar.length + 1; i++){
 				newBricks.push(new Brick(50, 2, p, color, 0));
 			}
-			generateArrangement();
 
 			$.get('/session.json', function(data){
 				USER_ID = data;
@@ -60,18 +60,29 @@ $(document).ready(function(){
 				newBricks[i].draw(finish);
 			}
 
+			var interval = ((Brick.level - Brick.level % 2) / 2) * 5;
+			var requiredStrength = Math.floor(Brick.level/3);
+
 			p.fill(255);
 			p.stroke(0);
-			p.rect(0, 0, 250, 70);
+			if(requiredStrength <= 0){
+				p.rect(0, 0, 250, 70);
+			}else{
+				p.rect(0, 0, 250, 100);
+			}
 			p.fill(0);
 			p.strokeWeight(1);
 			p.textSize(20);
 			p.text("Level: " + Brick.level, 10, 25);
-			var interval = ((Brick.level - Brick.level % 2) / 2) * 10;
+
 			if(interval == 0){
 				p.text("Update Rate: Immediate", 10, 50);
 			}else{
 				p.text("Update Rate: " + interval + " minutes", 10, 50);
+			}
+
+			if(requiredStrength > 0){
+				p.text("Required Strength: " + requiredStrength, 10, 75);
 			}
 		};
 
@@ -82,7 +93,7 @@ $(document).ready(function(){
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
-					$("#alerts").html("<h4>Instructions</h4>Your bricks will be added to the tower " + nextTime(Brick.level) +" - until then no one will be able to see them. Use the glyphs to write a message so other builders know where you placed your bricks.");
+					updateAlert(Brick.level, finish);
 					$("#left").hide();
 					$("#right").hide();
 					$("#remove").show();
@@ -141,6 +152,8 @@ $(document).ready(function(){
 						loadTower(Brick.level);
 						loadOrders(Brick.level, 0);
 						setBackground(Brick.level);
+						updateAlert(Brick.level, finish);
+
 					}
 					break;
 				case 40: //Down arrow key, move down a level
@@ -149,6 +162,7 @@ $(document).ready(function(){
 						loadTower(Brick.level);
 						loadOrders(Brick.level, 0);
 						setBackground(Brick.level);
+						updateAlert(Brick.level, finish);
 					}
 					break;
 				default:
@@ -240,6 +254,37 @@ $(document).ready(function(){
 		function setBackground(level){
 			var index = Math.min(level, backgrounds.length - 1);
 			background = p.loadImage("../" + backgrounds[index]);
+		}
+
+		//I'm going to be doing a lot of this, so I should come up with a better way to do this sort of thing
+		function updateAlert(level, placed){
+			if(level < 2){
+				if(placed){
+					$("#instructions").html("Press submit to add your brick to the tower!");
+				}else{
+					$("#instructions").html("Place your bricks on the tower to build it higher! Overlap bricks of the same color to make them stronger but overlapping different colors will make them weaker or destroy them! You can see how strong a brick is based on how many lines it has on it. Bricks without support will fall down and be destroyed!");
+				}
+			}else if(level == 2){
+				if(placed){
+					$("#instructions").html("Write a message to tell other builders where you've placed your bricks. Click on the glyphs below to write your message. Click on glyphs in the message to delete them. From now on, all bricks must have messages!");
+				}else{
+					$("#instructions").html("The tower is so high that it now takes time to build! All bricks placed on this level will be placed every five minutes, all at once.");
+				}
+			}else if(level == 3){
+				if(!placed){
+					$("#instructions").html("At this height, heavy winds will destroy any bricks which don't have at least one strength. Use the messages to communicate where you're putting bricks with other builders and overlap bricks of the same color.");
+				}else{
+					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds!");
+				}
+			}else if(level == 4){
+				if(!placed){
+					$("#instructions").html("The higher the tower gets, the longer is takes to build. Orders are now resolved every 10 minutes.");
+				}else{
+					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds!");
+				}
+			}else{
+				$("#instructions").html("Keep building the tower!");
+			}
 		}
 
 		//-------------------------------------------------------------------------------------------------

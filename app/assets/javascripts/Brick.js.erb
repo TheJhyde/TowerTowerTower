@@ -1,6 +1,6 @@
 function Brick(startX, startY, p, color, strength){
 	//const BRICK_WIDTH = <%= Global.tower.brick_width %>;
-	const BRICK_WIDTH = Global["brick_width"];
+	const BRICK_WIDTH = <%= Global.tower.brick_width %>;
 	const BRICK_HEIGHT = <%= Global.tower.brick_height %>;
 	const COLUMNS = <%= Global.tower.bricks_layer %>;
 	const BPL = <%= Global.tower.level_height %>;
@@ -119,8 +119,14 @@ function Brick(startX, startY, p, color, strength){
 	this.draw = function(placed){
 		if(x >= 0 && x < COLUMNS){
 			pickFill(placed);
+			p.strokeWeight(1);
 			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT);
-			//How how how how how how how how how to display strength?
+			//Let's just try this method of displaying strength and see what happens
+			p.strokeWeight(2);
+			for(var i = 0; i < strength; i++){
+				var xLerp = p.lerp(xToScreen(x), xToScreen(x) + BRICK_WIDTH, (i+1)/(strength+1));
+				p.line(xLerp, yToScreen(y)+5, xLerp, yToScreen(y) + BRICK_HEIGHT-5);
+			}
 		}
 	}
 }
