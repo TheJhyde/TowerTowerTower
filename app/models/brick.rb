@@ -25,12 +25,12 @@ class Brick < ActiveRecord::Base
 		return news
 	end
 
-	def self.check_strength
+	def self.check_strength(news = [])
 		Brick.all.each do |brick|
 			#Bricks which are too weak for their level are destroyed
 			if brick.strength < (brick.level/3).round
 				brick.destroy
-				#Inform the owners of the bricks
+				news = NewsItem.add_to(news, brick.user.id, "weak")
 			end
 		end
 	end

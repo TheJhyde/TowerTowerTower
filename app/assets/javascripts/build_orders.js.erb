@@ -119,7 +119,7 @@ $(document).ready(function(){
 				loadOrders(Brick.level, 0);
 				setBackground(Brick.level);
 				updateAlert(Brick.level, finish);
-			}else if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
+			}else if(p.mouseX > Brick.BRICK_WIDTH && p.mouseX < p.width - Brick.BRICK_WIDTH && p.mouseY > 0 && p.mouseY < p.height){
 				if(!finish){
 					console.log("Brick at " + newBricks[0].x() + ", " + newBricks[0].y() + " level: " + newBricks[0].level());
 					finish = true;
