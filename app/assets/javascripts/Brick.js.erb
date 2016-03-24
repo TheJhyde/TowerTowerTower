@@ -1,18 +1,18 @@
 function Brick(startX, startY, p, color, strength){
 	//const BRICK_WIDTH = <%= Global.tower.brick_width %>;
-	const BRICK_WIDTH = <%= Global.tower.brick_width %>;
-	const BRICK_HEIGHT = <%= Global.tower.brick_height %>;
+	Brick.BRICK_WIDTH = <%= Global.tower.brick_width %>;
+	Brick.BRICK_HEIGHT = <%= Global.tower.brick_height %>;
 	const COLUMNS = <%= Global.tower.bricks_layer %>;
 	const BPL = <%= Global.tower.level_height %>;
 	const OVERLAP = <%= Global.tower.overlap %>
 	//const OVERLAP = 2;
 
-	Brick.towerWidth = BRICK_WIDTH * COLUMNS;
+	Brick.towerWidth = Brick.BRICK_WIDTH * COLUMNS;
 	if(Brick.offset == null){
-		Brick.offset = (p.width - BRICK_WIDTH * COLUMNS)/2;
+		Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 	}
 	var leftBound = 10;
-	var rightBound = p.width - (BRICK_WIDTH * COLUMNS) - 5;
+	var rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS) - 5;
 
 	var x = startX;
 	var y = startY;
@@ -48,6 +48,22 @@ function Brick(startX, startY, p, color, strength){
 		return (screenToX(mouseX) == x && screenToY(mouseY) == y)
 	}
 
+	Brick.makeSmaller = function(){
+		if(Brick.BRICK_WIDTH > 2.5){
+			Brick.BRICK_WIDTH *= 0.5;
+			Brick.BRICK_HEIGHT *= 0.5;
+			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
+		}
+	}
+
+	Brick.makeLarger = function(){
+		if(Brick.BRICK_WIDTH < <%= Global.tower.brick_width %>){
+			Brick.BRICK_WIDTH *= 2;
+			Brick.BRICK_HEIGHT *= 2;
+			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
+		}
+	}
+
 	this.x = function(){
 		return x;
 	}
@@ -75,20 +91,20 @@ function Brick(startX, startY, p, color, strength){
 
 	//Given an coordinate, shows where on the screen to draw
 	function xToScreen(thisX){
-		return thisX * BRICK_WIDTH + Brick.offset;
+		return thisX * Brick.BRICK_WIDTH + Brick.offset;
 	}
 
 	function yToScreen(thisY){
-		return p.height - (thisY+1 - Brick.level * BPL) * BRICK_HEIGHT ;
+		return p.height - (thisY+1 - Brick.level * BPL) * Brick.BRICK_HEIGHT ;
 	}
 
 	// Converts the screen position to the nearest x,y position
 	function screenToX(x){
-		return Math.floor((x - Brick.offset)/BRICK_WIDTH);
+		return Math.floor((x - Brick.offset)/Brick.BRICK_WIDTH);
 	}
 
 	function screenToY(y){
-		return Math.floor((p.height-y)/BRICK_HEIGHT) + Brick.level * BPL;
+		return Math.floor((p.height-y)/Brick.BRICK_HEIGHT) + Brick.level * BPL;
 	}
 
 	function pickFill(placed){
@@ -120,12 +136,12 @@ function Brick(startX, startY, p, color, strength){
 		if(x >= 0 && x < COLUMNS){
 			pickFill(placed);
 			p.strokeWeight(1);
-			p.rect(xToScreen(x), yToScreen(y), BRICK_WIDTH, BRICK_HEIGHT);
+			p.rect(xToScreen(x), yToScreen(y), Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT);
 			//Let's just try this method of displaying strength and see what happens
 			p.strokeWeight(2);
 			for(var i = 0; i < strength; i++){
-				var xLerp = p.lerp(xToScreen(x), xToScreen(x) + BRICK_WIDTH, (i+1)/(strength+1));
-				p.line(xLerp, yToScreen(y)+5, xLerp, yToScreen(y) + BRICK_HEIGHT-5);
+				var xLerp = p.lerp(xToScreen(x), xToScreen(x) + Brick.BRICK_WIDTH, (i+1)/(strength+1));
+				p.line(xLerp, yToScreen(y)+5, xLerp, yToScreen(y) + Brick.BRICK_HEIGHT-5);
 			}
 		}
 	}
