@@ -13,7 +13,7 @@ $(document).ready(function(){
 		var newBricks = [];
 		var finish = false;
 		var ar = [];
-		var maxLevel = false;
+		var maxLevel;
 
 		var background;
 		var backgrounds = ["level_one.jpg", "level_two.jpg", "level_three.jpg", "level_four.jpg", "level_five.jpg", "level_six.jpg"];
@@ -40,12 +40,13 @@ $(document).ready(function(){
 			$("#remove").hide();
 
 			background = p.loadImage("../level_one.jpg");
+			background2 = p.loadImage("../level_two.jpg")
 		};
 
 		p.draw = function(){
-			//p.background(p.lerpColor(p.color(200), p.color(0), Brick.level/maxLevel));
 			p.image(background, 0, 0, background.width, background.height, 0, 0, p.width, p.height);
-
+			//p.image(background2, (Brick.offset % p.width) - p.width, 0, background.width, background.height, 0, 0, p.width, p.height);			
+			
 			//Draws the bricks from the tower
 			p.stroke(0);
 			p.strokeWeight(1);
@@ -85,7 +86,7 @@ $(document).ready(function(){
 				p.text("Required Strength: " + requiredStrength, 10, 75);
 			}
 
-			if(p.mouseY < Brick.BRICK_HEIGHT && !maxLevel){
+			if(p.mouseY < Brick.BRICK_HEIGHT && Brick.level < maxLevel){
 				p.triangle(p.width/2, 5, p.width/2 - 40, Brick.BRICK_HEIGHT-10, p.width/2 + 40, Brick.BRICK_HEIGHT - 10);
 			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT && Brick.level > 0){
 				p.triangle(p.width/2, p.height-5, p.width/2 - 40, p.height - Brick.BRICK_HEIGHT+10, p.width/2 + 40, p.height - Brick.BRICK_HEIGHT + 10);
@@ -107,7 +108,7 @@ $(document).ready(function(){
 		};
 
 		p.mouseClicked = function(){
-			if(p.mouseY < Brick.BRICK_HEIGHT && p.mouseY >= 0 && !maxLevel){
+			if(p.mouseY < Brick.BRICK_HEIGHT && p.mouseY >= 0 && Brick.level < maxLevel){
 				Brick.level++;
 				loadTower(Brick.level);
 				loadOrders(Brick.level, 0);
@@ -179,7 +180,7 @@ $(document).ready(function(){
 					Brick.moveLeft();
 					break;
 				case 38: //Up arrow key, move up a level
-					if(!maxLevel){
+					if(Brick.level < maxLevel){
 						Brick.level++;
 						loadTower(Brick.level);
 						loadOrders(Brick.level, 0);
@@ -271,14 +272,10 @@ $(document).ready(function(){
 		function loadTower(requestedLevel){
 			tower = [];
 			$.get('/tower/'+requestedLevel + '.json', {level: requestedLevel}, function(data){
-				if(data.length == 0){
-					maxLevel = true;
-				}else{
-					maxLevel = false;
-					for(var i = 0; i < data.length; i++){
-						tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]));
-					}
+				for(var i = 0; i < data.length-1; i++){
+					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]));
 				}
+				maxLevel = data[data.length - 1]["maxlevel"];
 			});
 		}
 
