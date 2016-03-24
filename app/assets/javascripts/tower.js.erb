@@ -43,9 +43,9 @@ $(document).ready(function(){
 			//Find the brick they just moused over
 			var index = overBrick(p.mouseX, p.mouseY)
 			if(index != -1){
-				$("#panel").html("This brick was placed by " + tower[index].getName());
+				$("#info").html(tower[index].getInfo());
 			}else{
-				$("#panel").html("");
+				$("#info").html("");
 			}
 		};
 
@@ -98,7 +98,7 @@ $(document).ready(function(){
 					maxLevel = false;
 					for(var i = 0; i < data.length; i++){
 						tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]));
-						tower[tower.length - 1].setName(data[i]["name"]);
+						tower[tower.length - 1].setInfo(data[i]["info"]);
 					}
 				}
 			});

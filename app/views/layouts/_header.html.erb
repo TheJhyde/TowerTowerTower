@@ -9,6 +9,7 @@
 				<li><%= link_to "Home", 	root_path %></li>
 				<li><%= link_to "About", 	about_path %></li>
 				<li><%= link_to "Build Tower", new_build_order_path %></li>
+				<li><%= link_to "See Tower", tower_index_path %></li>
 				<% if logged_in? %>
 					<li><%= link_to "Log Out", logout_path, method: "delete" %></li>
 				<% else %>

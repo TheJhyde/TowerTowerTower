@@ -2,13 +2,16 @@ class TowerController < ApplicationController
 	def index
 		@tower = Brick.all.as_json
 		@tower.each do |brick|
+			info = "This brick was placed by "
 			if !brick["user_id"].nil?
-				brick[:name] = User.find(brick["user_id"]).name
+				info += User.find(brick["user_id"]).name
 			elsif !brick["stranger_id"].nil?
-				brick[:name] = Stranger.find(brick.stranger_id).name
+				info += Stranger.find(brick.stranger_id).name
 			else
-				brick[:name] = "Nobody"
+				info += "Nobody"
 			end
+			info += " on #{brick["created_at"].strftime("%_m/%-d, %l:%M %p")}."
+			brick["info"] = info
 		end
 		respond_to do |format|
       		format.json {render json: @tower }

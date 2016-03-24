@@ -49,7 +49,7 @@ module SessionsHelper
 		if logged_in?
 			unless current_user.actions > 0
 				flash[:danger] = "You are out of actions for day. You'll get more actions at noon EST."
-	      		redirect_to '/'
+	      		redirect_to tower_index_path
 			end
 		else
 			if session["stranger"].nil?
@@ -59,7 +59,7 @@ module SessionsHelper
 				stranger = Stranger.find(session["stranger"])
 				if stranger.actions <= 0
 					flash[:success] = "Bricks placed! You've used up your actions for the day. Sign up or come back tomorrow build more!"
-		      		redirect_to '/'
+		      		redirect_to tower_index_path
 		      	end
 			end
 		end
