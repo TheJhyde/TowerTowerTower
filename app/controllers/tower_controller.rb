@@ -13,7 +13,6 @@ class TowerController < ApplicationController
 			info += " on #{brick["created_at"].strftime("%_m/%-d, %l:%M %p")}."
 			brick["info"] = info
 		end
-		@tower << {"maxlevel" => max_level}
 		respond_to do |format|
       		format.json {render json: @tower }
       		format.html
