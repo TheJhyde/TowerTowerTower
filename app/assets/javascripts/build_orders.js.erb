@@ -84,10 +84,42 @@ $(document).ready(function(){
 			if(requiredStrength > 0){
 				p.text("Required Strength: " + requiredStrength, 10, 75);
 			}
+
+			if(p.mouseY < Brick.BRICK_HEIGHT && !maxLevel){
+				p.triangle(p.width/2, 5, p.width/2 - 40, Brick.BRICK_HEIGHT-10, p.width/2 + 40, Brick.BRICK_HEIGHT - 10);
+			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT && Brick.level > 0){
+				p.triangle(p.width/2, p.height-5, p.width/2 - 40, p.height - Brick.BRICK_HEIGHT+10, p.width/2 + 40, p.height - Brick.BRICK_HEIGHT + 10);
+			}
+
+			if(p.mouseX < Brick.BRICK_WIDTH){
+				p.triangle(5, p.height/2, Brick.BRICK_WIDTH-10, p.height/2 - 40, Brick.BRICK_WIDTH - 10, p.height/2 + 40);
+			}else if(p.mouseX > p.width - Brick.BRICK_WIDTH){
+				p.triangle(p.width - 5, p.height/2, p.width - Brick.BRICK_WIDTH+10, p.height/2 - 40, p.width - Brick.BRICK_WIDTH + 10, p.height/2 + 40);
+			}
+
+			if(p.mouseIsPressed){
+				if(p.mouseX < Brick.BRICK_WIDTH && p.mouseX > 0 && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+					Brick.moveLeft();
+				}else if(p.mouseX > p.width-Brick.BRICK_WIDTH && p.mouseX < p.width && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+					Brick.moveRight();
+				}
+			}
 		};
 
 		p.mouseClicked = function(){
-			if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
+			if(p.mouseY < Brick.BRICK_HEIGHT && p.mouseY >= 0 && !maxLevel){
+				Brick.level++;
+				loadTower(Brick.level);
+				loadOrders(Brick.level, 0);
+				setBackground(Brick.level);
+				updateAlert(Brick.level, finish);
+			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT && p.mouseY < p.height && Brick.level > 0){
+				Brick.level--;
+				loadTower(Brick.level);
+				loadOrders(Brick.level, 0);
+				setBackground(Brick.level);
+				updateAlert(Brick.level, finish);
+			}else if(p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height){
 				if(!finish){
 					console.log("Brick at " + newBricks[0].x() + ", " + newBricks[0].y() + " level: " + newBricks[0].level());
 					finish = true;
