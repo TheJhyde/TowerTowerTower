@@ -9,13 +9,9 @@ class BuildOrder < ActiveRecord::Base
 	def self.resolve_orders
 		bricks = BuildOrder.where(used: nil).where(["resolve_at < ?", (DateTime.now + 2.minute)])
 		news = []
-		puts "Got the bricks, gonna place them all."
 		news = place_bricks(news, bricks);
-		puts "Checking if bricks fall"
 		news = Brick.gravity(news);
-		puts "Check if bricks are strong enough"
 		Brick.check_strength();
-		puts "We did it! Writing the updates"
 		NewsItem.write_updates(news);
 	end
 
@@ -25,11 +21,14 @@ class BuildOrder < ActiveRecord::Base
 				if Brick.where(x: x, y: order.y[i]).length > 0
 					#Then there's already a brick there
 					Brick.where(x: x, y: order.y[i]).each do |brick|
+						puts "There was a brick collision"
 						#If they are the same color, make them stronger
 						if brick.color == order.colors
+							puts "THe bricks are the same color, make them stronger"
 							brick.update(strength: brick.strength + 1)
 							#TODO: Tell the brick placer they strengthened a brick
 						else
+							puts "The bricks are different colors, make them weaker"
 							#If they are different colors, make them weaker
 							brick.update(strength: brick.strength - 1)
 							#If strength falls below zero, destroy the brick
@@ -49,9 +48,7 @@ class BuildOrder < ActiveRecord::Base
 						news = NewsItem.add_to(news, order.user.id, "placed")
 					end
 					level = (order.y[i] - 1)/10;
-					puts "I'm going to try and create a brick now"
 					Brick.create(x: x, y: order.y[i], color: order.colors, user: order.user, level: level)
-					puts "I created a brick, safe and sound"
 				end
 			end
 			order.update(used: DateTime.now)
