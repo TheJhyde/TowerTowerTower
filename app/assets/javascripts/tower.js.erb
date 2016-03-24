@@ -12,9 +12,6 @@ $(document).ready(function(){
 		var tower = [];
 		var maxLevel = false;
 
-		var background;
-		var backgrounds = ["level_one.jpg", "level_two.jpg", "level_three.jpg", "level_four.jpg", "level_five.jpg", "level_six.jpg"];
-
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
 			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height %> * <%= Rails.configuration.x.level_height %>);
@@ -32,7 +29,7 @@ $(document).ready(function(){
 		};
 
 		p.draw = function(){
-			p.image(background, 0, 0, background.width, background.height, 0, 0, p.width, p.height);
+			p.background(173,216,230);
 
 			//Draws the bricks from the tower
 			p.stroke(0);
@@ -43,8 +40,23 @@ $(document).ready(function(){
 		};
 
 		p.mouseMoved = function(){
-			
+			//Find the brick they just moused over
+			var index = overBrick(p.mouseX, p.mouseY)
+			if(index != -1){
+				$("#panel").html("This brick was placed by " + tower[index].getName());
+			}else{
+				$("#panel").html("");
+			}
 		};
+
+		function overBrick(x, y){
+			for(var i = 0; i < tower.length; i++){
+				if(tower[i].isWithin(x, y)){
+					return i;
+				}
+			}
+			return -1;
+		}
 
 		p.keyPressed = function(){
 			switch(p.keyCode){
@@ -57,17 +69,11 @@ $(document).ready(function(){
 				case 38: //Up arrow key, move up a level
 					if(!maxLevel){
 						Brick.level++;
-						loadTower(Brick.level);
-						loadOrders(Brick.level, 0);
-						setBackground(Brick.level);
 					}
 					break;
 				case 40: //Down arrow key, move down a level
 					if(Brick.level > 0){
 						Brick.level--;
-						loadTower(Brick.level);
-						loadOrders(Brick.level, 0);
-						setBackground(Brick.level);
 					}
 					break;
 				case 81: //Zoom out
@@ -85,13 +91,14 @@ $(document).ready(function(){
 		//Loads the tower from the server
 		function loadTower(requestedLevel){
 			tower = [];
-			$.get('/tower.json', {level: requestedLevel}, function(data){
+			$.get('/tower.json', function(data){
 				if(data.length == 0){
 					maxLevel = true;
 				}else{
 					maxLevel = false;
 					for(var i = 0; i < data.length; i++){
 						tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]));
+						tower[tower.length - 1].setName(data[i]["name"]);
 					}
 				}
 			});

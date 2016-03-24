@@ -18,6 +18,7 @@ function Brick(startX, startY, p, color, strength){
 	var y = startY;
 	var screenX = xToScreen(x);
 	var screenY = yToScreen(y);
+	var name = "";
 
 	//This function should check if the brick might go out of bounds
 	//And refuse if it does
@@ -26,6 +27,14 @@ function Brick(startX, startY, p, color, strength){
 		y = screenToY(newY) + offsetY;
 		screenX = xToScreen(x);
 		screenY = yToScreen(y);
+	}
+
+	this.setName = function(newName){
+		name = newName;
+	}
+
+	this.getName = function(){
+		return name;
 	}
 
 	this.fall = function(){

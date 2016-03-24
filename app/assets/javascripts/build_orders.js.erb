@@ -238,7 +238,7 @@ $(document).ready(function(){
 		//Loads the tower from the server
 		function loadTower(requestedLevel){
 			tower = [];
-			$.get('/tower.json', {level: requestedLevel}, function(data){
+			$.get('/tower/'+requestedLevel + '.json', {level: requestedLevel}, function(data){
 				if(data.length == 0){
 					maxLevel = true;
 				}else{

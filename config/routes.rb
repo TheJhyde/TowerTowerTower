@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   get 'build_orders/finished' => 'build_orders#finished'
   get 'build_orders/get_orders/:id' => 'build_orders#get_orders'
   resources :build_orders, only: [:new, :create, :index, :show]
-  resources :tower, only: [:index]
+  resources :tower, only: [:index, :show]
   resources :tower_pics, only: [:show, :index]
   resources :password_resets, only: [:new, :create, :edit, :update]
 end
