@@ -21,10 +21,10 @@ class BuildOrder < ActiveRecord::Base
 				if Brick.where(x: x, y: order.y[i]).length > 0
 					#Then there's already a brick there
 					Brick.where(x: x, y: order.y[i]).each do |brick|
-						puts "There was a brick collision"
+						puts "There was a brick collision. The colors are #{brick.color} and #{order.colors}"
 						#If they are the same color, make them stronger
 						if brick.color == order.colors
-							puts "THe bricks are the same color, make them stronger"
+							puts "THe bricks are the same color, make them stronger."
 							brick.update(strength: brick.strength + 1)
 							#TODO: Tell the brick placer they strengthened a brick
 						else
