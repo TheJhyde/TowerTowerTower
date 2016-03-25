@@ -121,7 +121,7 @@ $(document).ready(function(){
 				updateAlert(Brick.level, finish);
 			}else if(p.mouseX > Brick.BRICK_WIDTH && p.mouseX < p.width - Brick.BRICK_WIDTH && p.mouseY > 0 && p.mouseY < p.height){
 				if(!finish){
-					console.log("Brick at " + newBricks[0].x() + ", " + newBricks[0].y() + " level: " + newBricks[0].level());
+					//console.log("Brick at " + newBricks[0].x() + ", " + newBricks[0].y() + " level: " + newBricks[0].level());
 					finish = true;
 					$("#bricks").hide();
 					$("#messages").hide();
