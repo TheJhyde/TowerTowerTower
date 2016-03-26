@@ -20,32 +20,31 @@ $(document).ready(function(){
 
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
-			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height %> * <%= Rails.configuration.x.level_height %>);
+			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height * (Global.tower.level_height + Global.tower.overlap) %>);
 			canvas.parent("canvas");
+			background = p.loadImage("../" + backgrounds[0]);
+			background2 = p.loadImage("../" + backgrounds[1]);
 
-			Brick.level = 0;
-			loadTower(Brick.level);
-			loadOrders(Brick.level, 0);
-
-			var color = Math.floor(Math.random() * 2);
-			generateArrangement();
-			for(var i = 0; i < ar.length + 1; i++){
-				newBricks.push(new Brick(50, 2, p, color, 0));
-			}
 
 			$.get('/session.json', function(data){
-				USER_ID = data;
+				USER_ID = data["id"];
+				maxLevel = data["max_level"]
+				Brick.level = maxLevel - 1;
+				Brick.level = 0;
+				setLevel();
+
+				ar = data["ar"];
+				for(var i = 0; i < ar.length + 1; i++){
+					newBricks.push(new Brick(50, 2, p, data["color"], 0));
+				}
 			});
-
-			$("#remove").hide();
-
-			background = p.loadImage("../level_one.jpg");
-			background2 = p.loadImage("../level_two.jpg")
 		};
 
 		p.draw = function(){
-			p.image(background, 0, 0, background.width, background.height, 0, 0, p.width, p.height);
-			
+			p.background(100);
+			p.image(background, 0, 0, background.width, background.height, ((Brick.offset-10) % p.width), 0, p.width, p.height);
+			p.image(background, 0, 0, background.width, background.height, ((Brick.offset-10) % p.width + p.width), 0, p.width, p.height);
+
 			//Draws the bricks from the tower
 			p.stroke(0);
 			p.strokeWeight(1);
@@ -60,8 +59,9 @@ $(document).ready(function(){
 				newBricks[i].draw(finish);
 			}
 
-			var interval = ((Brick.level - Brick.level % 2) / 2) * 5;
-			var requiredStrength = Math.floor(Brick.level/3);
+			//Draws the information block in the upper left
+			var interval = (Math.floor((Brick.level+1) / 2)) * 5;
+			var requiredStrength = Math.floor((Brick.level+1)/3);
 
 			p.fill(255);
 			p.stroke(0);
@@ -74,7 +74,6 @@ $(document).ready(function(){
 			p.strokeWeight(1);
 			p.textSize(20);
 			p.text("Level: " + Brick.level, 10, 25);
-
 			if(interval == 0){
 				p.text("Update Rate: Immediate", 10, 50);
 			}else{
@@ -85,40 +84,36 @@ $(document).ready(function(){
 				p.text("Required Strength: " + requiredStrength, 10, 75);
 			}
 
+			//Draw navigation arrows
+			p.fill(100);
+			//Up and down arrows
 			if(p.mouseY < Brick.BRICK_HEIGHT && Brick.level < maxLevel){
-				p.triangle(p.width/2, 5, p.width/2 - 40, Brick.BRICK_HEIGHT-10, p.width/2 + 40, Brick.BRICK_HEIGHT - 10);
+				p.triangle(p.width/2, 5, p.width/2 - 40, (Brick.BRICK_HEIGHT-10)/2, p.width/2 + 40, (Brick.BRICK_HEIGHT-10)/2);
 			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT && Brick.level > 0){
-				p.triangle(p.width/2, p.height-5, p.width/2 - 40, p.height - Brick.BRICK_HEIGHT+10, p.width/2 + 40, p.height - Brick.BRICK_HEIGHT + 10);
+				p.triangle(p.width/2, p.height-5, p.width/2 - 40, p.height - (Brick.BRICK_HEIGHT-10)/2, p.width/2 + 40, p.height - (Brick.BRICK_HEIGHT-10)/2);
 			}
 
+			//Left and right arrows
 			if(p.mouseX < Brick.BRICK_WIDTH){
 				p.triangle(5, p.height/2, Brick.BRICK_WIDTH-10, p.height/2 - 40, Brick.BRICK_WIDTH - 10, p.height/2 + 40);
 			}else if(p.mouseX > p.width - Brick.BRICK_WIDTH){
 				p.triangle(p.width - 5, p.height/2, p.width - Brick.BRICK_WIDTH+10, p.height/2 - 40, p.width - Brick.BRICK_WIDTH + 10, p.height/2 + 40);
 			}
 
-			if(p.mouseIsPressed){
-				if(p.mouseX < Brick.BRICK_WIDTH && p.mouseX > 0 && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
-					Brick.moveLeft();
-				}else if(p.mouseX > p.width-Brick.BRICK_WIDTH && p.mouseX < p.width && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
-					Brick.moveRight();
-				}
+			if(p.mouseX < Brick.BRICK_WIDTH && p.mouseX > 0 && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+				Brick.moveLeft();
+			}else if(p.mouseX > p.width-Brick.BRICK_WIDTH && p.mouseX < p.width && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+				Brick.moveRight();
 			}
 		};
 
 		p.mouseClicked = function(){
-			if(p.mouseY < Brick.BRICK_HEIGHT && p.mouseY >= 0 && Brick.level < maxLevel){
+			if(p.mouseY < Brick.BRICK_HEIGHT/2 && p.mouseY >= 0 && Brick.level < maxLevel){
 				Brick.level++;
-				loadTower(Brick.level);
-				loadOrders(Brick.level, 0);
-				setBackground(Brick.level);
-				updateAlert(Brick.level, finish);
-			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT && p.mouseY < p.height && Brick.level > 0){
+				setLevel();
+			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT/2 && p.mouseY < p.height && Brick.level > 0){
 				Brick.level--;
-				loadTower(Brick.level);
-				loadOrders(Brick.level, 0);
-				setBackground(Brick.level);
-				updateAlert(Brick.level, finish);
+				setLevel();
 			}else if(p.mouseX > Brick.BRICK_WIDTH && p.mouseX < p.width - Brick.BRICK_WIDTH && p.mouseY > 0 && p.mouseY < p.height){
 				if(!finish){
 					//console.log("Brick at " + newBricks[0].x() + ", " + newBricks[0].y() + " level: " + newBricks[0].level());
@@ -181,20 +176,13 @@ $(document).ready(function(){
 				case 38: //Up arrow key, move up a level
 					if(Brick.level < maxLevel){
 						Brick.level++;
-						loadTower(Brick.level);
-						loadOrders(Brick.level, 0);
-						setBackground(Brick.level);
-						updateAlert(Brick.level, finish);
-
+						setLevel();
 					}
 					break;
 				case 40: //Down arrow key, move down a level
 					if(Brick.level > 0){
 						Brick.level--;
-						loadTower(Brick.level);
-						loadOrders(Brick.level, 0);
-						setBackground(Brick.level);
-						updateAlert(Brick.level, finish);
+						setLevel();
 					}
 					break;
 				default:
@@ -203,29 +191,6 @@ $(document).ready(function(){
 		};
 
 		//------------------------------------------OTHER FUNCTIONS------------------------------------
-				
-		//Generates the arrangement of bricks. Kind of hacky.
-		function generateArrangement(){
-			for(var i = 0; i < SHIPMENTSIZE-1; i++){
-				ar[i] = []
-				for(var j = 0; j < 2; j++){
-					ar[i][j] = Math.floor(Math.random()*3-1);
-				}
-			}
-			//Don't put a new brick on top of my old brick!
-			if(ar[0][0] == 0 && ar[0][1] == 0){
-				ar[0][0] = 1;
-			}
-			if(ar[1][0] == 0 && ar[1][1] == 0){
-				ar[1][0] = -1;
-			}
-			//If the first and second brick are in the same place
-			//Throw away one of them
-			if(ar[0][0] == ar[1][0] && ar[0][1] == ar[1][1]){
-				ar.shift();
-			}
-		}
-
 		//Is the given screen coordinates inside the new bricks?
 		function withinPlaced(x, y){
 			for(var i = 0; i < newBricks.length; i++){
@@ -252,6 +217,13 @@ $(document).ready(function(){
 			}
 		}
 
+		function setLevel(){
+			loadTower(Brick.level);
+			loadOrders(Brick.level, 0);
+			setBackground(Brick.level);
+			updateAlert(Brick.level, finish);
+		}
+
 		//Removes the keyboard and lets you move the bricks again
 		function moveBricks(){
 			finish = false;
@@ -271,10 +243,9 @@ $(document).ready(function(){
 		function loadTower(requestedLevel){
 			tower = [];
 			$.get('/tower/'+requestedLevel + '.json', {level: requestedLevel}, function(data){
-				for(var i = 0; i < data.length-1; i++){
+				for(var i = 0; i < data.length; i++){
 					tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]));
 				}
-				maxLevel = data[data.length - 1]["maxlevel"];
 			});
 		}
 
@@ -286,25 +257,25 @@ $(document).ready(function(){
 
 		//I'm going to be doing a lot of this, so I should come up with a better way to do this sort of thing
 		function updateAlert(level, placed){
-			if(level < 2){
+			if(level == 0){
 				if(placed){
 					$("#instructions").html("Press submit to add your brick to the tower! Or, click on your brick or press S to pick the brick back up and put it somewhere else.");
 				}else{
 					$("#instructions").html("Place your bricks on the tower to build it higher! Overlap bricks of the same color to make them stronger but overlapping different colors will make them weaker or destroy them! You can see how strong a brick is based on how many lines it has on it. Bricks without support will fall down and be destroyed!");
 				}
-			}else if(level == 2){
+			}else if(level == 1){
 				if(placed){
 					$("#instructions").html("You and all other builder's bricks will be added to the tower " + nextTime(level) +". Write a message to tell other builders where you've placed your bricks. Click on the glyphs below to write your message. Click on glyphs in the message to delete them. From now on, all bricks must have messages!");
 				}else{
 					$("#instructions").html("The tower is so high that it now takes time to build! All bricks placed on this level will be placed every five minutes, all at once.");
 				}
-			}else if(level == 3){
+			}else if(level == 2){
 				if(!placed){
 					$("#instructions").html("At this height, heavy winds will destroy any bricks which don't have at least one strength. Use the messages to communicate where you're putting bricks with other builders and overlap bricks of the same color.");
 				}else{
 					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds! All bricks will be added to the tower " + nextTime(level) +".");
 				}
-			}else if(level == 4){
+			}else if(level == 3){
 				if(!placed){
 					$("#instructions").html("The higher the tower gets, the longer is takes to build. Orders are now resolved every 10 minutes.");
 				}else{

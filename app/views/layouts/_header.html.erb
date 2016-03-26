@@ -4,7 +4,7 @@
 		<nav>
 			<ul class = "nav navbar-nav navbar-right">
 				<% if logged_in? %>
-					<li class = "text">Actions: <%= current_user.actions %></li>
+					<li class = "text"><%= link_to "Actions", actions_path%>: <%= current_user.actions %></li>
 				<% end %>
 				<li><%= link_to "Home", 	root_path %></li>
 				<li><%= link_to "About", 	about_path %></li>

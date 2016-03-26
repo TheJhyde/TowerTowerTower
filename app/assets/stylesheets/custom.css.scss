@@ -189,6 +189,10 @@ input{
 		display: block;
 		position: relative;
 		box-sizing: border-box;
+		a{
+			padding: 0px;
+			display: inline;
+		}
 	}
 }
 

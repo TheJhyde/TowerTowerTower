@@ -12,7 +12,7 @@ function Brick(startX, startY, p, color, strength){
 		Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 	}
 	var leftBound = 10;
-	var rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS) - 5;
+	var rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
 
 	var x = startX;
 	var y = startY;
@@ -42,14 +42,17 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	Brick.moveLeft = function(){
-		if(Brick.offset < leftBound){
-			Brick.offset += 30;
+		Brick.offset += 15;
+		if(Brick.offset > leftBound){
+			Brick.offset = leftBound;
 		}
+		console.log(Brick.offset);
 	}
 
 	Brick.moveRight = function(){
-		if(Brick.offset > rightBound){
-			Brick.offset -= 30;
+		Brick.offset -= 15;
+		if(Brick.offset < rightBound){
+			Brick.offset = rightBound;
 		}
 	}
 
@@ -104,7 +107,7 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	function yToScreen(thisY){
-		return p.height - (thisY+1 - Brick.level * BPL) * Brick.BRICK_HEIGHT ;
+		return p.height - (thisY+1 - Brick.level * BPL) * Brick.BRICK_HEIGHT + Brick.BRICK_HEIGHT/2;
 	}
 
 	// Converts the screen position to the nearest x,y position
@@ -124,16 +127,31 @@ function Brick(startX, startY, p, color, strength){
 		}
 		switch (color){
 			case 0:
-				p.fill(170, 0, 0, a);
+				//p.fill(170, 0, 0, a);
+				p.fill(0, 0, 0, a);
 				break;
 			case 1:
-				p.fill(255, 140, 0, a);
+				//p.fill(255, 140, 0, a);
+				p.fill(255, 255, 255, a);
 				break;
 			case 2:
 				p.fill(0, 0, 200, a);
 				break;
 			default:
 				p.fill(0);
+		}
+	}
+
+	function pickStrokeFill(){
+		switch(color){
+			case 0:
+				p.stroke(255);
+				break;
+			case 1:
+				p.stroke(0);
+				break;
+			default:
+				p.stroke(100);
 		}
 	}
 
@@ -144,10 +162,12 @@ function Brick(startX, startY, p, color, strength){
 	this.draw = function(placed){
 		if(x >= 0 && x < COLUMNS){
 			pickFill(placed);
+			p.stroke(100);
 			p.strokeWeight(1);
 			p.rect(xToScreen(x), yToScreen(y), Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT);
-			//Let's just try this method of displaying strength and see what happens
+
 			p.strokeWeight(2);
+			pickStrokeFill(2);
 			for(var i = 0; i < strength; i++){
 				var xLerp = p.lerp(xToScreen(x), xToScreen(x) + Brick.BRICK_WIDTH, (i+1)/(strength+1));
 				p.line(xLerp, yToScreen(y)+5, xLerp, yToScreen(y) + Brick.BRICK_HEIGHT-5);

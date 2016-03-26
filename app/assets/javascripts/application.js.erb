@@ -43,17 +43,15 @@ function readGlyphs(){
 function loadKeyboard(bricks){
 	$.get('finished.js', function(){
 		readGlyphs();
-		var colors = bricks[0].color();
 		var x = "";
 		var y = "";
 		for(var i = 0; i < bricks.length; i++){
 			x += bricks[i].x() + " ";
 			y += bricks[i].y() + " ";
 		}
-		$("#build_order_colors").val(colors);
 		$("#build_order_x").val(x);
 		$("#build_order_y").val(y);
-		if(Brick.level < 2){
+		if(Brick.level < 1){
 			$("#keyboard").hide();
 		}
 	});
@@ -65,7 +63,7 @@ function loadOrders(level, date){
 }
 
 function nextTime(level){
-	var interval = ((level - level % 2) / 2) * 5;
+	var interval = (Math.floor((level+1) / 2)) * 5;
 	if(interval == 0){
 		return "immediately";
 	}

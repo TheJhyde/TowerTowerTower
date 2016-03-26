@@ -25,9 +25,6 @@ class TowerController < ApplicationController
 			one_down = Brick.where(y: params["id"].to_i * Global.tower.level_height)
 			one_up = Brick.where(y: (params["id"].to_i + 1) * Global.tower.level_height + 1);
 			@tower = this_level + one_up + one_down
-			@tower = @tower.as_json
-			max_level = Brick.order(:level).last.level + 1
-			@tower << {"maxlevel" => max_level}
 		else
 			#NONE OF THIS IS RELEVANT ANYMORE
 			#DON"T USE IT UNTIL IT"S BEEN REVAMPED!!

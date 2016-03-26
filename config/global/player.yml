@@ -1,5 +1,5 @@
 default:
-  max_actions: 20
+  max_actions: 12
   daily_actions: 6
   starting_actions: 6
   stranger_actions: 2

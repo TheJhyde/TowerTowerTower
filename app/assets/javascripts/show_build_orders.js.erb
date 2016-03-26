@@ -23,7 +23,7 @@ $(document).ready(function(){
 			var url = window.location.href;
 			time = parseInt(url.slice(url.lastIndexOf("/")+1));
 
-			canvas = p.createCanvas(p.windowWidth - 550, <%= Rails.configuration.x.brick_height %> * <%= Rails.configuration.x.level_height %>);
+			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height * (Global.tower.level_height + Global.tower.overlap)%>);
 			canvas.parent("canvas");
 
 			Brick.level = 0;
@@ -129,7 +129,7 @@ $(document).ready(function(){
 			orders = [];
 			$.get('/build_orders/' + time + '.json', function(data){
 				for(var i = 0; i < data.length; i++){
-					if(data[i]["y"][0] >= level * <%= Rails.configuration.x.level_height %> - 2 && data[i]["y"][0] <= (level + 1) * <%= Rails.configuration.x.level_height %>){
+					if(data[i]["y"][0] >= level * <%= Global.tower.level_height %> && data[i]["y"][0] <= (level + 1) * <%= Rails.configuration.x.level_height %>){
 						orders.push(data[i]);
 					}
 				}

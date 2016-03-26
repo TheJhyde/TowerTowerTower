@@ -42,6 +42,9 @@ class StaticPagesController < ApplicationController
         @news_items = NewsItem.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
   end
 
+  def actions
+  end
+
   private
   	def error_params
   		params.require(:news_item).permit(:message)
