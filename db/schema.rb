@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160320204657) do
+ActiveRecord::Schema.define(version: 20160327223442) do
 
   create_table "bricks", force: :cascade do |t|
     t.integer  "x"
@@ -37,6 +37,16 @@ ActiveRecord::Schema.define(version: 20160320204657) do
     t.datetime "resolve_at",  default: '2016-03-10 19:50:47'
     t.integer  "level",       default: 0
     t.integer  "stranger_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.integer  "number",             default: 0, null: false
+    t.integer  "brick_id"
+    t.integer  "build_order_id"
+    t.integer  "original_player_id"
+    t.integer  "placing_player_id"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   create_table "glyphs", force: :cascade do |t|

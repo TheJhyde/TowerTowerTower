@@ -3,6 +3,7 @@ include Magick
 class Brick < ActiveRecord::Base
 	belongs_to :user
 	belongs_to :stranger
+	has_many :events
 
 	@@brick_width = Global.tower.brick_width/5
 	@@brick_height = Global.tower.brick_height/5
