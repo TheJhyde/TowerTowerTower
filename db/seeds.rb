@@ -32,5 +32,16 @@ intro.update(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get
 	new_brick.save
 end
 
+(1..15).each do |i|
+	((15 - i)*2).times do |j|
+		new_brick = Brick.find_or_create_by(x: j+45+i, y: i)
+		new_brick.color = rand(2)
+		new_brick.user = User.first
+		new_brick.level = (i - 1)/10;
+		new_brick.strength = rand(3);
+		new_brick.save
+	end
+end
+
 me = User.find_or_create_by(name: "Cool Goat")
 me.update(admin: true, email: "jkhyde86@gmail.com", activated: true, actions: 100, password: User.digest('password'))
