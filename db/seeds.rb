@@ -23,6 +23,7 @@ intro.update(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get
 	about the game, check out our <a href ='http://towerbricklightning.tumblr.com/'>tumblr</a>
 	 or <a href='https://twitter.com/TBLGame'>twitter</a>.")
 
+#Make a foundation
 100.times do |i|
 	new_brick = Brick.find_or_create_by(x: i, y: 0)
 	new_brick.color = rand(2)
@@ -32,9 +33,10 @@ intro.update(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get
 	new_brick.save
 end
 
-(1..15).each do |i|
-	((15 - i)*2).times do |j|
-		new_brick = Brick.find_or_create_by(x: j+45+i, y: i)
+#Make's a pyramid to demonstrate concepts
+(1..25).each do |i|
+	((25 - i)*2).times do |j|
+		new_brick = Brick.find_or_create_by(x: j+50+i, y: i)
 		new_brick.color = rand(2)
 		new_brick.user = User.first
 		new_brick.level = (i - 1)/10;

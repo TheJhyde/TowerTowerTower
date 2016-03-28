@@ -12,6 +12,8 @@ $(document).ready(function(){
 		var tower = [];
 		var maxLevel = false;
 
+		var arrow_width;
+
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
 			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height %> * <%= Rails.configuration.x.level_height %>);
@@ -25,6 +27,8 @@ $(document).ready(function(){
 				USER_ID = data;
 			});
 
+			arrow_width = <%= Global.tower.brick_width %>;
+
 			background = p.loadImage("../level_one.jpg");
 		};
 
@@ -36,6 +40,36 @@ $(document).ready(function(){
 			p.strokeWeight(1);
 			for(var i = 0; i < tower.length; i++){
 				tower[i].draw();
+			}
+
+			//Draw navigation arrows
+			p.fill(100);
+			//Up and down arrows
+			if(p.mouseY < arrow_width){
+				p.triangle(p.width/2, 5, p.width/2 - 40, (arrow_width-10)/2, p.width/2 + 40, (arrow_width-10)/2);
+			}else if(p.mouseY > p.height - arrow_width){
+				p.triangle(p.width/2, p.height-5, p.width/2 - 40, p.height - (arrow_width-10)/2, p.width/2 + 40, p.height - (arrow_width-10)/2);
+			}
+
+			//Left and right arrows
+			if(p.mouseX < arrow_width){
+				p.triangle(5, p.height/2, arrow_width-10, p.height/2 - 40, arrow_width - 10, p.height/2 + 40);
+			}else if(p.mouseX > p.width - arrow_width){
+				p.triangle(p.width - 5, p.height/2, p.width - arrow_width+10, p.height/2 - 40, p.width - arrow_width + 10, p.height/2 + 40);
+			}
+
+			//Move right and left
+			if(p.mouseX < arrow_width && p.mouseX > 0 && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+				Brick.moveLeft();
+			}else if(p.mouseX > p.width-arrow_width && p.mouseX < p.width && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+				Brick.moveRight();
+			}
+
+			//This is where the mouse stuff for the up and down would go
+			if(p.mouseY < arrow_width && p.mouseY > 0 && p.mouseX > p.width/2 - 40 && p.mouseX < p.width/2 + 40){
+				Brick.moveUp();
+			}else if(p.mouseY > p.height-Brick.BRICK_WIDTH && p.mouseY < p.height && p.mouseX > p.width/2 - 40 && p.mouseX < p.width/2 + 40){
+				Brick.moveDown();
 			}
 		};
 
@@ -67,14 +101,10 @@ $(document).ready(function(){
 					Brick.moveLeft();
 					break;
 				case 38: //Up arrow key, move up a level
-					if(!maxLevel){
-						Brick.level++;
-					}
+					Brick.moveUp();
 					break;
 				case 40: //Down arrow key, move down a level
-					if(Brick.level > 0){
-						Brick.level--;
-					}
+					Brick.moveDown();
 					break;
 				case 81: //Zoom out
 					Brick.makeSmaller();

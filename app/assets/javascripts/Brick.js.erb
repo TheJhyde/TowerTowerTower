@@ -11,6 +11,9 @@ function Brick(startX, startY, p, color, strength){
 	if(Brick.offset == null){
 		Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 	}
+	if(Brick.verticalOffset == null){
+		Brick.verticalOffset = 0;
+	}
 	var leftBound = 10;
 	var rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
 
@@ -56,14 +59,29 @@ function Brick(startX, startY, p, color, strength){
 		}
 	}
 
+	//There should be some limit on how far up you can go
+	Brick.moveUp = function(){
+		Brick.verticalOffset -= 15;
+	}
+
+	Brick.moveDown = function(){
+		Brick.verticalOffset += 15;
+		if(Brick.verticalOffset > 0){
+			Brick.verticalOffset = 0;
+		}
+	}
+
 	this.isWithin = function(mouseX, mouseY){
 		return (screenToX(mouseX) == x && screenToY(mouseY) == y)
 	}
 
+	//The bounds need to be altered also
 	Brick.makeSmaller = function(){
 		if(Brick.BRICK_WIDTH > 2.5){
 			Brick.BRICK_WIDTH *= 0.5;
 			Brick.BRICK_HEIGHT *= 0.5;
+			rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
+			//This alwys put the offset at the halfway point
 			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 		}
 	}
@@ -72,6 +90,7 @@ function Brick(startX, startY, p, color, strength){
 		if(Brick.BRICK_WIDTH < <%= Global.tower.brick_width %>){
 			Brick.BRICK_WIDTH *= 2;
 			Brick.BRICK_HEIGHT *= 2;
+			rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
 			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 		}
 	}
@@ -164,13 +183,13 @@ function Brick(startX, startY, p, color, strength){
 			pickFill(placed);
 			p.stroke(100);
 			p.strokeWeight(1);
-			p.rect(xToScreen(x), yToScreen(y), Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT);
+			p.rect(xToScreen(x), yToScreen(y) - Brick.verticalOffset, Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT);
 
 			p.strokeWeight(2);
 			pickStrokeFill(2);
 			for(var i = 0; i < strength; i++){
 				var xLerp = p.lerp(xToScreen(x), xToScreen(x) + Brick.BRICK_WIDTH, (i+1)/(strength+1));
-				p.line(xLerp, yToScreen(y)+5, xLerp, yToScreen(y) + Brick.BRICK_HEIGHT-5);
+				p.line(xLerp, yToScreen(y)+5- Brick.verticalOffset, xLerp, yToScreen(y) + Brick.BRICK_HEIGHT-5- Brick.verticalOffset);
 			}
 		}
 	}
