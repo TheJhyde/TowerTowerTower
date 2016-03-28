@@ -4,7 +4,12 @@ class SessionsController < ApplicationController
 
   def create
   	user = User.find_by(email: params[:session][:email].downcase)
-  	if user && user.authenticate(params[:session][:password])      
+  	if user && user.authenticate(params[:session][:password])  
+      if current_user.build_orders.count == 0
+        current_user.delete
+      end
+      #If the mysterious stranger does have any build orders, they should probably be
+      #Given to the current user and they should lose actions to correspond
   		log_in user
   		params[:session][:remember_me] == '1' ? remember(user) : forget(user)
   		redirect_back_or root_url

@@ -25,26 +25,31 @@ class BuildOrder < ActiveRecord::Base
 						#If they are the same color, make them stronger
 						if brick.color == order.colors
 							brick.update(strength: brick.strength + 1)
+							Event.create(category: "strengthened", original_player: brick.user, placing_player: order.user, brick: brick, build_order: order)
 						else
 							#If they are different colors, make them weaker
 							brick.update(strength: brick.strength - 1)
 							#If strength falls below zero, destroy the brick
 							if brick.strength < 0
-								unless brick.user.nil?
-									news = NewsItem.add_to(news, brick.user.id, "destroyed")
-								end
+								Event.create(category: "demolished", original_player: brick.user, placing_player: order.user, brick: brick, build_order: order)
+								# unless brick.user.nil?
+								# 	news = NewsItem.add_to(news, brick.user.id, "destroyed")
+								# end
 								brick.destroy
+							else
+								Event.create(category: "weakened", original_player: brick.user, placing_player: order.user, brick: brick, build_order: order)
 							end
 							#TODO: Tell the brick placer they weakened or destroyed a brick
 						end
 					end
 				else
 					#Then there isn't a brick there. Add it to the tower.
-					unless order.user.nil?
-						news = NewsItem.add_to(news, order.user.id, "placed")
-					end
+					# unless order.user.nil?
+					# 	news = NewsItem.add_to(news, order.user.id, "placed")
+					# end
 					level = (order.y[i] - 1)/10;
-					Brick.create(x: x, y: order.y[i], color: order.colors, user: order.user, level: level)
+					brick = Brick.create(x: x, y: order.y[i], color: order.colors, user: order.user, level: level)
+					Event.create(category: "placed", placing_player: order.user, build_order: order, brick: brick)
 				end
 			end
 			order.update(used: DateTime.now)

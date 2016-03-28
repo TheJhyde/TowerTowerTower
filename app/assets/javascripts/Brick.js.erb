@@ -116,7 +116,7 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	function screenToY(y){
-		return Math.floor((p.height-y)/Brick.BRICK_HEIGHT) + Brick.level * BPL;
+		return Math.floor((p.height-y+Brick.BRICK_HEIGHT/2)/Brick.BRICK_HEIGHT) + Brick.level * BPL;
 	}
 
 	function pickFill(placed){

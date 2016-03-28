@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328002351) do
+ActiveRecord::Schema.define(version: 20160328172222) do
 
   create_table "bricks", force: :cascade do |t|
     t.integer  "x"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20160328002351) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.integer  "number",             default: 0, null: false
+    t.integer  "category",           default: 0, null: false
     t.integer  "brick_id"
     t.integer  "build_order_id"
     t.integer  "original_player_id"
@@ -87,14 +87,13 @@ ActiveRecord::Schema.define(version: 20160328002351) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.string   "password_digest"
-    t.string   "user_name"
     t.string   "gender"
     t.string   "remember_digest"
     t.boolean  "admin",             default: false
-    t.string   "curse",             default: "bees"
+    t.string   "curse"
     t.string   "activation_digest"
     t.boolean  "activated",         default: false
     t.datetime "activated_at"
@@ -105,6 +104,5 @@ ActiveRecord::Schema.define(version: 20160328002351) do
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["user_name"], name: "index_users_on_user_name", unique: true
 
 end
