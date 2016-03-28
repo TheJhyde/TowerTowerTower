@@ -16,22 +16,20 @@ class UsersController < ApplicationController
   end
 
   def create
-  	@user = User.new(user_params)
+    @user = current_user
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
-    @user.news_items << NewsItem.first
     @user.actions = Global.player.starting_actions
-    unless session["stranger"].nil?
-      @user.build_orders << Stranger.find(session["stranger"]).build_orders
-      @user.bricks << Stranger.find(session["stranger"]).bricks
-    end
-  	if @user.save
-      @user.send_activation_email
+    @user.signed_up = true
+  	if @user.save && @user.update_attributes(user_params)
+      #@user.send_activation_email
       log_in @user
-  		flash[:success] = "Welcome #{@user.name}"
+  		flash[:success] = "Welcome #{current_user.name}"
   		redirect_to '/'
   	else
-  		@user.name = nil #This is a little hackey
+      @user.update(signed_up: false)
+      @names = params[:name]
+      @gender = params[:user][:gender]
   		render 'new'
   	end
   end

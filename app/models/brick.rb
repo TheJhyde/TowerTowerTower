@@ -31,7 +31,7 @@ class Brick < ActiveRecord::Base
 			#Bricks which are too weak for their level are destroyed
 			if brick.strength < (brick.level+1/3).round
 				brick.destroy
-				news = NewsItem.add_to(news, brick.user.id, "weak")
+				#news = NewsItem.add_to(news, brick.user.id, "weak")
 			end
 		end
 	end

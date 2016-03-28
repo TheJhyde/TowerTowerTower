@@ -1,21 +1,25 @@
 class User < ActiveRecord::Base
 	attr_accessor :remember_token, :activation_token, :reset_token
 	#Befores
-	before_save :downcase_email
+	before_save :downcase_email, if: "signed_up?"
 	before_create :create_activation_digest
+
 	#Validations, so many validations
 	validates :name, presence: true, length: {maximum: 50}
-	validates :user_name, presence: true, length: {maximum: 50}, format: { with: /\A[a-zA-Z0-9]+\Z/ },
-		uniqueness: {case_sensitive: false}, allow_nil: true
-	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-	validates :email, presence: true, length: {maximum: 255}, format: { with: VALID_EMAIL_REGEX},
+	has_secure_password validations: false
+	#Checks all of these for a real user
+	with_options :if => Proc.new{|user| user.signed_up? } do |signed_user|
+		signed_user.validates :password, presence: true, length: { minimum: 6 }
+		VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+		signed_user.validates :email, presence: true, length: {maximum: 255}, format: { with: VALID_EMAIL_REGEX},
 		uniqueness: {case_sensitive: false}
-	has_secure_password
-	validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+	end
+	
 	#Relationships. Users own a lot of stuff
 	has_and_belongs_to_many :news_items
 	has_many :build_orders
 	has_many :bricks
+	
 	#Some variables used for the sign up form
 	GENDERS = ['4524', '___!___!_', 'zzzzzz', '<_>']
 	NAME_WORDS = "Goat Mountain Tower Sun Moon Star Horse Desert Tree Hammer Cool Warm Kind Tall 
@@ -47,10 +51,19 @@ class User < ActiveRecord::Base
 		update_attribute(:remember_digest, nil)
 	end
 
+	def self.daily_tasks
+  		User.add_actions
+	end
+
 	#Adds an action to all users
 	def self.add_actions
 		User.all.each do |user|
-			user.actions += Global.player.daily_actions
+			if user.signed_up
+				user.actions += Global.player.daily_actions
+			else
+				user.actions += Global.player.stranger_actions
+			end
+
 			if user.actions > Global.player.max_actions
 				user.actions = Global.player.max_actions
 			end
@@ -79,11 +92,6 @@ class User < ActiveRecord::Base
 
 	def password_reset_expired?
 		reset_sent_at < 2.hours.ago
-	end
-
-	def self.daily_tasks
-  		User.add_actions
-		Stranger.add_actions
 	end
 
 	private

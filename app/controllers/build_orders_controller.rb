@@ -17,54 +17,36 @@ class BuildOrdersController < ApplicationController
 		if session[:ar].nil?
 			redirect_to new_build_order_path
 		end
-
 		@order = BuildOrder.new
-		@order.message = params["build_order"]["message"]
 		@order.x = params["build_order"]["x"].split(" ").map{|x| x.to_i}
 		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
-
-		@order.colors = session[:color]
-
 		@order.level = (@order.y[0] - 1) / Global.tower.level_height;
-		#Figure out at what interval it should be resolved
 
 		if params["build_order"]["message"].empty? && @order.level >= 1
 			flash[:danger] = "Bricks must have a message."
 			redirect_to new_build_order_path and return
 		end
+		@order.message = params["build_order"]["message"]
+		@order.colors = session[:color]
+		@order.user = current_user
+
 		interval = ((@order.level+1)/2).round * 5
-		#Set @order.resolve_at to that
 		if interval > 0
 			@order.resolve_at = Time.now.ceil_to(interval.minutes)
 		else
 			@order.resolve_at = DateTime.now
 		end
 
-		if logged_in?
-			@order.user = current_user
-		else
-			@order.stranger = Stranger.find(session["stranger"])
-		end
-
 		if @order.save
 			#Right here check if there's a duplicate order from the recent past
-
 			if(interval == 0)
 				BuildOrder.resolve_orders()
 				resolve_time = "now"
 			else
 				resolve_time = "at #{@order.resolve_at.strftime("%l:%M %p")}"
 			end
-
-			if logged_in?
-				current_user.update(actions: current_user.actions - 1)
-				#Bit of awkward grammar here
-				flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. You have #{current_user.actions} <a href ='/actions' target = '_blank'>actions</a> left for the day."
-			else
-				current_stranger.update(actions: current_stranger.actions - 1)
-				flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. You have #{current_stranger.actions} <a href ='/actions' target = '_blank'>actions</a> actions left for the day."
-				Stranger.find(session["stranger"]).update(actions: Stranger.find(session["stranger"]).actions - 1)
-			end
+			current_user.update(actions: (current_user.actions - 1))
+			flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. You have #{current_user.actions} <a href ='/actions' target = '_blank'>actions</a> left for the day."
 
 			session[:color] = nil
 			session[:ar] = nil

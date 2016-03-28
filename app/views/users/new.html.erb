@@ -1,4 +1,13 @@
 <% provide(:title, "Sign Up") %>
+
+<% if @names.nil? %>
+	<% first_collection = User::NAME_WORDS.sample(4) %>
+	<% second_collection = User::NAME_WORDS.sample(4) %>
+<% else %>
+	<% first_collection = User::NAME_WORDS.sample(3).unshift(@names[:name_1]) %>
+	<% second_collection = User::NAME_WORDS.sample(3).unshift(@names[:name_2]) %>
+<% end %>
+
 <h1>Sign Up</h1>
 <div class="row">
 	<div class = "col-md-6 col-md-offset-3">
@@ -7,21 +16,23 @@
 			
 			<!-- This should check if the name you've selected is already in use, 
 			so you don't have to submit the form only to find out it is -->
-			<%= fields_for :name, @user.name do |name| %>
+			<%= fields_for :name do |name| %>
 				<%= name.label :name %>
-				<%= name.collection_select :name_1, User::NAME_WORDS.sample(4), :to_s, :to_s, 
-					options = { :include_blank => true} %>
-				<%= name.collection_select :name_2, User::NAME_WORDS.sample(4), :to_s, :to_s, 
-					options = { :include_blank => true } %>
+				<%= name.collection_select :name_1, first_collection, :to_s, :to_s, 
+					options = { :include_blank => false} %>
+				<%= name.collection_select :name_2, second_collection, :to_s, :to_s, 
+					options = { :include_blank => false } %>
 			<% end %>
 			<br/>
 
 			<%= f.label :gender %>
-			<%= f.collection_select :gender, User::GENDERS, :to_s, :to_s, :include_blank => true, class: 'form-control' %>
+			<%= f.collection_select :gender, User::GENDERS, :to_s, :to_s, :include_blank => false, class: 'form-control' %>
 			<br/>
+
 			<%= f.label :curse, "How have the gods cursed you?" %>
 			<%= f.collection_select :curse, User::CURSES, :to_s, :to_s, :include_blank => true, class: 'form-control' %>
 			<br/>
+
 			<%= f.label :email %>
 			<%= f.email_field :email, class: 'form-control' %>
 

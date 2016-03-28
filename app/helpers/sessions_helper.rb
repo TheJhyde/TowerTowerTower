@@ -19,11 +19,17 @@ module SessionsHelper
 				log_in user
 				@current_user = user
 			end
+		else
+			new_user = User.create(actions: Global.player.stranger_actions, 
+				name: "Mysterious Stranger #{User.count + 1}", 
+				signed_up: false)
+			log_in new_user #This is weird because I'm logging the user in but they won't be actually be logged in
+			@current_user = new_user
 		end
 	end
 
 	def logged_in?
-		!current_user.nil?
+		!current_user.nil? && current_user.signed_up
 	end
 
 	def logged_in_user
@@ -46,32 +52,9 @@ module SessionsHelper
 	end
 
 	def has_actions
-		if logged_in?
-			unless current_user.actions > 0
-				flash[:danger] = "You are out of <a href ='/actions' target = '_blank'>actions</a> for day. You'll get more at noon EST."
-	      		redirect_to tower_index_path
-			end
-		else
-			if session["stranger"].nil?
-				create_stranger
-			else
-				stranger = Stranger.find(session["stranger"])
-				if stranger.actions <= 0
-					flash[:success] = "Bricks placed! You've used up your <a href ='/actions' target = '_blank'>actions</a> for the day. <a href = '/signup'>Sign up</a> or come back tomorrow build more!"
-		      		redirect_to tower_index_path
-		      	end
-			end
-		end
-	end
-
-	def create_stranger
-		new_stranger = Stranger.create(actions: Global.player.stranger_actions)
-		session["stranger"] = new_stranger.id
-	end
-
-	def current_stranger
-		if (stranger_id = session[:stranger])
-			@current_stranger ||= Stranger.find_by(id: stranger_id)
+		unless current_user.actions > 0
+			flash[:danger] = "You are out of <a href ='/actions' target = '_blank'>actions</a> for day. You'll get more at noon EST."
+      		redirect_to tower_index_path
 		end
 	end
 

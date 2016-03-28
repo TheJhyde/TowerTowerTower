@@ -11,9 +11,9 @@ class BuildOrder < ActiveRecord::Base
 		bricks = BuildOrder.where(used: nil).where(["resolve_at < ?", (DateTime.now + 2.minute)])
 		news = []
 		news = place_bricks(news, bricks);
-		news = Brick.gravity(news);
+		Brick.gravity(news);
 		Brick.check_strength();
-		NewsItem.write_updates(news);
+		#NewsItem.write_updates(news);
 	end
 
 	def self.place_bricks(news = [], bricks)

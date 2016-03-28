@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160327223442) do
+ActiveRecord::Schema.define(version: 20160328002351) do
 
   create_table "bricks", force: :cascade do |t|
     t.integer  "x"
@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 20160327223442) do
     t.integer  "actions",           default: 2
     t.string   "reset_digest"
     t.datetime "reset_sent_at"
+    t.boolean  "signed_up",         default: true
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

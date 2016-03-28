@@ -20,19 +20,11 @@ class SessionsController < ApplicationController
   end
 
   def index
-    @user = {}
-    if logged_in?
-      @user[:logged] = true
-      @user[:id] = current_user.id
+    @user = {id: current_user.id}
+    if current_user.bricks.count > 0
       @user[:max_level] = current_user.bricks.order(:y).last.level + 1
     else
-      @user[:logged] = false
-      @user[:id] = current_stranger.id
-      if current_stranger.bricks.count > 0
-        @user[:max_level] = current_stranger.bricks.order(:y).last.level + 1
-      else
-        @user[:max_level] = 1
-      end
+      @user[:max_level] = 1
     end
 
     if session[:color].nil?
