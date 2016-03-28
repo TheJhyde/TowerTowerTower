@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :check_admin, only: [:index, :destroy]
   
   def new
-  	@user = User.new
+  	@user = current_user
   end
 
   def show
@@ -20,14 +20,14 @@ class UsersController < ApplicationController
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
     @user.signed_up = true
-  	if @user.save && @user.update_attributes(user_params)
-      @user.actions = Global.player.starting_actions
+    @user.assign_attributes(user_params)
+  	if @user.save
+      @user.update(actions: @user.actions + (Global.player.starting_actions - Global.player.stranger_actions))
       #@user.send_activation_email
       log_in @user
   		flash[:success] = "Welcome #{current_user.name}"
   		redirect_to '/'
   	else
-      @user.update(signed_up: false, name: nil, user_name: nil)
       @names = params[:name]
       @gender = params[:user][:gender]
   		render 'new'
