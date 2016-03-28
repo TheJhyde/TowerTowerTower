@@ -19,15 +19,15 @@ class UsersController < ApplicationController
     @user = current_user
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
   	@user.user_name = @user.name.downcase.delete " " #spooky
-    @user.actions = Global.player.starting_actions
     @user.signed_up = true
   	if @user.save && @user.update_attributes(user_params)
+      @user.actions = Global.player.starting_actions
       #@user.send_activation_email
       log_in @user
   		flash[:success] = "Welcome #{current_user.name}"
   		redirect_to '/'
   	else
-      @user.update(signed_up: false)
+      @user.update(signed_up: false, name: nil, user_name: nil)
       @names = params[:name]
       @gender = params[:user][:gender]
   		render 'new'
