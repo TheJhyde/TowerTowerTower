@@ -19,6 +19,8 @@ class User < ActiveRecord::Base
 	has_and_belongs_to_many :news_items
 	has_many :build_orders
 	has_many :bricks
+	has_many :placing_events, :class_name => "Event", :foreign_key => "placing_player_id"
+	has_many :brick_events, :class_name => "Event", :foreign_key => "original_player_id"
 	
 	#Some variables used for the sign up form
 	GENDERS = ['4524', '___!___!_', 'zzzzzz', '<_>']
@@ -50,9 +52,9 @@ class User < ActiveRecord::Base
 	def forget
 		update_attribute(:remember_digest, nil)
 	end
-
-	def self.daily_tasks
-  		User.add_actions
+	
+	def events
+		placing_events + brick_events
 	end
 
 	#Adds an action to all users

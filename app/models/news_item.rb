@@ -12,44 +12,10 @@ class NewsItem < ActiveRecord::Base
 		 end
 	end
 
-	def self.write_updates(news)
-		puts "Time to write the news items"
-		news.each do |user_hash|
-			puts "We're looking at #{user_hash.to_s}"
-			user = User.find(user_hash["user"].to_i)
-			msg = ""
-			if user_hash["placed"] > 0
-				msg += "You placed #{pluralize(user_hash['placed'], 'brick')} on the tower. "
-			end
-			if user_hash['destroyed'] > 0
-				msg += "#{pluralize(user_hash['destroyed'], 'of your brick')} were destroyed in collisions. "
-			end
-			if user_hash['fell'] > 0
-				msg += "#{pluralize(user_hash['fell'], 'of your brick')} fell and were destroyed."
-			end
-			if user_hash['weak'] > 0
-				msg += "#{pluralize(user_hash['weak'], 'of your brick')} were too weak to survive at their level and were destroyed."
-			end
-			#msg += " <a href='/build_orders/0'>See how all the orders were resolved.</a>"
-			user.news_items << NewsItem.create(msg_type: "update", message: msg)
-		end
-	end
-
-	#Takes the news hash I'm building and tells you if it contains a given player
-	def self.add_to(news, id, key)
-		if !id.nil?
-			news.each do |hash|
-				if hash["user"] == id
-					hash[key] = hash[key] + 1
-					return news
-				end
-			end
-			hash = {"user" => id, "#{key}" => 1}
-			hash.default = 0
-			news << hash
-		else
-			news
-		end
+	#I'm routing this method through News Items because I'm pretty sure clockwork has it's own
+	#class called event. So it gets confused if I try to call an event method
+	def self.write_updates
+		Event.write_updates
 	end
 
 	#This is a pointless function that only exists to test scheduler apps

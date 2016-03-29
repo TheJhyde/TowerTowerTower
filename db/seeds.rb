@@ -34,8 +34,8 @@ intro.update(msg_type: "new", message: "Welcome to Tower Brick Lightning! To get
 end
 
 #Make's a pyramid to demonstrate concepts
-(1..25).each do |i|
-	((25 - i)*2).times do |j|
+(1..15).each do |i|
+	((15 - i)*2).times do |j|
 		new_brick = Brick.find_or_create_by(x: j+50+i, y: i)
 		new_brick.color = rand(2)
 		new_brick.user = User.first
