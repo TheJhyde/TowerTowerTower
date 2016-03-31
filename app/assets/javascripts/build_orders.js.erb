@@ -261,17 +261,17 @@ $(document).ready(function(){
 				if(placed){
 					$("#instructions").html("Press submit to add your brick to the tower! Or, click on your brick or press S to pick the brick back up and put it somewhere else.");
 				}else{
-					$("#instructions").html("Place your bricks on the tower to build it higher! Overlap bricks of the same color to make them stronger but overlapping different colors will make them weaker or destroy them! You can see how strong a brick is based on how many lines it has on it. Bricks without support will fall down and be destroyed!");
+					$("#instructions").html("Put your bricks on the tower to build it higher! Bricks needs to have bricks underneath them or they will fall and be destroyed. If you place your bricks on top of other bricks, they'll get stronger if their colors match and weaker if they don't. If a brick's strength falls too far, it'll be destroyed! A brick's strength is equal to the number of lines on it.");
 				}
 			}else if(level == 1){
 				if(placed){
-					$("#instructions").html("You and all other builder's bricks will be added to the tower " + nextTime(level) +". Write a message to tell other builders where you've placed your bricks. Click on the glyphs below to write your message. Click on glyphs in the message to delete them. From now on, all bricks must have messages!");
+					$("#instructions").html("Your bricks will be added to the tower " + nextTime(level) +". Write a message to tell other builders where they'll be. Click on the glyphs below to write your message. Click on glyphs in the message to delete them. From now on, all bricks must have messages!");
 				}else{
-					$("#instructions").html("The tower is so high that it now takes time to build! All bricks placed on this level will be placed every five minutes, all at once.");
+					$("#instructions").html("At this height it takes time to put bricks on the tower! All bricks placed on this level will be added to the tower every five minutes, all at once.");
 				}
 			}else if(level == 2){
 				if(!placed){
-					$("#instructions").html("At this height, heavy winds will destroy any bricks which don't have at least one strength. Use the messages to communicate where you're putting bricks with other builders and overlap bricks of the same color.");
+					$("#instructions").html("Heavy winds on this level will destroy any bricks which don't have at least one strength. Use the messages to communicate where you're putting bricks with other builders and overlap bricks of the same color to make them strong enough.");
 				}else{
 					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds! All bricks will be added to the tower " + nextTime(level) +".");
 				}
@@ -285,22 +285,10 @@ $(document).ready(function(){
 				if(!placed){
 					$("#instructions").html("Keep building the tower!");
 				}else{
-					$("#instructions").html("All bricks will be added to the tower " + nextTime(level) +".");
+					$("#instructions").html("Your bricks will be added to the tower " + nextTime(level) +".");
 				}
 			}
 		}
-
-		//-------------------------------------------------------------------------------------------------
-		//------------------------------------------------JQUERY EVENT HANDLERS----------------------------
-		//-------------------------------------------------------------------------------------------------
-		
-		// $(document).on('click', '#up', function(){
-			
-		// });
-
-		// $(document).on('click', '#down', function(){
-			
-		// });
 	};
 
 	var myp5 = new p5(sketch);

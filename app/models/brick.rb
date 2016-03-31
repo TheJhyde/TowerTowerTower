@@ -17,7 +17,7 @@ class Brick < ActiveRecord::Base
 	def self.check_strength(news = [])
 		Brick.all.each do |brick|
 			#Bricks which are too weak for their level are destroyed
-			if brick.strength < (brick.level+1/3).round
+			if brick.strength < ((brick.level+1)/3).round
 				Event.create(category: "worn", original_player: brick.user)
 				brick.destroy
 				#news = NewsItem.add_to(news, brick.user.id, "weak")
