@@ -18,7 +18,6 @@ class UsersController < ApplicationController
   def create
     @user = current_user
   	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
-  	@user.user_name = @user.name.downcase.delete " " #spooky
     @user.signed_up = true
     @user.assign_attributes(user_params)
   	if @user.save
