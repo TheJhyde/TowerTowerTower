@@ -1,10 +1,7 @@
-images = "tower up_top red brick everything_harm mine_build despair down run_is 
-bring_lie large_size no_not_never push_destroy both neither row_small column_lucky 
-center curse bottom hole left line right within"
+images = "both bottom bring builder builders column despair down error hole large left
+monster neither no destroy pyramid right up warning within"
 
-meanings = "TOWER UP/TOP RED BRICK EVERYTHING/HARM MINE/BUILD DESPAIR DOWN/GOOD RUN/IS 
-BRING/LIE LARGE/SIZE NO/NOT/NEVER PUSH/DESTROY BOTH NEITHER ROW/SMALL COLUMN/LUCKY 
-CENTER CURSE BOTTOM HOLE LEFT LINE RIGHT WITHIN"
+meanings = images
 
 #Adds the glyphs to the database
 urls = images.split(" ")

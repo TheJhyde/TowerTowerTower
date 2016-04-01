@@ -1,14 +1,18 @@
-<header class = "navbar navbar-fixed-top navbar-inverse">
+<header class = "navbar">
 	<div class = "container">
 		<%= link_to "TOWER BRICK LIGHTNING", root_path, id: "logo" %>
 		<nav>
-			<ul class = "nav navbar-nav navbar-right">
-				<li class = "text"><%= link_to "Actions", actions_path, target: '_blank'%>: <%= current_user.actions %></li>
+			<ul class = "nav">
+				<li><%= link_to "Actions", actions_path, target: '_blank'%>: <%= current_user.actions %></li>
 				<% if logged_in? %>
 					<li><%= link_to "Home", 	root_path %></li>
 				<% end %>
 				<li><%= link_to "About", 	about_path %></li>
-				<li><%= link_to "Build Tower", new_build_order_path %></li>
+				<% if logged_in? %>
+					<li><%= link_to "Build Tower", new_build_order_path %></li>
+				<% else %>
+					<li><%= link_to "Play Now", new_build_order_path %></li>
+				<% end %>
 				<li><%= link_to "See Tower", tower_index_path %></li>
 				<% if logged_in? %>
 					<li><%= link_to "Log Out", logout_path, method: "delete" %></li>

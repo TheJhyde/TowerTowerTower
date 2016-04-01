@@ -1,6 +1,3 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
-
 /* Variables */
 $gray-medium-light: #eaeaea;
 
@@ -9,6 +6,10 @@ $gray-medium-light: #eaeaea;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+body{
+	
 }
 
 /* alerts */
@@ -30,7 +31,7 @@ $gray-medium-light: #eaeaea;
 #panel{
 	float: left;
 	text-align: left;
-	width: 500px;
+	width: 400px;
 }
 
 /* foot-er */
@@ -38,11 +39,11 @@ footer{
 	margin-top: 45px;
 	padding-top: 5px;
 	border-top: 1px solid $gray-medium-light;
-	color: $gray-light;
+	color: #999;
 	a{
-		color: $gray;
+		color: 	#555;
 		&:hover{
-			color: $gray-darker;
+			color: #222;
 		}
 	}
 	small{
@@ -81,9 +82,8 @@ input{
 }
 
 .field_with_errors {
-	@extend .has-error;
 	.form-control {
-		color: $state-danger-text;
+		color: #FF0000;
 	}
 }
 
@@ -104,6 +104,7 @@ input{
 /* Front Page */
 .jumbotron{
 	padding: 10px;
+	background-color: #eee;
 }
 
 .box{
@@ -115,10 +116,6 @@ input{
 
 #player_status{
 	width: 70%;
-}
-
-#information{
-	// height: 100px
 }
 
 #sidebar{
@@ -143,7 +140,7 @@ input{
     width: 75px;
     margin: 1px;
     display: inline-block;
-    background-color: #F38630;
+    background-color: #FF9966;
     border-radius: 5px;
     text-align: center;
     font-size: 0.7em;
@@ -174,67 +171,32 @@ input{
 
 
 /* header */
+.navbar{
+	background-color: black;
+}
+
 #logo {
 	float: left;
 	margin-right: 10px;
 	font-size: 1.7em;
-	color: white;
+	color: $gray-medium-light;
 	text-transform: uppercase;
 	letter-spacing: -1px;
 	padding-top: 9px;
 	font-weight: bold;
 	&:hover {
-		color: white;
+		color: $gray-medium-light;
 		text-decoration: none;
  	}
 }
 
-.nav{
-	.text{
-		color: grey;
-		padding: 15px;
-		display: block;
-		position: relative;
-		box-sizing: border-box;
-		a{
-			padding: 0px;
-			display: inline;
-		}
+nav{
+	li{
+		float: left;
+		list-style-type: none;
+		width: 100px;
+		text-color: white;
 	}
-}
-
-/* mining */
-.blank {
-    background-color: #FFFFFF;
-}
-
-.red {
-	background-color: #B20000;
-}
-
-.brown {
-	background-color: #8B4513;
-}
-
-.black {
-	background-color: #363636;
-}
-
-.grid{
-	border-style: solid;
-}
-
-.grid_selected{
-	border-style: dashed;
-}
-
-.clay{
-    height: 20px;
-    width: 20px;
-    margin: 2px;
-    display: inline-block;
-    border-radius: 0px;
-    text-align: center;
 }
 
 /* misc */
@@ -273,25 +235,6 @@ aside{
 	}
 }
 
-/* tower */
-#tower_pic{
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
-}
-
-#tower_prev{
-	float: left;
-	display: inline;
-	margin: 20px;
-}
-
-#tower_next{
-	float: right;
-	display: inline;
-	margin: 10px;
-}
-
 /* typography */
 h1, h2, h3, h4, h5, h6{
 	line-height: 1;
@@ -310,7 +253,7 @@ h2{
 	margin-bottom: 30px;
 	text-align: center;
 	font-weight: normal;
-	color: $gray-light;
+	color: #999;
 }
 
 p{
@@ -320,9 +263,6 @@ p{
 
 
 /* universal */
-body{
-	padding-top: 60px;
-}
 
 section{
 	overflow: auto;
@@ -346,6 +286,6 @@ textarea{
 	li{
 		overflow: auto;
 		padding: 10px 0;
-		border-bottom: 1px solid $gray-lighter;
+		border-bottom: 1px solid #eee;
 	}
 }
