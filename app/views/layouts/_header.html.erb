@@ -3,7 +3,7 @@
 		<%= link_to "TOWER BRICK LIGHTNING", root_path, id: "logo" %>
 		<nav>
 			<ul class = "nav navbar-nav navbar-right">
-				<li class = "text"><%= link_to "Actions", actions_path%>: <%= current_user.actions %></li>
+				<li class = "text"><%= link_to "Actions", actions_path, target: '_blank'%>: <%= current_user.actions %></li>
 				<% if logged_in? %>
 					<li><%= link_to "Home", 	root_path %></li>
 				<% end %>

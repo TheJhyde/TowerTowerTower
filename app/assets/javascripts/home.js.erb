@@ -1,0 +1,46 @@
+$(document).ready(function(){
+	//If there's already a canvas loaded or it's the wrong page, don't load this page
+	if($("canvas").size() > 0 || $(".static_pages.home").length == 0){
+		return false;
+	}
+
+	var sketch = function(p){
+		var tower = [];
+		//-----------------------------------P5 FUNCTIONS---------------------------------------------
+		p.setup = function(){
+			Brick.level = 0;
+			loadTower(Brick.level);
+		};
+
+		p.draw = function(){
+			p.background(200);
+
+			//Draws the bricks from the tower
+			p.stroke(0);
+			p.strokeWeight(1);
+			for(var i = 0; i < tower.length; i++){
+				tower[i].draw();
+			}
+		};
+
+		//------------------------------------------OTHER FUNCTIONS------------------------------------
+		//Loads the tower from the server
+		function loadTower(requestedLevel){
+			tower = [];
+			$.get('/tower.json', function(data){
+				for(var i = 0; i < data.length; i++){
+					brick = new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]);
+					brick.setID(data[i]["id"]);
+					tower.push(brick);
+				}
+				for(var i = 0; i < 4; i++){
+					Brick.makeSmaller();			
+				}
+				canvas = p.createCanvas(<%= Global.tower.bricks_layer %> * Brick.BRICK_WIDTH, <%= Global.tower.brick_height %> * (<%= Global.tower.level_height %> + 1));
+				canvas.parent("canvas");
+			});
+		}
+	};
+
+	var myp5 = new p5(sketch);
+});

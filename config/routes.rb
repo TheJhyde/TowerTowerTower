@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   post 'submit' => 'static_pages#submit'
   get 'news_items' => 'static_pages#news_items'
   get 'actions' => 'static_pages#actions'
+  get 'strength' => 'static_pages#strength'
+  get 'gravity' => 'static_pages#gravity'
 
 
   get 'login' => 'sessions#new'
@@ -23,6 +25,6 @@ Rails.application.routes.draw do
   resources :build_orders, only: [:new, :create, :index, :show]
 
   resources :tower, only: [:index, :show]
-  resources :tower_pics, only: [:show, :index]
+  get 'tower/brick/:id' => 'tower#brick'
   resources :password_resets, only: [:new, :create, :edit, :update]
 end

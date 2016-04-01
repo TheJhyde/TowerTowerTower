@@ -5,35 +5,30 @@ $(document).ready(function(){
 	}
 
 	var sketch = function(p){
-		const BRICKS = <%= Global.tower.shipment %>;
-		const SHIPMENTSIZE = <%= Global.tower.shipment_size %>
-
-		var USER_ID;
 		var tower = [];
-		var maxLevel = false;
 
 		var arrow_width;
 
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
-			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height %> * <%= Rails.configuration.x.level_height %>);
+			canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height %> * (<%= Global.tower.level_height %> + 1));
 			canvas.parent("canvas");
 
 			Brick.level = 0;
 			loadTower(Brick.level);
-			loadOrders(Brick.level, 0);
-
-			$.get('/session.json', function(data){
-				USER_ID = data;
-			});
-
 			arrow_width = <%= Global.tower.brick_width %>;
-
-			background = p.loadImage("../level_one.jpg");
 		};
 
 		p.draw = function(){
-			p.background(173,216,230);
+			p.background(255);
+
+			//Level markers
+			p.noStroke();
+			var levelSize = Brick.BRICK_HEIGHT * <%= Global.tower.level_height %>;
+			for(var i = 0; i < p.width/levelSize + 2; i++){
+				p.fill(100 + (i%2)*100);
+				p.rect(0, p.height - (Brick.BRICK_HEIGHT/2 + levelSize*i + (Brick.verticalOffset % (levelSize*2))), p.width, levelSize);
+			}
 
 			//Draws the bricks from the tower
 			p.stroke(0);
@@ -59,16 +54,16 @@ $(document).ready(function(){
 			}
 
 			//Move right and left
-			if(p.mouseX < arrow_width && p.mouseX > 0 && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+			if(p.mouseX < arrow_width && p.mouseX > 0 && p.mouseY > p.height/2 - 200 && p.mouseY < p.height/2 + 200){
 				Brick.moveLeft();
-			}else if(p.mouseX > p.width-arrow_width && p.mouseX < p.width && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+			}else if(p.mouseX > p.width-arrow_width && p.mouseX < p.width && p.mouseY > p.height/2 - 200 && p.mouseY < p.height/2 + 200){
 				Brick.moveRight();
 			}
 
-			//This is where the mouse stuff for the up and down would go
-			if(p.mouseY < arrow_width && p.mouseY > 0 && p.mouseX > p.width/2 - 40 && p.mouseX < p.width/2 + 40){
+			//This is where the mouse stuff for the up and down go
+			if(p.mouseY < arrow_width && p.mouseY > 0 && p.mouseX > p.width/2 - 200 && p.mouseX < p.width/2 + 200){
 				Brick.moveUp();
-			}else if(p.mouseY > p.height-Brick.BRICK_WIDTH && p.mouseY < p.height && p.mouseX > p.width/2 - 40 && p.mouseX < p.width/2 + 40){
+			}else if(p.mouseY > p.height-arrow_width && p.mouseY < p.height && p.mouseX > p.width/2 - 200 && p.mouseX < p.width/2 + 200){
 				Brick.moveDown();
 			}
 		};
@@ -77,7 +72,9 @@ $(document).ready(function(){
 			//Find the brick they just moused over
 			var index = overBrick(p.mouseX, p.mouseY)
 			if(index != -1){
-				$("#info").html(tower[index].getInfo());
+				$.get('/tower/brick/'+ tower[index].getID() +'.json', function(data){
+					$("#info").html("Placed by " + data["name"] + " on " + data["created_at"]);
+				});
 			}else{
 				$("#info").html("");
 			}
@@ -106,10 +103,10 @@ $(document).ready(function(){
 				case 40: //Down arrow key, move down a level
 					Brick.moveDown();
 					break;
-				case 81: //Zoom out
+				case 90: //Zoom out
 					Brick.makeSmaller();
 					break;
-				case 90: //Zoom in
+				case 81: //Zoom in
 					Brick.makeLarger();
 					break;
 				default:
@@ -122,22 +119,12 @@ $(document).ready(function(){
 		function loadTower(requestedLevel){
 			tower = [];
 			$.get('/tower.json', function(data){
-				if(data.length == 0){
-					maxLevel = true;
-				}else{
-					maxLevel = false;
-					for(var i = 0; i < data.length; i++){
-						tower.push(new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]));
-						tower[tower.length - 1].setInfo(data[i]["info"]);
-					}
+				for(var i = 0; i < data.length; i++){
+					brick = new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]);
+					brick.setID(data[i]["id"]);
+					tower.push(brick);
 				}
 			});
-		}
-
-		//Sets the new background
-		function setBackground(level){
-			var index = Math.min(level, backgrounds.length - 1);
-			background = p.loadImage("../" + backgrounds[index]);
 		}
 	};
 

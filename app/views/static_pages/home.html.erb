@@ -2,15 +2,12 @@
 <% if !logged_in? %>
 	<div class = "center jumbotron">
 		<h1>Tower Brick Lightning</h1>
+		<div id="canvas"></div>
 		<p>
-			You and your friends are building a tower to escape to the heavens. But a curse has been put on you, limiting your communication!
-		</p>
-		<p>
-			Tower Brick Lightning is a massively multiplayer browser based game about confusion and collaboration. Players place bricks on the tower and try to work together to make the tower ever higher!
+			Build a tower to escape to the heavens.
 		</p>
 		<%= link_to "Play Now", new_build_order_path, class: "btn btn-lg btn-primary" %>
 		<%= link_to "Sign Up", signup_path, class: "btn btn-lg btn-primary" %>
-		<%= link_to "Learn More", about_path, class: "btn btn-lg btn-primary" %>
 	</div>
 <% else %>
 	<h1><%= current_user.name %></h1>

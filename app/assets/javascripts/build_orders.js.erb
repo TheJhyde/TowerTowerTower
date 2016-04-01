@@ -100,9 +100,9 @@ $(document).ready(function(){
 				p.triangle(p.width - 5, p.height/2, p.width - Brick.BRICK_WIDTH+10, p.height/2 - 40, p.width - Brick.BRICK_WIDTH + 10, p.height/2 + 40);
 			}
 
-			if(p.mouseX < Brick.BRICK_WIDTH && p.mouseX > 0 && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+			if(p.mouseX < Brick.BRICK_WIDTH && p.mouseX > 0 && p.mouseY > p.height/2 - 200 && p.mouseY < p.height/2 + 200){
 				Brick.moveLeft();
-			}else if(p.mouseX > p.width-Brick.BRICK_WIDTH && p.mouseX < p.width && p.mouseY > p.height/2 - 40 && p.mouseY < p.height/2 + 40){
+			}else if(p.mouseX > p.width-Brick.BRICK_WIDTH && p.mouseX < p.width && p.mouseY > p.height/2 - 200 && p.mouseY < p.height/2 + 200){
 				Brick.moveRight();
 			}
 		};
@@ -139,7 +139,7 @@ $(document).ready(function(){
 
 		p.keyPressed = function(){
 			switch(p.keyCode){
-				case 65: //A, rotate the bricks
+				case 32: //A, rotate the bricks
 					if(!finish){
 						for(var i = 0; i < ar.length; i++){
 							var new_ar = [0, 0];
@@ -148,21 +148,7 @@ $(document).ready(function(){
 							ar[i] = new_ar;
 						}
 						updateBricks(p.mouseX, p.mouseY);
-					}
-					break;
-				case 68: //D, rotate the bricks
-					if(!finish){
-						for(var i = 0; i < ar.length; i++){
-							var new_ar = [0, 0];
-							new_ar[1] = ar[i][0] * -1;
-							new_ar[0] = ar[i][1];
-							ar[i] = new_ar;
-						}
-						updateBricks(p.mouseX, p.mouseY);
-					}
-					break;
-				case 83: //S, pick up bricks
-					if(finish){
+					}else{
 						moveBricks();
 						updateBricks(p.mouseX, p.mouseY);
 					}
@@ -259,31 +245,31 @@ $(document).ready(function(){
 		function updateAlert(level, placed){
 			if(level == 0){
 				if(placed){
-					$("#instructions").html("Press submit to add your brick to the tower! Or, click on your brick or press S to pick the brick back up and put it somewhere else.");
+					$("#instructions").html("Click on your bricks or press space to move them. Click submit to add your bricks to the tower.");
 				}else{
-					$("#instructions").html("Put your bricks on the tower to build it higher! Bricks needs to have bricks underneath them or they will fall and be destroyed. If you place your bricks on top of other bricks, they'll get stronger if their colors match and weaker if they don't. If a brick's strength falls too far, it'll be destroyed! A brick's strength is equal to the number of lines on it.");
+					$("#instructions").html("Build the tower. Do not let your bricks <a href='/gravity' target='_blank'>fall</a>.");
 				}
 			}else if(level == 1){
 				if(placed){
-					$("#instructions").html("Your bricks will be added to the tower " + nextTime(level) +". Write a message to tell other builders where they'll be. Click on the glyphs below to write your message. Click on glyphs in the message to delete them. From now on, all bricks must have messages!");
+					$("#instructions").html("Your bricks will be added to the tower " + nextTime(level) +". Tell other builders where they'll be. Click glyphs to write your message. Click on glyphs in the message to delete them. All bricks must have messages!");
 				}else{
-					$("#instructions").html("At this height it takes time to put bricks on the tower! All bricks placed on this level will be added to the tower every five minutes, all at once.");
+					$("#instructions").html("At this height bricks will be added to the tower every five minutes.");
 				}
 			}else if(level == 2){
 				if(!placed){
-					$("#instructions").html("Heavy winds on this level will destroy any bricks which don't have at least one strength. Use the messages to communicate where you're putting bricks with other builders and overlap bricks of the same color to make them strong enough.");
+					$("#instructions").html("Heavy winds on this level will destroy any bricks which don't have at least one <a href='/strength' target='_blank'>strength</a>.");
 				}else{
-					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds! All bricks will be added to the tower " + nextTime(level) +".");
+					$("#instructions").html("Your bricks will be added to the tower at " + nextTime(level) +". Use the glyphs so other builders make your bricks stronger");
 				}
 			}else if(level == 3){
 				if(!placed){
-					$("#instructions").html("The higher the tower gets, the longer is takes to build. Orders are now resolved every 10 minutes.");
+					$("#instructions").html("Orders are now resolved every 10 minutes.");
 				}else{
-					$("#instructions").html("Use your message to help other builders strengthen your bricks and survive the winds! All bricks will be added to the tower " + nextTime(level) +".");
+					$("#instructions").html("Your bricks will be added to the tower at " + nextTime(level) +". Use the glyphs so other builders make your bricks stronger");
 				}
 			}else{
 				if(!placed){
-					$("#instructions").html("Keep building the tower!");
+					$("#instructions").html("Continue building the tower.");
 				}else{
 					$("#instructions").html("Your bricks will be added to the tower " + nextTime(level) +".");
 				}
@@ -292,4 +278,8 @@ $(document).ready(function(){
 	};
 
 	var myp5 = new p5(sketch);
+
+	window.onkeydown = function(e) { 
+    	return !(e.keyCode == 32);
+	};
 });

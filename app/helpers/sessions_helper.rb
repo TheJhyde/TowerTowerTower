@@ -20,7 +20,7 @@ module SessionsHelper
 				@current_user = user
 			end
 		else
-			new_user = User.create(actions: Global.player.stranger_actions, 
+			new_user = User.create(actions: Global.player.starting_actions, 
 				name: "Mysterious Stranger #{User.count + 1}", 
 				signed_up: false)
 			log_in new_user #This is weird because I'm logging the user in but they won't be actually be logged in

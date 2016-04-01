@@ -45,6 +45,12 @@ class StaticPagesController < ApplicationController
   def actions
   end
 
+  def strength
+  end
+
+  def gravity
+  end
+
   private
   	def error_params
   		params.require(:news_item).permit(:message)

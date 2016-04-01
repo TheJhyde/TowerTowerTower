@@ -1,18 +1,6 @@
 class TowerController < ApplicationController
 	def index
 		@tower = Brick.all.as_json
-		@tower.each do |brick|
-			info = "This brick was placed by "
-			if !brick["user_id"].nil?
-				info += User.find(brick["user_id"]).name
-			elsif !brick["stranger_id"].nil?
-				info += Stranger.find(brick.stranger_id).name
-			else
-				info += "Nobody"
-			end
-			info += " on #{brick["created_at"].strftime("%_m/%-d, %l:%M %p")}."
-			brick["info"] = info
-		end
 		respond_to do |format|
       		format.json {render json: @tower }
       		format.html
@@ -29,6 +17,19 @@ class TowerController < ApplicationController
 
 		respond_to do |format|
       		format.json {render json: @tower }
+    	end
+	end
+
+	def brick
+		brick = Brick.find(params["id"].to_i)
+
+		@json = {}
+		@json[:name] = brick.user.name
+		@json[:created_at] = brick.created_at
+		@json[:message] = brick.events.where(category: Event.categories[:placed]).first.build_order.message
+
+		respond_to do |format|
+      		format.json {render json: @json }
     	end
 	end
 end

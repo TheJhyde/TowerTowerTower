@@ -21,7 +21,7 @@ function Brick(startX, startY, p, color, strength){
 	var y = startY;
 	var screenX = xToScreen(x);
 	var screenY = yToScreen(y);
-	var info = "";
+	var id;
 
 	//This function should check if the brick might go out of bounds
 	//And refuse if it does
@@ -32,12 +32,12 @@ function Brick(startX, startY, p, color, strength){
 		screenY = yToScreen(y);
 	}
 
-	this.setInfo = function(newInfo){
-		info = newInfo;
+	this.setID = function(newInfo){
+		id = newInfo;
 	}
 
-	this.getInfo = function(){
-		return info;
+	this.getID = function(){
+		return id;
 	}
 
 	this.fall = function(){
@@ -49,7 +49,6 @@ function Brick(startX, startY, p, color, strength){
 		if(Brick.offset > leftBound){
 			Brick.offset = leftBound;
 		}
-		console.log(Brick.offset);
 	}
 
 	Brick.moveRight = function(){
@@ -69,19 +68,19 @@ function Brick(startX, startY, p, color, strength){
 		if(Brick.verticalOffset > 0){
 			Brick.verticalOffset = 0;
 		}
+		console.log(Brick.verticalOffset);
 	}
 
 	this.isWithin = function(mouseX, mouseY){
 		return (screenToX(mouseX) == x && screenToY(mouseY) == y)
 	}
 
-	//The bounds need to be altered also
 	Brick.makeSmaller = function(){
 		if(Brick.BRICK_WIDTH > 2.5){
 			Brick.BRICK_WIDTH *= 0.5;
 			Brick.BRICK_HEIGHT *= 0.5;
 			rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
-			//This alwys put the offset at the halfway point
+			//This always put the offset at the halfway point
 			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 		}
 	}
