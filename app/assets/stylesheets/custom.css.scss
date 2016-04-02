@@ -1,26 +1,25 @@
-/* Variables */
+// @import "bootstrap-sprockets";
+// @import "bootstrap";
+
+// /* Variables */
 $gray-medium-light: #eaeaea;
 
-/* mixins */
-@mixin box_sizing {
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-}
+// /* mixins */
+// @mixin box_sizing {
+// 	-moz-box-sizing: border-box;
+// 	-webkit-box-sizing: border-box;
+// 	box-sizing: border-box;
+// }
 
-body{
-	
-}
-
-/* alerts */
-.alert{
-	width: 60%;
-	text-align: center;
-	font-size: 1.1em;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 10px;
-}
+// /* alerts */
+// .alert{
+// 	width: 60%;
+// 	text-align: center;
+// 	font-size: 1.1em;
+// 	margin-left: auto;
+// 	margin-right: auto;
+// 	margin-bottom: 10px;
+// }
 
 /* Tower Building */
 #craft{
@@ -34,19 +33,18 @@ body{
 	width: 400px;
 }
 
-/* foot-er */
+// /* foot-er */
 footer{
 	margin-top: 45px;
 	padding-top: 5px;
-	border-top: 1px solid $gray-medium-light;
-	color: #999;
+	border-top: 1px solid black;
+	font-size: small;
 	a{
-		color: 	#555;
 		&:hover{
 			color: #222;
 		}
 	}
-	small{
+	#leftFooter{
 		float: left;
 	}
 	ul{
@@ -62,77 +60,81 @@ footer{
 
 /* forms */
 input, textarea, select .uneditable-input{
-	border: 1px, solid #bbb;
-	width: 80%;
-	margin-bottom: 15px;
-	@include box_sizing;
+	// border: 1px, solid #bbb;
+	width: 50%;
+	// margin-bottom: 15px;
+	//@include box_sizing;
+}
+
+.right{
+	margin-left: 150px
 }
 
 input{
-	height: auto !important;
+	//height: auto !important;
 	// What does the !important mean? If I'm gonna use sass I'm gonna have to learn more about it
 }
 
-#error_explanation{
-	color: red;
-	ul {
-		color: red;
-		margin: 0 0 30px 0;
-	}
-}
+// #error_explanation{
+// 	color: red;
+// 	ul {
+// 		color: red;
+// 		margin: 0 0 30px 0;
+// 	}
+// }
 
-.field_with_errors {
-	.form-control {
-		color: #FF0000;
-	}
-}
+// .field_with_errors {
+// 	.form-control {
+// 		color: #FF0000;
+// 	}
+// }
 
-.checkbox{
-	margin-top: -10px;
-	margin-bottom: 10px;
-	span {
-		margin-left: 20px;
-		font-weight: normal;
-	}
-}
+// .checkbox{
+// 	margin-top: -10px;
+// 	margin-bottom: 10px;
+// 	span {
+// 		margin-left: 20px;
+// 		font-weight: normal;
+// 	}
+// }
 
-#session_remember_me{
-	width: auto;
-	margin-left: 0;
-}
+// #session_remember_me{
+// 	width: auto;
+// 	margin-left: 0;
+// }
 
-/* Front Page */
-.jumbotron{
-	padding: 10px;
-	background-color: #eee;
-}
+// /* Front Page */
+// .jumbotron{
+// 	padding: 10px;
+// 	background-color: #eee;
+// }
 
-.box{
-	border-style: solid;
-	border-width: 1px;
-	margin: 10px;
-	width: 20%;
-}
+// .box{
+// 	border-style: solid;
+// 	border-width: 1px;
+// 	margin: 10px;
+// 	width: 20%;
+// }
 
-#player_status{
-	width: 70%;
-}
+// #player_status{
+// 	width: 70%;
+// }
 
-#sidebar{
-	float: right;
-}
+// #sidebar{
+// 	float: right;
+// }
 
-.news{
-	font-size: 120%;
-}
+// .news{
+// 	font-size: 120%;
+// }
 
-.error_report{
-	color: red;
-}
+// .error_report{
+// 	color: red;
+// }
 
-.content{
-	margin: 10px
-}
+// .content{
+// 	margin: 10px
+// }
 
 /* glyphs */
 .button{
@@ -156,9 +158,9 @@ input{
 	height: 50px;
 }
 
-.resolved{
-	font-weight: bold;
-}
+// .resolved{
+// 	font-weight: bold;
+// }
 
 // Controls
 #controls{
@@ -170,75 +172,66 @@ input{
 }
 
 
-/* header */
-.navbar{
-	background-color: black;
-}
-
-#logo {
-	float: left;
-	margin-right: 10px;
-	font-size: 1.7em;
-	color: $gray-medium-light;
-	text-transform: uppercase;
-	letter-spacing: -1px;
-	padding-top: 9px;
-	font-weight: bold;
-	&:hover {
-		color: $gray-medium-light;
-		text-decoration: none;
- 	}
-}
-
-nav{
+// /* header */
+header{
+	text-align: center;
+	ul{
+		display: inline-block;
+		border-style: ridge;
+		margin-bottom: 10px;
+	}
 	li{
 		float: left;
 		list-style-type: none;
-		width: 100px;
-		text-color: white;
+		padding-left: 20px;
+		padding-right: 20px;
+		a{
+			color: black;
+		}
+		color: black;
 	}
 }
 
-/* misc */
+// /* misc */
 .debug_dump {
 	clear: both;
 	float: left;
 	width: 100%;
 	margin-top: 45px;
-	@include box_sizing;
+	//@include box_sizing;
 }
 
-/* sidebar */
-aside{
-	section.user_info{
-		margin-top: 20px
-	}
-	section {
-		padding: 10px 0;
-		margin-top: 20px;
-		&:first-child{
-			border: 0;
-			padding-top: 0;
-		}
-		span {
-			display: block;
-			margin-bottom: 3px;
-			line-height: 1;
-		}
-		h1{
-			font-size: 1.4em;
-			text-align: left;
-			letter-spacing: -1px;
-			margin-bottom: 3px;
-			margin-top: 0px;
-		}
-	}
-}
+// /* sidebar */
+// aside{
+// 	section.user_info{
+// 		margin-top: 20px
+// 	}
+// 	section {
+// 		padding: 10px 0;
+// 		margin-top: 20px;
+// 		&:first-child{
+// 			border: 0;
+// 			padding-top: 0;
+// 		}
+// 		span {
+// 			display: block;
+// 			margin-bottom: 3px;
+// 			line-height: 1;
+// 		}
+// 		h1{
+// 			font-size: 1.4em;
+// 			text-align: left;
+// 			letter-spacing: -1px;
+// 			margin-bottom: 3px;
+// 			margin-top: 0px;
+// 		}
+// 	}
+// }
 
-/* typography */
-h1, h2, h3, h4, h5, h6{
-	line-height: 1;
-}
+// /* typography */
+// h1, h2, h3, h4, h5, h6{
+// 	line-height: 1;
+// }
 
 h1{
 	font-size: 3em;
@@ -247,30 +240,34 @@ h1{
 	text-align: center;
 }
 
-h2{
-	font-size: 1.2em;
-	letter-spacing: -1px;
-	margin-bottom: 30px;
-	text-align: center;
-	font-weight: normal;
-	color: #999;
+// h2{
+// 	font-size: 1.2em;
+// 	letter-spacing: -1px;
+// 	margin-bottom: 30px;
+// 	text-align: center;
+// 	font-weight: normal;
+// 	color: #999;
+// }
+
+// p{
+// 	font-size: 1.1em;
+// 	line-height: 1.7em;
+// }
+
+
+// /* universal */
+body{
+	background-color: #add8e6;
+	font-family: sans-serif;
 }
 
-p{
-	font-size: 1.1em;
-	line-height: 1.7em;
-}
+// section{
+// 	overflow: auto;
+// }
 
-
-/* universal */
-
-section{
-	overflow: auto;
-}
-
-textarea{
-	resize: vertical;
-}
+// textarea{
+// 	resize: vertical;
+// }
 
 .center{
 	text-align: center;
@@ -279,13 +276,13 @@ textarea{
 	}
 }
 
-/* Users */
-.users{
-	list-style: none;
-	margin: 0;
-	li{
-		overflow: auto;
-		padding: 10px 0;
-		border-bottom: 1px solid #eee;
-	}
-}
+// /* Users */
+// .users{
+// 	list-style: none;
+// 	margin: 0;
+// 	li{
+// 		overflow: auto;
+// 		padding: 10px 0;
+// 		border-bottom: 1px solid #eee;
+// 	}
+// }

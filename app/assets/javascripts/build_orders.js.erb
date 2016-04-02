@@ -28,9 +28,13 @@ $(document).ready(function(){
 
 			$.get('/session.json', function(data){
 				USER_ID = data["id"];
-				maxLevel = data["max_level"]
-				Brick.level = maxLevel - 1;
-				Brick.level = 0;
+				if( data["max_level"] > 0){
+					maxLevel = data["max_level"]
+					Brick.level = maxLevel - 1;
+				}else{
+					Brick.level = 0;
+					maxLevel = 0;
+				}
 				setLevel();
 
 				ar = data["ar"];
@@ -87,9 +91,9 @@ $(document).ready(function(){
 			//Draw navigation arrows
 			p.fill(100);
 			//Up and down arrows
-			if(p.mouseY < Brick.BRICK_HEIGHT && Brick.level < maxLevel){
+			if(p.mouseY < Brick.BRICK_HEIGHT && Brick.level < maxLevel && p.mouseX > 0 && p.mouseX < p.width ){
 				p.triangle(p.width/2, 5, p.width/2 - 40, (Brick.BRICK_HEIGHT-10)/2, p.width/2 + 40, (Brick.BRICK_HEIGHT-10)/2);
-			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT && Brick.level > 0){
+			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT && Brick.level > 0 && p.mouseX > 0 && p.mouseX < p.width){
 				p.triangle(p.width/2, p.height-5, p.width/2 - 40, p.height - (Brick.BRICK_HEIGHT-10)/2, p.width/2 + 40, p.height - (Brick.BRICK_HEIGHT-10)/2);
 			}
 
@@ -108,10 +112,10 @@ $(document).ready(function(){
 		};
 
 		p.mouseClicked = function(){
-			if(p.mouseY < Brick.BRICK_HEIGHT/2 && p.mouseY >= 0 && Brick.level < maxLevel){
+			if(p.mouseY < Brick.BRICK_HEIGHT/2 && p.mouseY >= 0 && Brick.level < maxLevel && p.mouseX > 0 && p.mouseX < p.width){
 				Brick.level++;
 				setLevel();
-			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT/2 && p.mouseY < p.height && Brick.level > 0){
+			}else if(p.mouseY > p.height - Brick.BRICK_HEIGHT/2 && p.mouseY < p.height && Brick.level > 0 && p.mouseX > 0 && p.mouseX < p.width){
 				Brick.level--;
 				setLevel();
 			}else if(p.mouseX > Brick.BRICK_WIDTH && p.mouseX < p.width - Brick.BRICK_WIDTH && p.mouseY > 0 && p.mouseY < p.height){
@@ -208,6 +212,11 @@ $(document).ready(function(){
 			loadOrders(Brick.level, 0);
 			setBackground(Brick.level);
 			updateAlert(Brick.level, finish);
+			if(Brick.level == 0){
+				$("#messages").hide();
+			}else{
+				$("#messages").show();
+			}
 		}
 
 		//Removes the keyboard and lets you move the bricks again

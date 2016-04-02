@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:edit, :update, :index, :destroy]
   before_action :correct_user, only: [:edit, :update]
   before_action :check_admin, only: [:index, :destroy]
-  
+    
   def new
   	@user = current_user
   end

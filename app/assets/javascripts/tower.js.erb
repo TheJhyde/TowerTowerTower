@@ -6,7 +6,6 @@ $(document).ready(function(){
 
 	var sketch = function(p){
 		var tower = [];
-
 		var arrow_width;
 
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
@@ -22,11 +21,12 @@ $(document).ready(function(){
 		p.draw = function(){
 			p.background(255);
 
+
 			//Level markers
 			p.noStroke();
 			var levelSize = Brick.BRICK_HEIGHT * <%= Global.tower.level_height %>;
 			for(var i = 0; i < p.width/levelSize + 2; i++){
-				p.fill(100 + (i%2)*100);
+				p.fill(173 + (i%2)*100, 216, 230);
 				p.rect(0, p.height - (Brick.BRICK_HEIGHT/2 + levelSize*i + (Brick.verticalOffset % (levelSize*2))), p.width, levelSize);
 			}
 

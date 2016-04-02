@@ -9,40 +9,49 @@
 <% end %>
 
 <h1>Sign Up</h1>
-<div class="row">
-	<div class = "col-md-6 col-md-offset-3">
+<div>
+	<div>
 		<%= form_for(@user, url: users_path, method: "POST") do |f| %>
 			<%= render 'shared/error_messages' %>
 			
 			<!-- This should check if the name you've selected is already in use, 
 			so you don't have to submit the form only to find out it is -->
-			<%= fields_for :name do |name| %>
-				<%= name.label :name %>
-				<%= name.collection_select :name_1, first_collection, :to_s, :to_s, 
-					options = { :include_blank => false} %>
-				<%= name.collection_select :name_2, second_collection, :to_s, :to_s, 
-					options = { :include_blank => false } %>
-			<% end %>
-			<br/>
+			<p>
+				<%= fields_for :name do |name| %>
+					<%= name.label :name %>
+					<%= name.collection_select :name_1, first_collection, :to_s, :to_s, 
+						options = { :include_blank => false} %>
+					<%= name.collection_select :name_2, second_collection, :to_s, :to_s, 
+						options = { :include_blank => false } %>
+				<% end %>
+			</p>
 
-			<%= f.label :gender %>
-			<%= f.collection_select :gender, User::GENDERS.shuffle, :to_s, :to_s, :include_blank => false, class: 'form-control' %>
-			<br/>
+			<p class = "right">
+				<%= f.label :gender %>
+				<%= f.collection_select :gender, User::GENDERS.shuffle, :to_s, :to_s, :include_blank => false %>
+			</p>
 
-			<%= f.label :curse, "How have the gods cursed you?" %>
-			<%= f.collection_select :curse, User::CURSES.shuffle, :to_s, :to_s, class: 'form-control' %>
-			<br/>
+			<p>
+				<%= f.label :curse, "How have you been cursed?" %>
+				<%= f.collection_select :curse, User::CURSES.shuffle, :to_s, :to_s %>
+			</p>
 
-			<%= f.label :email %>
-			<%= f.email_field :email, class: 'form-control' %>
+			<p>
+				<%= f.label :email %><br>
+				<%= f.email_field :email %>
+			</p>
 
-			<%= f.label :password %>
-			<%= f.password_field :password, class: 'form-control' %>
+			<p class = "right">
+				<%= f.label :password %><br>
+				<%= f.password_field :password %>
+			</p>
 
-			<%= f.label :password_confirmation, "Confirmation" %>
-			<%= f.password_field :password_confirmation, class: 'form-control' %>
+			<p>
+				<%= f.label :password_confirmation, "Confirmation" %><br>
+				<%= f.password_field :password_confirmation %>
+			</p>
 
-			<%= f.submit "Create An Account", class: "btn btn-primary" %>
+			<%= f.submit "Create An Account" %>
 		<% end %>
 	</div>
 </div>

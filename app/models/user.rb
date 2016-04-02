@@ -26,7 +26,8 @@ class User < ActiveRecord::Base
 	#Some variables used for the sign up form
 	GENDERS = ['4524', '___!___!_', 'zzzzzz', '<_>']
 	NAME_WORDS = "Goat Mountain Tower Sun Moon Star Horse Desert Tree Hammer Cool Warm Kind Tall 
-	Fast Green Dark Run Swim Build See Home Child Plan".split(" ")
+	Fast Green Dark Run Swim Build See Home Child Plan Electric Waste Blood Ghost Number Phone
+	Leaf Concrete Iron Skull".split(" ")
 	CURSES = "bees/no skin/constant darkness/a confusion of senses/an evil ghost/the inability to die".split("/")
 
 	#Returns the hash digest of the given string
