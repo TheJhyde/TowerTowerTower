@@ -7,6 +7,7 @@ $(document).ready(function(){
 	var sketch = function(p){
 		var tower = [];
 		var arrow_width;
+		var current_brick;
 
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
@@ -72,11 +73,13 @@ $(document).ready(function(){
 			//Find the brick they just moused over
 			var index = overBrick(p.mouseX, p.mouseY)
 			if(index != -1){
-				$.get('/tower/brick/'+ tower[index].getID() +'.json', function(data){
-					$("#info").html("Placed by " + data["name"] + " on " + data["created_at"]);
-				});
+				if(index != current_brick){
+					current_brick = index;
+					$.get('/tower/history/'+ tower[current_brick].getID() +'.js');
+				}
 			}else{
 				$("#info").html("");
+				current_brick = -1;
 			}
 		};
 

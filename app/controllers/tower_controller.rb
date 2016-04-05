@@ -20,16 +20,17 @@ class TowerController < ApplicationController
     	end
 	end
 
-	def brick
-		brick = Brick.find(params["id"].to_i)
+	def history
+		@brick = Brick.find(params["id"].to_i)
 
-		@json = {}
-		@json[:name] = brick.user.name
-		@json[:created_at] = brick.created_at
-		@json[:message] = brick.events.where(category: Event.categories[:placed]).first.build_order.message
+		build_event = @brick.events.where(category: Event.categories[:placed]).first
+		if build_event
+			@order = build_event.build_order
+		end
+		@glyphs = Glyph.all
 
 		respond_to do |format|
-      		format.json {render json: @json }
+      		format.js
     	end
 	end
 end

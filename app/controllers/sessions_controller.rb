@@ -26,17 +26,26 @@ class SessionsController < ApplicationController
 
   def index
     @user = {id: current_user.id}
+    #The highest the user can go
     if current_user.bricks.count > 0
       @user[:max_level] = current_user.bricks.order(:y).last.level + 1
     else
       @user[:max_level] = -1
     end
+    #The level the user should currently be at
+    if session[:level].nil?
+      @user[:level] = @user[:max_level] - 1
+    else
+      @user[:level] = session[:level]
+    end
 
+    #The color of the bricks
     if session[:color].nil?
       session[:color] = rand(2)
     end
     @user[:color] = session[:color]
 
+    #How the bricks should be laid out
     if session[:ar].nil?
       arrangement = [[0, 0], [0, 0]]
       (Global.tower.shipment_size - 1).times do |i| 
@@ -49,7 +58,6 @@ class SessionsController < ApplicationController
     end
     @user[:ar] = session[:ar]
 
-    @user[:arrangement]
     respond_to do |format|
           format.json {render json: @user }
       end

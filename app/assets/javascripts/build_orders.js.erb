@@ -28,9 +28,9 @@ $(document).ready(function(){
 
 			$.get('/session.json', function(data){
 				USER_ID = data["id"];
-				if( data["max_level"] > 0){
+				if( data["max_level"] >= 0){
 					maxLevel = data["max_level"]
-					Brick.level = maxLevel - 1;
+					Brick.level = data["level"];
 				}else{
 					Brick.level = 0;
 					maxLevel = 0;

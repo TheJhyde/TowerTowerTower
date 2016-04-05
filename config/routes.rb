@@ -26,6 +26,6 @@ Rails.application.routes.draw do
   resources :build_orders, only: [:new, :create, :index, :show]
 
   resources :tower, only: [:index, :show]
-  get 'tower/brick/:id' => 'tower#brick'
+  get 'tower/history/:id' => 'tower#history'
   resources :password_resets, only: [:new, :create, :edit, :update]
 end

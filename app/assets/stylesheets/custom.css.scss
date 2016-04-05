@@ -33,6 +33,16 @@ $gray-medium-light: #eaeaea;
 	width: 400px;
 }
 
+// canvas{
+// 	-webkit-transform: rotate(40deg);
+//     transform: rotate(40deg);
+// }
+
+// body{
+// 	-webkit-transform: rotate(-20deg);
+//     transform: rotate(-20deg);
+// }
+
 // /* foot-er */
 footer{
 	margin-top: 45px;
@@ -174,6 +184,8 @@ input{
 
 // /* header */
 header{
+	-webkit-transform: rotate(1deg);
+    transform: rotate(1deg);
 	text-align: center;
 	ul{
 		display: inline-block;

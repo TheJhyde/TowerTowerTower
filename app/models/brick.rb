@@ -1,4 +1,6 @@
 class Brick < ActiveRecord::Base
+	before_create :set_level
+
 	belongs_to :user
 	belongs_to :stranger
 	has_many :events
@@ -24,4 +26,9 @@ class Brick < ActiveRecord::Base
 			end
 		end
 	end
+
+	private
+		def set_level
+			self.level = (self.y - 1)/10
+		end
 end

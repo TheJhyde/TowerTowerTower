@@ -1,0 +1,4 @@
+$("#info").html("Placed by <%= @brick.user.name %> on <%= @brick.created_at.strftime('%_m/%-d, %l:%M %p') %>");
+<% if !@order.nil? %>
+	$("#info").append("<br><%= escape_javascript( render partial: 'shared/message', locals: {glyphs: @glyphs, order: @order}) %>");
+<% end %>

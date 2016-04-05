@@ -17,6 +17,7 @@ class BuildOrdersController < ApplicationController
 		if session[:ar].nil?
 			redirect_to new_build_order_path
 		end
+
 		@order = BuildOrder.new
 		@order.x = params["build_order"]["x"].split(" ").map{|x| x.to_i}
 		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
@@ -40,7 +41,9 @@ class BuildOrdersController < ApplicationController
 		if @order.save
 			#Right here check if there's a duplicate order from the recent past
 			if(interval == 0)
-				BuildOrder.resolve_orders()
+				@order.place_bricks
+				Brick.check_strength
+				Brick.gravity
 				resolve_time = "now"
 			else
 				resolve_time = "at #{@order.resolve_at.strftime("%l:%M %p")}"
@@ -50,6 +53,7 @@ class BuildOrdersController < ApplicationController
 
 			session[:color] = nil
 			session[:ar] = nil
+			session[:level] = @order.level
 
 			redirect_to new_build_order_path
 		else
@@ -95,10 +99,6 @@ class BuildOrdersController < ApplicationController
 			last_order = Time.at(date).to_datetime
 			@orders = BuildOrder.where( used: last_order..(last_order + 5.minute) )
 		end
-
-		# bottom = params[:level].to_i * (Global.tower.level_height - Global.tower.offset) 
-		# top = bottom + Global.tower.level_height
-		# @orders.select{|order| order.y.any?{|y| y >= bottom && y <= top} }
 
 		@glyphs = Glyph.all
 		respond_to do |format|

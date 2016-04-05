@@ -68,7 +68,6 @@ function Brick(startX, startY, p, color, strength){
 		if(Brick.verticalOffset > 0){
 			Brick.verticalOffset = 0;
 		}
-		console.log(Brick.verticalOffset);
 	}
 
 	this.isWithin = function(mouseX, mouseY){
@@ -134,7 +133,7 @@ function Brick(startX, startY, p, color, strength){
 	}
 
 	function screenToY(y){
-		return Math.floor((p.height-y+Brick.BRICK_HEIGHT/2)/Brick.BRICK_HEIGHT) + Brick.level * BPL;
+		return Math.floor((p.height-y+Brick.BRICK_HEIGHT/2-Brick.verticalOffset)/Brick.BRICK_HEIGHT) + Brick.level * BPL;
 	}
 
 	function pickFill(placed){
