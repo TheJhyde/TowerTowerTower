@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Rails tower: production" uuid="904f9094-7757-46ea-900f-610c7b7eb311">
+      <auth-required>false</auth-required>
+      <first-sync>true</first-sync>
+    </data-source>
+    <data-source name="Rails tower: development" uuid="6cc8ed6f-a1c0-48e9-a451-7a05a22d4ff2">
+      <auth-required>false</auth-required>
+      <first-sync>true</first-sync>
+    </data-source>
+    <data-source name="Rails tower: test" uuid="4b673d48-162f-43c6-abe5-1929a1c94d72">
+      <auth-required>false</auth-required>
+      <first-sync>true</first-sync>
+    </data-source>
+  </component>
+</project>

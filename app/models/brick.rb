@@ -2,7 +2,6 @@ class Brick < ActiveRecord::Base
 	before_create :set_level
 
 	belongs_to :user
-	belongs_to :stranger
 	has_many :events
 
 	def self.gravity(news = [])

@@ -14,7 +14,6 @@ class BuildOrder < ActiveRecord::Base
 		end
 		Brick.check_strength
 		Brick.gravity
-		#NewsItem.write_updates(news);
 	end
 
 	def place_bricks

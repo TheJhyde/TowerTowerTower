@@ -30,49 +30,49 @@ function Brick(startX, startY, p, color, strength){
 		y = screenToY(newY) + offsetY;
 		screenX = xToScreen(x);
 		screenY = yToScreen(y);
-	}
+	};
 
 	this.setID = function(newInfo){
 		id = newInfo;
-	}
+	};
 
 	this.getID = function(){
 		return id;
-	}
+	};
 
 	this.fall = function(){
 		y -= 0.1;
-	}
+	};
 
 	Brick.moveLeft = function(){
 		Brick.offset += 15;
 		if(Brick.offset > leftBound){
 			Brick.offset = leftBound;
 		}
-	}
+	};
 
 	Brick.moveRight = function(){
 		Brick.offset -= 15;
 		if(Brick.offset < rightBound){
 			Brick.offset = rightBound;
 		}
-	}
+	};
 
 	//There should be some limit on how far up you can go
 	Brick.moveUp = function(){
 		Brick.verticalOffset -= 15;
-	}
+	};
 
 	Brick.moveDown = function(){
 		Brick.verticalOffset += 15;
 		if(Brick.verticalOffset > 0){
 			Brick.verticalOffset = 0;
 		}
-	}
+	};
 
 	this.isWithin = function(mouseX, mouseY){
 		return (screenToX(mouseX) == x && screenToY(mouseY) == y)
-	}
+	};
 
 	Brick.makeSmaller = function(){
 		if(Brick.BRICK_WIDTH > 2.5){
@@ -82,7 +82,7 @@ function Brick(startX, startY, p, color, strength){
 			//This always put the offset at the halfway point
 			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 		}
-	}
+	};
 
 	Brick.makeLarger = function(){
 		if(Brick.BRICK_WIDTH < <%= Global.tower.brick_width %>){
@@ -91,32 +91,32 @@ function Brick(startX, startY, p, color, strength){
 			rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
 			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
 		}
-	}
+	};
 
 	this.x = function(){
 		return x;
-	}
+	};
 
 	this.y = function(){
 		return y;
-	}
+	};
 
 	this.color = function(){
 		return color;
-	}
+	};
 
 	//Do I use this function anywhere?
 	this.level = function(){
 		return Math.floor((y - 1) / BPL);
-	}
+	};
 
 	Brick.withinTower = function(x, offset){
 		return screenToX(x) + offset >= 0 && screenToX(x) + offset < COLUMNS;
-	}
+	};
 
 	Brick.onLevel = function(y, offset){
 		return Math.floor((screenToY(y) + offset - 1 ) / BPL) == Brick.level
-	}
+	};
 
 	//Given an coordinate, shows where on the screen to draw
 	function xToScreen(thisX){
@@ -174,7 +174,7 @@ function Brick(startX, startY, p, color, strength){
 
 	this.draw = function(){
 		draw(false);
-	}
+	};
 
 	this.draw = function(placed){
 		if(x >= 0 && x < COLUMNS){
@@ -192,38 +192,3 @@ function Brick(startX, startY, p, color, strength){
 		}
 	}
 }
-
-// function BrickCluster(){
-// 	const SHIPMENTSIZE = <%= Global.tower.shipment_size %>;
-
-// 	var arrangment = generateArrangement();
-// 	var bricks = [];
-
-// 	//Generates the arrangement of bricks. Kind of hacky.
-// 	function generateArrangement(){
-// 		var ar = []
-// 		for(var i = 0; i < SHIPMENTSIZE-1; i++){
-// 			ar[i] = []
-// 			for(var j = 0; j < 2; j++){
-// 				ar[i][j] = Math.floor(Math.random()*3-1);
-// 			}
-// 		}
-// 		//Don't put a new brick on top of my old brick!
-// 		if(ar[0][0] == 0 && ar[0][1] == 0){
-// 			ar[0][0] = 1;
-// 		}
-// 		if(ar[1][0] == 0 && ar[1][1] == 0){
-// 			ar[1][0] = -1;
-// 		}
-// 		//If the first and second brick are in the same place
-// 		//Throw away one of them
-// 		if(ar[0][0] == ar[1][0] && ar[0][1] == ar[1][1]){
-// 			ar.shift();
-// 		}
-// 		return ar;
-// 	}
-
-// 	this.draw = function(){
-
-// 	}
-// }

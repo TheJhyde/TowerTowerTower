@@ -12,25 +12,52 @@ $gray-medium-light: #eaeaea;
 // }
 
 // /* alerts */
-// .alert{
-// 	width: 60%;
-// 	text-align: center;
-// 	font-size: 1.1em;
-// 	margin-left: auto;
-// 	margin-right: auto;
-// 	margin-bottom: 10px;
-// }
-
-/* Tower Building */
-#craft{
-	float: right;
-	text-align: center;
+.alert {
+  width: 60%;
+  text-align: center;
+  //font-size: 1.1em;
+  margin-left: auto;
+  margin-bottom: 10px;
+  border-style: dotted;
+  height: 60px;
+  display: block;
+  p{
+    text-align: center;
+  }
 }
 
-#panel{
-	float: left;
-	text-align: left;
-	width: 400px;
+.alert-success{
+  border-color: blue;
+  background-color: cornflowerblue;
+}
+
+.alert-danger{
+  border-color: red;
+  background-color: palevioletred;
+}
+
+.alert-warning{
+  border-color: yellow;
+  background-color: yellowgreen;
+}
+
+.alert-info{
+  border-color: purple;
+  background-color: mediumpurple;
+}
+
+.alert-
+
+/* Tower Building */
+#craft {
+  float: right;
+  text-align: center;
+}
+
+#panel {
+  float: left;
+  text-align: left;
+  width: 400px;
 }
 
 // canvas{
@@ -44,45 +71,45 @@ $gray-medium-light: #eaeaea;
 // }
 
 // /* foot-er */
-footer{
-	margin-top: 45px;
-	padding-top: 5px;
-	border-top: 1px solid black;
-	font-size: small;
-	a{
-		&:hover{
-			color: #222;
-		}
-	}
-	#leftFooter{
-		float: left;
-	}
-	ul{
-		float: right;
-		list-style: none;
-		li{
-			float: left;
-			margin-left: 15px;
-		}
-	}
-	clear: both;
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid black;
+  font-size: small;
+  a {
+    &:hover {
+      color: #222;
+    }
+  }
+  #leftFooter {
+    float: left;
+  }
+  ul {
+    float: right;
+    list-style: none;
+    li {
+      float: left;
+      margin-left: 15px;
+    }
+  }
+  clear: both;
 }
 
 /* forms */
-input, textarea, select .uneditable-input{
-	// border: 1px, solid #bbb;
-	width: 50%;
-	// margin-bottom: 15px;
-	//@include box_sizing;
+input, textarea, select .uneditable-input {
+  // border: 1px, solid #bbb;
+  width: 50%;
+  // margin-bottom: 15px;
+  //@include box_sizing;
 }
 
-.right{
-	margin-left: 150px
+.right {
+  margin-left: 150px
 }
 
-input{
-	//height: auto !important;
-	// What does the !important mean? If I'm gonna use sass I'm gonna have to learn more about it
+input {
+  //height: auto !important;
+  // What does the !important mean? If I'm gonna use sass I'm gonna have to learn more about it
 }
 
 // #error_explanation{
@@ -147,25 +174,25 @@ input{
 // }
 
 /* glyphs */
-.button{
-	height: 75px;
-    width: 75px;
-    margin: 1px;
-    display: inline-block;
-    background-color: #FF9966;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 0.7em;
-    word-wrap: break-word;
-    cursor: pointer;
+.button {
+  height: 75px;
+  width: 75px;
+  margin: 1px;
+  display: inline-block;
+  background-color: #FF9966;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.7em;
+  word-wrap: break-word;
+  cursor: pointer;
 }
 
-.msg_glyph{
-	cursor: pointer;
+.msg_glyph {
+  cursor: pointer;
 }
 
-#text_area{
-	height: 50px;
+#text_area {
+  height: 50px;
 }
 
 // .resolved{
@@ -173,44 +200,43 @@ input{
 // }
 
 // Controls
-#controls{
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
-	text-align: center;
-	border-style: solid;
+#controls {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+  border-style: solid;
 }
 
-
 // /* header */
-header{
-	-webkit-transform: rotate(1deg);
-    transform: rotate(1deg);
-	text-align: center;
-	ul{
-		display: inline-block;
-		border-style: ridge;
-		margin-bottom: 10px;
-	}
-	li{
-		float: left;
-		list-style-type: none;
-		padding-left: 20px;
-		padding-right: 20px;
-		a{
-			color: black;
-		}
-		color: black;
-	}
+header {
+  -webkit-transform: rotate(1deg);
+  transform: rotate(1deg);
+  text-align: center;
+  ul {
+    display: inline-block;
+    border-style: ridge;
+    margin-bottom: 10px;
+  }
+  li {
+    float: left;
+    list-style-type: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    a {
+      color: black;
+    }
+    color: black;
+  }
 }
 
 // /* misc */
 .debug_dump {
-	clear: both;
-	float: left;
-	width: 100%;
-	margin-top: 45px;
-	//@include box_sizing;
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  //@include box_sizing;
 }
 
 // /* sidebar */
@@ -245,11 +271,11 @@ header{
 // 	line-height: 1;
 // }
 
-h1{
-	font-size: 3em;
-	letter-spacing: -2px;
-	margin-bottom: 30px;
-	text-align: center;
+h1 {
+  font-size: 3em;
+  letter-spacing: -2px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 // h2{
@@ -266,11 +292,10 @@ h1{
 // 	line-height: 1.7em;
 // }
 
-
 // /* universal */
-body{
-	background-color: #add8e6;
-	font-family: sans-serif;
+body {
+  background-color: #add8e6;
+  font-family: sans-serif;
 }
 
 // section{
@@ -281,11 +306,11 @@ body{
 // 	resize: vertical;
 // }
 
-.center{
-	text-align: center;
-	h1 {
-		margin-bottom: 10px;
-	}
+.center {
+  text-align: center;
+  h1 {
+    margin-bottom: 10px;
+  }
 }
 
 // /* Users */

@@ -1,11 +1,11 @@
-images = "both bottom bring builder builders column despair down error hole large left
-monster neither no destroy pyramid right up warning within"
+images = 'both bottom bring builder builders column despair down error hole large left
+monster neither no destroy pyramid right up warning within white black top'
 
 meanings = images
 
 #Adds the glyphs to the database
-urls = images.split(" ")
-words = meanings.split(" ")
+urls = images.split(' ')
+words = meanings.split(' ')
 words.each do |word|
 	word.upcase!
 end

@@ -41,6 +41,11 @@ function readGlyphs(){
 	});
 }
 
+function noReadGlyphs(){
+  $(document).off('click', '.glyph');
+  $(document).off('click', '#text_area .glyph_image');
+}
+
 function loadKeyboard(bricks){
 	$.get('finished.js', function(){
 		readGlyphs();

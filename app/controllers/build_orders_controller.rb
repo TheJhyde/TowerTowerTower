@@ -40,7 +40,7 @@ class BuildOrdersController < ApplicationController
 
 		if @order.save
 			#Right here check if there's a duplicate order from the recent past
-			if(interval == 0)
+			if interval == 0
 				@order.place_bricks
 				Brick.check_strength
 				Brick.gravity
@@ -57,7 +57,7 @@ class BuildOrdersController < ApplicationController
 
 			redirect_to new_build_order_path
 		else
-			flash[:danger] = "There was an error!"
+			flash[:danger] = 'There was an error!'
 			render 'new'
 		end
 	end

@@ -11,9 +11,10 @@ gem 'jbuilder',     '2.2.3'
 gem 'sdoc',         '0.4.0', group: :doc
 gem 'rmagick',      '~> 2.15', '>= 2.15.4'
 gem 'aws-sdk',      '~> 2'
-gem 'global', 		'~> 0.1.2'
-gem 'clockwork', 	'~> 1.2'
-gem 'rounding', 	'~> 1.0.1'
+gem 'global', 		  '~> 0.1.2'
+gem 'clockwork', 	  '~> 1.2'
+gem 'rounding', 	  '~> 1.0.1'
+gem 'json',         '~> 1.8', '>= 1.8.3'
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'
