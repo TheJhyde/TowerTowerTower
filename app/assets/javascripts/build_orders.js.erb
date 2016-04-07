@@ -13,6 +13,9 @@ $(document).ready(function(){
     var maxLevel;
     var calc;
 
+    var whiteBrick;
+    var blackBrick;
+
     var background;
     var backgrounds = ["level_one.jpg", "level_two.jpg", "level_three.jpg", "level_four.jpg", "level_five.jpg", "level_six.jpg"];
 
@@ -22,6 +25,9 @@ $(document).ready(function(){
       canvas.parent("canvas");
       background = p.loadImage("../" + backgrounds[0]);
       calc = new BrickCalc(p);
+
+      whiteBrick = p.loadImage("/brick-02.png");
+      blackBrick = p.loadImage("/brick-01.png");
 
       $.get('/session.json', function (data) {
         USER_ID = data["id"];
@@ -45,6 +51,7 @@ $(document).ready(function(){
       p.background(100);
       p.image(background, 0, 0, background.width, background.height, ((calc.offset - calc.BRICK_WIDTH) % p.width), 0, p.width, p.height);
       p.image(background, 0, 0, background.width, background.height, ((calc.offset - calc.BRICK_WIDTH) % p.width + p.width), 0, p.width, p.height);
+      p.filter(p.POSTERIZE, 4);
 
       //Draws the bricks from the tower
       p.stroke(0);
@@ -52,7 +59,7 @@ $(document).ready(function(){
       for (var i = 0; i < tower.length; i++) {
         p.stroke(100);
         p.strokeWeight(1);
-        drawBrick(tower[i], 255);
+        drawBrick(tower[i]);
       }
 
       //Draws the player's bricks
@@ -62,9 +69,10 @@ $(document).ready(function(){
         p.stroke(0,128,0);
         p.strokeWeight(4);
         if(finish){
-          drawBrick(newBricks[i], 180);
+          p.tint(255, 180);
+          drawBrick(newBricks[i]);
         }else{
-          drawBrick(newBricks[i], 255);
+          drawBrick(newBricks[i]);
         }
       }
 
@@ -185,23 +193,29 @@ $(document).ready(function(){
       }
     };
 
-    function drawBrick(brick, a) {
+    function drawBrick(brick) {
       //Draw the rectangle for the block
       if (brick.x() >= 0 && brick.x() < calc.COLUMNS) {
-        switch (brick.color()) {
-          case 0:
-            p.fill(0, 0, 0, a);
-            break;
-          case 1:
-            p.fill(255, 255, 255, a);
-            break;
-          default:
-            p.fill(0);
-        }
+//        switch (brick.color()) {
+//          case 0:
+//            p.fill(0, 0, 0, a);
+//            break;
+//          case 1:
+//            p.fill(255, 255, 255, a);
+//            break;
+//          default:
+//            p.fill(0);
+//        }
 
         var x = calc.xToScreen(brick.x());
         var y = calc.yToScreen(brick.y());
-        p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+        if(brick.color() == 1){
+          p.image(whiteBrick, 0, 0, whiteBrick.width, whiteBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+        }else{
+          p.image(blackBrick, 0, 0, blackBrick.width, blackBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+        }
+
+        //p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
 
 
         //Draw the strength lines
@@ -218,7 +232,7 @@ $(document).ready(function(){
         }
         for (var j = 0; j < brick.strength(); j++) {
           var xLerp = p.lerp(x, x + calc.BRICK_WIDTH, (j + 1) / (brick.strength() + 1));
-          p.line(xLerp, y + 5, xLerp, y + (calc.BRICK_HEIGHT - 5));
+          p.line(xLerp, y + 10, xLerp, y + (calc.BRICK_HEIGHT - 10));
         }
       }
     }

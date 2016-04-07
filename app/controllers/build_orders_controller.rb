@@ -40,16 +40,18 @@ class BuildOrdersController < ApplicationController
 
 		if @order.save
 			#Right here check if there's a duplicate order from the recent past
-			if interval == 0
+      current_user.update(actions: (current_user.actions - 1))
+      if interval == 0
 				@order.place_bricks
 				Brick.check_strength
 				Brick.gravity
-				resolve_time = "now"
+        msg = 'Your bricks have been added to the tower.'
 			else
-				resolve_time = "at #{@order.resolve_at.strftime("%l:%M %p")}"
-			end
-			current_user.update(actions: (current_user.actions - 1))
-			flash[:success] = "Bricks placed. Your order will be resolved #{resolve_time}. You have #{current_user.actions} <a href ='/actions' target = '_blank'>actions</a> left for the day."
+				resolve_time = "#{@order.resolve_at.strftime("%l:%M %p")}"
+				msg = "Bricks placed. Your order will be resolved at #{resolve_time}."
+      end
+
+      flash[:success] = msg + "You have #{current_user.actions} <a href ='/actions' target = '_blank'>actions</a> left for the day."
 
 			session[:color] = nil
 			session[:ar] = nil

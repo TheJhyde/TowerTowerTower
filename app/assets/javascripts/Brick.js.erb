@@ -93,7 +93,7 @@ function BrickCalc(p){
 
   this.makeSmaller = function(){
     if(this.BRICK_WIDTH > 2.5){
-      this.zoom--;
+      this.zoom++;
       this.BRICK_WIDTH *= 0.5;
       this.BRICK_HEIGHT *= 0.5;
       reviseBounds();
@@ -105,7 +105,7 @@ function BrickCalc(p){
 
   this.makeLarger = function(){
     if(this.BRICK_WIDTH < <%= Global.tower.brick_width %>){
-      this.zoom++;
+      this.zoom--;
       this.BRICK_WIDTH *= 2;
       this.BRICK_HEIGHT *= 2;
       reviseBounds();

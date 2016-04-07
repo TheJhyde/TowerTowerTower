@@ -6,7 +6,7 @@ class Event < ActiveRecord::Base
 
 	enum category: [:placed, :fell, :weakened, :demolished, :strengthened, :worn]
 
-	def self.write_updates()
+	def self.write_updates
 		User.where(signed_up: true).each do |user|
 			new_placed = user.placing_events.where(["created_at > ?", (DateTime.now - 20.minute)])
 			new_bricks = user.brick_events.where(["created_at > ?", (DateTime.now - 20.minute)])
