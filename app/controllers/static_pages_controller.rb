@@ -4,8 +4,7 @@ class StaticPagesController < ApplicationController
   #The home page, with all the global stats
   def home
     if(logged_in?)
-      @towers = Brick.order(:y).last.y + 1
-      @bricks = Brick.count
+      @tower = Brick.all
       @news_items = current_user.news_items.order(created_at: :desc).paginate(page: params[:page], per_page: 20)
     end
   end

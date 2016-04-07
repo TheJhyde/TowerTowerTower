@@ -2,11 +2,20 @@
 <div class = "row">
 	<aside class="col-md-4">
 		<section class="user_info">
-			<h1>
-				<%= @user.name %>
-			</h1>
-			Gender: <%= @user.gender %><br/>
-			The gods have cursed me with <%= @user.curse %>
+			<h1><%= @user.name %></h1>
+      <p>
+        Gender: <%= @user.gender %><br/>.
+        The gods have cursed me with <%= @user.curse %>.
+      </p>
+
+      <p>
+        I have submitted to the tower <%= pluralize(@user.build_orders.count, 'time') %>.<br>
+        I have <%= pluralize(@user.bricks.count, 'brick') %> on the tower.<br>
+        <%= pluralize(@user.placing_events.count + @user.brick_events.count, 'thing') %> have happened to me.<br>
+        <% if @user.bricks.count > 0 %>
+          I have reached level <%= @user.bricks.order(:y).last.level %>.
+        <% end %>
+      </p>
 		</section>
 	</aside>
 </div>

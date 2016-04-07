@@ -46,8 +46,6 @@ $gray-medium-light: #eaeaea;
   background-color: mediumpurple;
 }
 
-.alert-
-
 /* Tower Building */
 #craft {
   float: right;
@@ -107,9 +105,17 @@ input, textarea, select .uneditable-input {
   margin-left: 150px
 }
 
-input {
-  //height: auto !important;
-  // What does the !important mean? If I'm gonna use sass I'm gonna have to learn more about it
+.btn{
+  width: auto;
+  padding: 5px;
+  font-size: 16px;
+  background-color: gold;
+  border: 2px outset buttonface;
+}
+
+.btn-primary{
+  font-size: larger;
+  font-weight: bold;
 }
 
 // #error_explanation{
@@ -120,11 +126,11 @@ input {
 // 	}
 // }
 
-// .field_with_errors {
-// 	.form-control {
-// 		color: #FF0000;
-// 	}
-// }
+.field_with_errors {
+  .form-control {
+    color: #FF0000;
+  }
+}
 
 // .checkbox{
 // 	margin-top: -10px;
@@ -141,21 +147,25 @@ input {
 // }
 
 // /* Front Page */
-// .jumbotron{
-// 	padding: 10px;
-// 	background-color: #eee;
-// }
+.jumbotron{
+  padding: 10px;
+  background-color: #eee;
+  margin: 20px;
+  border-radius: 25px;
+}
 
-// .box{
-// 	border-style: solid;
-// 	border-width: 1px;
-// 	margin: 10px;
-// 	width: 20%;
-// }
+.box{
+  border-style: solid;
+  border-width: 1px;
+  margin: 10px;
+  display: inline-block;
+  padding: 10px;
+  vertical-align: middle;
+}
 
-// #player_status{
-// 	width: 70%;
-// }
+#information{
+  text-align: center;
+}
 
 // #sidebar{
 // 	float: right;
@@ -165,9 +175,9 @@ input {
 // 	font-size: 120%;
 // }
 
-// .error_report{
-// 	color: red;
-// }
+.error_report{
+  color: red;
+}
 
 // .content{
 // 	margin: 10px
@@ -192,7 +202,7 @@ input {
 }
 
 #text_area {
-  height: 50px;
+  min-height: 50px;
 }
 
 // .resolved{
@@ -296,6 +306,18 @@ h1 {
 body {
   background-color: #add8e6;
   font-family: sans-serif;
+}
+
+a:visited{
+  color: darkgreen;
+}
+
+a:hover{
+  color: salmon;
+}
+
+a:link{
+  color: darkblue;
 }
 
 // section{

@@ -20,7 +20,7 @@ $(document).ready(function(){
 
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
-			var canvas = p.createCanvas(p.windowWidth - 550, <%= Global.tower.brick_height * (Global.tower.level_height + Global.tower.overlap) %>);
+			var canvas = p.createCanvas(p.windowWidth - 450, <%= Global.tower.brick_height * (Global.tower.level_height + Global.tower.overlap) %>);
 			canvas.parent("canvas");
 			background = p.loadImage("../" + backgrounds[0]);
 			background2 = p.loadImage("../" + backgrounds[1]);

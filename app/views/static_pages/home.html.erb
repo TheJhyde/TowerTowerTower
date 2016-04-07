@@ -1,43 +1,45 @@
 <% provide(:title, "Tower Brick Lightning") %>
 <% if !logged_in? %>
-	<div class = "center jumbotron">
-		<h1>Tower Brick Lightning</h1>
-		<div id="canvas"></div>
-		<p>
-			Build a tower to escape to the heavens.
-		</p>
-		<%= link_to "Play Now", new_build_order_path, class: "btn btn-lg btn-primary" %>
-		<%= link_to "Sign Up", signup_path, class: "btn btn-lg btn-primary" %>
-	</div>
+    <div class = "center jumbotron">
+      <h1>Tower Brick Lightning</h1>
+      <div id="canvas"></div>
+      <p>
+        Build a tower to escape and the heavens.
+      </p>
+      <%= link_to "Play Now", new_build_order_path, class: "btn btn-primary" %>
+      <%= link_to "About", about_path, class: "btn btn-primary" %>
+      <%= link_to "Sign Up", signup_path, class: "btn btn-primary" %>
+    </div>
 <% else %>
-	<h1><%= current_user.name %></h1>
-	<div id = "information">
-		<div id = "player_status">
-			Actions: <%= current_user.actions %>
-		</div>
-		<div id = "siderbar">
-			<div id = "global_stats" class = "box">
-				Tower Height: <%= @towers %> stories</br>
-				Total Bricks: <%= @bricks %></br>
-			</div>
-			<div id = "links" class = "box">
-				<%= link_to "Build Tower", new_build_order_path %><br/>
-				<%= link_to "See Tower", tower_index_path %><br/>
-				<%= link_to "Profile", current_user %><br/>
-				<%= link_to "Settings", edit_user_path(current_user) %><br/>
-				<% if current_user.admin %>
-					<%= link_to "Admin", '/admin' %>
-				<% end %>
-			</div>
-		</div>
-	</div>
-	<div id = "news_feed">
-		<h3>Updates</h3>
-		<ul>
-			<% @news_items.each do |news| %>
-				<li class = "<%= news.msg_type %>"><%= news.created_at.strftime("%_m/%-d, %l:%M %p")%>: <%= news.message.html_safe %></li>
-			<% end %>
-		</ul>
-		<%= will_paginate @news_items %>
-	</div>
+    <h1><%= current_user.name %></h1>
+    <div id = "information">
+      <div id = "stats" class = "box">
+        <strong>Personal Stats</strong><br>
+        Actions: <%= current_user.actions %><br>
+        Highest Level: <%= current_user.bricks.order(:y).last.level %><br>
+        <br>
+        <strong>Global Stats</strong><br>
+        Tower Height: <%= @tower.order(:y).last.y %> bricks, <%= @tower.order(:y).last.level %> levels</br>
+        Total Bricks: <%= @tower.count %></br>
+      </div>
+      <div id = "canvas" class="box"></div>
+      <div id = "links" class = "box">
+        <%= link_to "Profile", current_user %><br/>
+        <%= link_to "Settings", edit_user_path(current_user) %><br/>
+        <%= link_to "Build Tower", new_build_order_path %><br/>
+        <%= link_to "See Tower", tower_index_path %><br/>
+        <% if current_user.admin %>
+            <%= link_to 'Admin', '/admin' %>
+        <% end %>
+      </div>
+    </div>
+    <div id = "news_feed">
+      <h3>News</h3>
+      <ul>
+        <% @news_items.each do |news| %>
+            <li class = "<%= news.msg_type %>"><%= news.created_at.strftime("%_m/%-d, %l:%M %p")%>: <%= news.message.html_safe %></li>
+        <% end %>
+      </ul>
+      <%= will_paginate @news_items %>
+    </div>
 <% end %>
