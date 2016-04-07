@@ -1,96 +1,20 @@
-function Brick(startX, startY, p, color, strength){
-	//const BRICK_WIDTH = <%= Global.tower.brick_width %>;
-	Brick.BRICK_WIDTH = <%= Global.tower.brick_width %>;
-	Brick.BRICK_HEIGHT = <%= Global.tower.brick_height %>;
-	const COLUMNS = <%= Global.tower.bricks_layer %>;
-	const BPL = <%= Global.tower.level_height %>;
-	const OVERLAP = <%= Global.tower.overlap %>
-	//const OVERLAP = 2;
-
-	Brick.towerWidth = Brick.BRICK_WIDTH * COLUMNS;
-	if(Brick.offset == null){
-		Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
-	}
-	if(Brick.verticalOffset == null){
-		Brick.verticalOffset = 0;
-	}
-	var leftBound = 10;
-	var rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
-
-	var x = startX;
+function Brick(startX, startY, color, strength){
+  var x = startX;
 	var y = startY;
-	var screenX = xToScreen(x);
-	var screenY = yToScreen(y);
-	var id;
+	this.id;
+  this.playerID;
 
-	//This function should check if the brick might go out of bounds
-	//And refuse if it does
-	this.update = function(newX, newY, offsetX, offsetY){
-		x = screenToX(newX) + offsetX;
-		y = screenToY(newY) + offsetY;
-		screenX = xToScreen(x);
-		screenY = yToScreen(y);
-	};
-
-	this.setID = function(newInfo){
-		id = newInfo;
-	};
-
-	this.getID = function(){
-		return id;
+	this.update = function(newX, newY){
+		x = newX;
+		y = newY;
 	};
 
 	this.fall = function(){
 		y -= 0.1;
 	};
 
-	Brick.moveLeft = function(){
-		Brick.offset += 15;
-		if(Brick.offset > leftBound){
-			Brick.offset = leftBound;
-		}
-	};
-
-	Brick.moveRight = function(){
-		Brick.offset -= 15;
-		if(Brick.offset < rightBound){
-			Brick.offset = rightBound;
-		}
-	};
-
-	//There should be some limit on how far up you can go
-	Brick.moveUp = function(){
-		Brick.verticalOffset -= 15;
-	};
-
-	Brick.moveDown = function(){
-		Brick.verticalOffset += 15;
-		if(Brick.verticalOffset > 0){
-			Brick.verticalOffset = 0;
-		}
-	};
-
 	this.isWithin = function(mouseX, mouseY){
 		return (screenToX(mouseX) == x && screenToY(mouseY) == y)
-	};
-
-	Brick.makeSmaller = function(){
-		if(Brick.BRICK_WIDTH > 2.5){
-			Brick.BRICK_WIDTH *= 0.5;
-			Brick.BRICK_HEIGHT *= 0.5;
-			rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
-			//This always put the offset at the halfway point
-			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
-		}
-	};
-
-	Brick.makeLarger = function(){
-		if(Brick.BRICK_WIDTH < <%= Global.tower.brick_width %>){
-			Brick.BRICK_WIDTH *= 2;
-			Brick.BRICK_HEIGHT *= 2;
-			rightBound = p.width - (Brick.BRICK_WIDTH * COLUMNS + 10);
-			Brick.offset = (p.width - Brick.BRICK_WIDTH * COLUMNS)/2;
-		}
 	};
 
 	this.x = function(){
@@ -105,90 +29,118 @@ function Brick(startX, startY, p, color, strength){
 		return color;
 	};
 
+  this.strength = function(){
+    return strength;
+  };
+
 	//Do I use this function anywhere?
 	this.level = function(){
 		return Math.floor((y - 1) / BPL);
 	};
+}
 
-	Brick.withinTower = function(x, offset){
-		return screenToX(x) + offset >= 0 && screenToX(x) + offset < COLUMNS;
-	};
+function BrickCalc(p){
+  this.BRICK_WIDTH = <%= Global.tower.brick_width %>;
+  this.BRICK_HEIGHT = <%= Global.tower.brick_height %>;
+  this.COLUMNS = <%= Global.tower.bricks_layer %>;
+  this.BPL = <%= Global.tower.level_height %>;
 
-	Brick.onLevel = function(y, offset){
-		return Math.floor((screenToY(y) + offset - 1 ) / BPL) == Brick.level
-	};
+  this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
+  this.verticalOffset = 0;
+  this.leftbound = this.BRICK_WIDTH;
+  this.rightbound = p.width - (this.BRICK_WIDTH * this.COLUMNS + this.BRICK_WIDTH);
+  this.upperbound = this.BRICK_HEIGHT * this.BPL * 20 * -1;
+  this.zoom = 0;
 
-	//Given an coordinate, shows where on the screen to draw
-	function xToScreen(thisX){
-		return thisX * Brick.BRICK_WIDTH + Brick.offset;
-	}
+  this.level;
 
-	function yToScreen(thisY){
-		return p.height - (thisY+1 - Brick.level * BPL) * Brick.BRICK_HEIGHT + Brick.BRICK_HEIGHT/2;
-	}
+  this.moveLeft = function(){
+    if(this.BRICK_WIDTH * this.COLUMNS > p.width){
+      this.offset += 15;
+      if(this.offset > this.leftbound){
+        this.offset = this.leftbound;
+      }
+    }else{
+      this.center();
+    }
+  };
 
-	// Converts the screen position to the nearest x,y position
-	function screenToX(x){
-		return Math.floor((x - Brick.offset)/Brick.BRICK_WIDTH);
-	}
+  this.moveRight = function(){
+    if(this.BRICK_WIDTH * this.COLUMNS > p.width) {
+      this.offset -= 15;
+      if (this.offset < this.rightbound) {
+        this.offset = this.rightbound;
+      }
+    }else{
+      this.center();
+    }
+  };
 
-	function screenToY(y){
-		return Math.floor((p.height-y+Brick.BRICK_HEIGHT/2-Brick.verticalOffset)/Brick.BRICK_HEIGHT) + Brick.level * BPL;
-	}
+  //There should be some limit on how far up you can go
+  this.moveUp = function(){
+    this.verticalOffset -= 15;
+    if(this.verticalOffset < this.upperbound){
+      this.verticalOffset = this.upperbound;
+    }
+  };
 
-	function pickFill(placed){
-		if(placed){
-			var a = 150;
-		}else{
-			var a = 255;
-		}
-		switch (color){
-			case 0:
-				//p.fill(170, 0, 0, a);
-				p.fill(0, 0, 0, a);
-				break;
-			case 1:
-				//p.fill(255, 140, 0, a);
-				p.fill(255, 255, 255, a);
-				break;
-			case 2:
-				p.fill(0, 0, 200, a);
-				break;
-			default:
-				p.fill(0);
-		}
-	}
+  this.moveDown = function(){
+    this.verticalOffset += 15;
+    if(this.verticalOffset > 0){
+      this.verticalOffset = 0;
+    }
+  };
 
-	function pickStrokeFill(){
-		switch(color){
-			case 0:
-				p.stroke(255);
-				break;
-			case 1:
-				p.stroke(0);
-				break;
-			default:
-				p.stroke(100);
-		}
-	}
+  this.makeSmaller = function(){
+    if(this.BRICK_WIDTH > 2.5){
+      this.zoom--;
+      this.BRICK_WIDTH *= 0.5;
+      this.BRICK_HEIGHT *= 0.5;
+      reviseBounds();
+      //This always put the offset at the halfway point
 
-	this.draw = function(){
-		draw(false);
-	};
+      this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
+    }
+  };
 
-	this.draw = function(placed){
-		if(x >= 0 && x < COLUMNS){
-			pickFill(placed);
-			p.stroke(100);
-			p.strokeWeight(1);
-			p.rect(xToScreen(x), yToScreen(y) - Brick.verticalOffset, Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT);
+  this.makeLarger = function(){
+    if(this.BRICK_WIDTH < <%= Global.tower.brick_width %>){
+      this.zoom++;
+      this.BRICK_WIDTH *= 2;
+      this.BRICK_HEIGHT *= 2;
+      reviseBounds();
+      this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
+    }
+  };
 
-			p.strokeWeight(2);
-			pickStrokeFill(2);
-			for(var i = 0; i < strength; i++){
-				var xLerp = p.lerp(xToScreen(x), xToScreen(x) + Brick.BRICK_WIDTH, (i+1)/(strength+1));
-				p.line(xLerp, yToScreen(y)+5- Brick.verticalOffset, xLerp, yToScreen(y) + Brick.BRICK_HEIGHT-5- Brick.verticalOffset);
-			}
-		}
-	}
+  function reviseBounds(){
+    this.rightbound = p.width - (this.BRICK_WIDTH * this.COLUMNS + 10);
+    this.upperbound = this.BRICK_HEIGHT * this.BPL * 20 * -1;
+  }
+
+  this.center = function(){
+    this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
+  }
+
+  //Given an coordinate, shows where on the screen to draw
+  this.xToScreen = function(thisX){
+    return thisX * this.BRICK_WIDTH + this.offset;
+  };
+
+  this.yToScreen = function(thisY){
+    return p.height - (thisY+1 - this.level * this.BPL) * this.BRICK_HEIGHT + this.BRICK_HEIGHT/2 - this.verticalOffset;
+  };
+
+  // Converts the screen position to the nearest x,y position
+  this.screenToX = function(x){
+    return Math.floor((x - this.offset)/this.BRICK_WIDTH);
+  };
+
+  this.screenToY = function(y){
+    return Math.floor((p.height-y+this.BRICK_HEIGHT/2-this.verticalOffset)/this.BRICK_HEIGHT) + this.level * this.BPL;
+  };
+
+  this.withinLevel = function(x, y){
+    return (x >= 0 && x <= this.COLUMNS && Math.floor((y - 1) / this.BPL) == this.level);
+  }
 }

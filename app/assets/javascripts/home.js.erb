@@ -6,10 +6,17 @@ $(document).ready(function(){
 
 	var sketch = function(p){
 		var tower = [];
+    var calc;
+    var current_player = -1;
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
-			Brick.level = 0;
-			loadTower(Brick.level);
+      calc = new BrickCalc(p);
+			calc.level = 0;
+			loadTower(calc.level);
+
+      $.get('/session.json', function(data){
+        current_player = data["id"];
+      });
 		};
 
 		p.draw = function(){
@@ -19,9 +26,37 @@ $(document).ready(function(){
 			p.stroke(0);
 			p.strokeWeight(1);
 			for(var i = 0; i < tower.length; i++){
-				tower[i].draw();
+				drawBrick(tower[i]);
 			}
 		};
+
+    function drawBrick(brick) {
+      //Draw the rectangle for the block
+      if (brick.x() >= 0 && brick.x() < calc.COLUMNS) {
+        switch (brick.color()) {
+          case 0:
+            p.fill(0, 0, 0);
+            break;
+          case 1:
+            p.fill(255, 255, 255);
+            break;
+          case 2:
+            p.fill(0, 0, 200);
+            break;
+          default:
+            p.fill(0);
+        }
+        if(brick.playerID == current_player){
+          p.fill(200, 0, 0);
+        }
+
+        p.stroke(100);
+        p.strokeWeight(0.5);
+        var x = calc.xToScreen(brick.x());
+        var y = calc.yToScreen(brick.y());
+        p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+      }
+    }
 
 		//------------------------------------------OTHER FUNCTIONS------------------------------------
 		//Loads the tower from the server
@@ -29,15 +64,21 @@ $(document).ready(function(){
 			tower = [];
 			$.get('/tower.json', function(data){
 				for(var i = 0; i < data.length; i++){
-					brick = new Brick(data[i]["x"], data[i]["y"], p, data[i]["color"], data[i]["strength"]);
-					brick.setID(data[i]["id"]);
+					var brick = new Brick(data[i]["x"], data[i]["y"], data[i]["color"], data[i]["strength"]);
+					brick.id = data[i]["id"];
+          brick.playerID = data[i]["user_id"];
+          console.log(brick.playerID);
 					tower.push(brick);
 				}
 				for(var i = 0; i < 4; i++){
-					Brick.makeSmaller();			
+					calc.makeSmaller();
 				}
-				canvas = p.createCanvas(<%= Global.tower.bricks_layer %> * Brick.BRICK_WIDTH, <%= Global.tower.brick_height %> * (<%= Global.tower.level_height %> + 1));
+
+        var width = calc.BRICK_WIDTH * <%= Global.tower.bricks_layer %> + 10;
+        var height = <%= Global.tower.brick_height %> * (<%= Global.tower.level_height %> + 1);
+				var canvas = p.createCanvas(width, height);
 				canvas.parent("canvas");
+        calc.center();
 			});
 		}
 	};
