@@ -28,4 +28,5 @@ Rails.application.routes.draw do
   resources :tower, only: [:index, :show]
   get 'tower/history/:id' => 'tower#history'
   resources :password_resets, only: [:new, :create, :edit, :update]
+  resources :levels, only: [:index, :show]
 end

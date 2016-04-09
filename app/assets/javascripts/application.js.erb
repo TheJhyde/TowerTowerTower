@@ -46,7 +46,7 @@ function noReadGlyphs(){
   $(document).off('click', '#text_area .glyph_image');
 }
 
-function loadKeyboard(bricks){
+function loadKeyboard(bricks, calc){
 	$.get('finished.js', function(){
 		readGlyphs();
 		var x = "";
@@ -57,8 +57,9 @@ function loadKeyboard(bricks){
 		}
 		$("#build_order_x").val(x);
 		$("#build_order_y").val(y);
-		if(Brick.level < 1){
-			$("#keyboard").hide();
+		if(calc.level < 1){
+			$("#keyboard").remove();
+      $('.text_area').remove();
 		}
 	});
 }
@@ -68,8 +69,7 @@ function loadOrders(level, date){
 	$.get('/build_orders/get_orders/' + date + '.js', {level: level});
 }
 
-function nextTime(level){
-	var interval = (Math.floor((level+1) / 2)) * 5;
+function nextTime(interval){
 	if(interval == 0){
 		return "immediately";
 	}

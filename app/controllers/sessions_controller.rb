@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
     @user = {id: current_user.id}
     #The highest the user can go
     if current_user.bricks.count > 0
-      @user[:max_level] = current_user.bricks.order(:y).last.level + 1
+      @user[:max_level] = current_user.bricks.order(:y).last.level.level + 1
     else
       @user[:max_level] = -1
     end

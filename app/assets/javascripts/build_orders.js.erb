@@ -13,17 +13,21 @@ $(document).ready(function(){
     var maxLevel;
     var calc;
 
+    var interval = 0;
+    var requiredStrength = 0;
+    var unfinishedText = "";
+    var finishText = "";
+
     var whiteBrick;
     var blackBrick;
 
     var background;
-    var backgrounds = ["level_one.jpg", "level_two.jpg", "level_three.jpg", "level_four.jpg", "level_five.jpg", "level_six.jpg"];
 
     //-----------------------------------P5 FUNCTIONS---------------------------------------------
     p.setup = function () {
       var canvas = p.createCanvas(p.windowWidth - 450, <%= Global.tower.brick_height * (Global.tower.level_height + Global.tower.overlap) %>);
       canvas.parent("canvas");
-      background = p.loadImage("../" + backgrounds[0]);
+      background = p.loadImage("../level_one.jpg");
       calc = new BrickCalc(p);
 
       whiteBrick = p.loadImage("/brick-02.png");
@@ -77,9 +81,6 @@ $(document).ready(function(){
       }
 
       //Draws the information block in the upper left
-      var interval = (Math.floor((calc.level + 1) / 2)) * 5;
-      var requiredStrength = Math.floor((calc.level + 1) / 3);
-
       p.fill(255);
       p.stroke(0);
       if (requiredStrength <= 0) {
@@ -137,11 +138,11 @@ $(document).ready(function(){
           finish = true;
           $("#bricks").hide();
           $("#messages").hide();
-          updateAlert(calc.level, finish);
+          $("#instructions").html(finishText);
           $("#left").hide();
           $("#right").hide();
           $("#remove").show();
-          loadKeyboard(newBricks);
+          loadKeyboard(newBricks, calc);
         } else if (withinPlaced(p.mouseX, p.mouseY) && finish) {
           moveBricks();
         }
@@ -195,28 +196,15 @@ $(document).ready(function(){
 
     function drawBrick(brick) {
       //Draw the rectangle for the block
-      if (brick.x() >= 0 && brick.x() < calc.COLUMNS) {
-//        switch (brick.color()) {
-//          case 0:
-//            p.fill(0, 0, 0, a);
-//            break;
-//          case 1:
-//            p.fill(255, 255, 255, a);
-//            break;
-//          default:
-//            p.fill(0);
-//        }
-
-        var x = calc.xToScreen(brick.x());
-        var y = calc.yToScreen(brick.y());
+      var x = calc.xToScreen(brick.x());
+      var y = calc.yToScreen(brick.y());
+      if (x > calc.BRICK_WIDTH * -1 && x < p.width) {
+        //p.tint(250, 0, 0);
         if(brick.color() == 1){
           p.image(whiteBrick, 0, 0, whiteBrick.width, whiteBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
         }else{
           p.image(blackBrick, 0, 0, blackBrick.width, blackBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
         }
-
-        //p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
-
 
         //Draw the strength lines
         p.strokeWeight(2);
@@ -231,13 +219,14 @@ $(document).ready(function(){
             p.stroke(100);
         }
         for (var j = 0; j < brick.strength(); j++) {
-          var xLerp = p.lerp(x, x + calc.BRICK_WIDTH, (j + 1) / (brick.strength() + 1));
+          var xLerp = p.lerp(x+5, x + calc.BRICK_WIDTH-5, (j + 1) / (brick.strength() + 1));
           p.line(xLerp, y + 10, xLerp, y + (calc.BRICK_HEIGHT - 10));
         }
       }
     }
 
     //------------------------------------------OTHER FUNCTIONS------------------------------------
+
     //Is the given screen coordinates inside the new bricks?
     function withinPlaced(x, y) {
       for (var i = 0; i < newBricks.length; i++) {
@@ -258,7 +247,6 @@ $(document).ready(function(){
           return false;
         }
       }
-
       newBricks[0].update(x, y);
       for (var i = 0; i < ar.length; i++) {
         newBricks[i + 1].update(x + ar[i][0], y + ar[i][1]);
@@ -266,10 +254,8 @@ $(document).ready(function(){
     }
 
     function setLevel() {
-      loadTower(calc.level);
+      loadLevel(calc.level);
       loadOrders(calc.level, 0);
-      setBackground(calc.level);
-      updateAlert(calc.level, finish);
       if (calc.level == 0) {
         $("#messages").hide();
       } else {
@@ -282,65 +268,43 @@ $(document).ready(function(){
       finish = false;
 
       $('#remove').hide();
+      $("#message_form").remove();
 
       $('#bricks').show();
       $("#messages").show();
       $("#left").show();
       $("#right").show();
+      $("#instructions").html(unfinishedText);
 
-      $("#message_form").remove();
       noReadGlyphs();
-      updateAlert(calc.level, finish);
     }
 
-    //Loads the tower from the server
-    function loadTower(requestedLevel) {
+    function loadLevel(requestedLevel){
       tower = [];
-      $.get('/tower/' + requestedLevel + '.json', {level: requestedLevel}, function (data) {
-        for (var i = 0; i < data.length; i++) {
-          tower.push(new Brick(data[i]["x"], data[i]["y"], data[i]["color"], data[i]["strength"]));
+      $.get('/levels/' + requestedLevel + '.json', function(data){
+        var level = data["level"];
+
+        requiredStrength = level["strength_requirement"];
+        interval = level["update_rate"];
+        background = p.loadImage("../" + level['background']);
+
+        var text = level["text"];
+        text = text.replace('<nextTime()>', nextTime(interval));
+        finishText = text.slice(text.indexOf('|')+2);
+        unfinishedText = text.slice(0, text.indexOf('|'));
+        updateAlert();
+        var towerData = data["bricks"];
+        for (var i = 0; i < towerData.length; i++) {
+          tower.push(new Brick(towerData[i]["x"], towerData[i]["y"], towerData[i]["color"], towerData[i]["strength"]));
         }
-      });
+      })
     }
 
-    //Sets the new background
-    function setBackground(level) {
-      var index = Math.min(level, backgrounds.length - 1);
-      background = p.loadImage("../" + backgrounds[index]);
-    }
-
-    //I'm going to be doing a lot of this, so I should come up with a better way to do this sort of thing
-    function updateAlert(level, placed) {
-      if (level == 0) {
-        if (placed) {
-          $("#instructions").html("Click on your bricks or press space to move them. Click submit to add your bricks to the tower.");
-        } else {
-          $("#instructions").html("Build the tower. Do not let your bricks <a href='/gravity' target='_blank'>fall</a>.");
-        }
-      } else if (level == 1) {
-        if (placed) {
-          $("#instructions").html("Your bricks will be added to the tower " + nextTime(level) + ". Tell other builders where they'll be. Click glyphs to write your message. Click on glyphs in the message to delete them. All bricks must have messages!");
-        } else {
-          $("#instructions").html("At this height bricks will be added to the tower every five minutes.");
-        }
-      } else if (level == 2) {
-        if (!placed) {
-          $("#instructions").html("Heavy winds on this level will destroy any bricks which don't have at least one <a href='/strength' target='_blank'>strength</a>.");
-        } else {
-          $("#instructions").html("Your bricks will be added to the tower at " + nextTime(level) + ". Use the glyphs so other builders make your bricks stronger");
-        }
-      } else if (level == 3) {
-        if (!placed) {
-          $("#instructions").html("Orders are now resolved every 10 minutes.");
-        } else {
-          $("#instructions").html("Your bricks will be added to the tower at " + nextTime(level) + ". Use the glyphs so other builders make your bricks stronger");
-        }
+    function updateAlert() {
+      if (finish) {
+        $("#instructions").html(finishText);
       } else {
-        if (!placed) {
-          $("#instructions").html("Continue building the tower.");
-        } else {
-          $("#instructions").html("Your bricks will be added to the tower " + nextTime(level) + ".");
-        }
+        $("#instructions").html(unfinishedText);
       }
     }
   };

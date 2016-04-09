@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328172222) do
+ActiveRecord::Schema.define(version: 20160408171538) do
 
   create_table "bricks", force: :cascade do |t|
     t.integer  "x"
@@ -20,10 +20,12 @@ ActiveRecord::Schema.define(version: 20160328172222) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.integer  "user_id"
-    t.integer  "level",       default: 0
     t.integer  "strength",    default: 0
     t.integer  "stranger_id"
+    t.integer  "level_id"
   end
+
+  add_index "bricks", ["level_id"], name: "index_bricks_on_level_id"
 
   create_table "build_orders", force: :cascade do |t|
     t.string   "message"
@@ -35,9 +37,11 @@ ActiveRecord::Schema.define(version: 20160328172222) do
     t.string   "y"
     t.datetime "used"
     t.datetime "resolve_at",  default: '2016-03-10 19:50:47'
-    t.integer  "level",       default: 0
     t.integer  "stranger_id"
+    t.integer  "level_id"
   end
+
+  add_index "build_orders", ["level_id"], name: "index_build_orders_on_level_id"
 
   create_table "events", force: :cascade do |t|
     t.integer  "category",           default: 0, null: false
@@ -54,6 +58,16 @@ ActiveRecord::Schema.define(version: 20160328172222) do
     t.string   "meaning"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "levels", force: :cascade do |t|
+    t.string   "background"
+    t.string   "text"
+    t.integer  "level"
+    t.integer  "strength_requirement"
+    t.integer  "update_rate"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "news_items", force: :cascade do |t|

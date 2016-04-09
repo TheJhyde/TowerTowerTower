@@ -21,7 +21,7 @@ class BuildOrdersController < ApplicationController
 		@order = BuildOrder.new
 		@order.x = params["build_order"]["x"].split(" ").map{|x| x.to_i}
 		@order.y = params["build_order"]["y"].split(" ").map{|x| x.to_i}
-		@order.level = (@order.y[0] - 1) / Global.tower.level_height;
+		@order.level = Level.find_by_y(@order.y[0])
 
 		if params["build_order"]["message"].empty? && @order.level >= 1
 			flash[:danger] = "Bricks must have a message."
@@ -31,7 +31,7 @@ class BuildOrdersController < ApplicationController
 		@order.colors = session[:color]
 		@order.user = current_user
 
-		interval = ((@order.level+1)/2).round * 5
+		interval = @order.level.update_rate
 		if interval > 0
 			@order.resolve_at = Time.now.ceil_to(interval.minutes)
 		else
@@ -46,6 +46,8 @@ class BuildOrdersController < ApplicationController
 				Brick.check_strength
 				Brick.gravity
         msg = 'Your bricks have been added to the tower.'
+        #Get the user, find their most recent events
+        #Those are what happened to the bricks.
 			else
 				resolve_time = "#{@order.resolve_at.strftime("%l:%M %p")}"
 				msg = "Bricks placed. Your order will be resolved at #{resolve_time}."
@@ -72,7 +74,7 @@ class BuildOrdersController < ApplicationController
 
 
 	def show
-		if params[:id] == "0"
+		if params[:id] == '0'
 			@last_order = BuildOrder.where.not(used: nil).order(:used).last.used
 			first_last_order = BuildOrder.where(["used >= ?", (@last_order - 5.minute)]).order(:used).first.used
 			redirect_to "/build_orders/#{first_last_order.to_i}"

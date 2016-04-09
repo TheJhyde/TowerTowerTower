@@ -41,54 +41,8 @@ $(document).ready(function(){
 			}
 
 			//Draws the bricks from the tower
-			p.stroke(0);
-			p.strokeWeight(1);
 			for(var i = 0; i < tower.length; i++){
-        //Draw the rectangle for the block
-        if (tower[i].x() >= 0 && tower[i].x() < calc.COLUMNS) {
-          switch (tower[i].color()){
-            case 0:
-              p.fill(0, 0, 0);
-              break;
-            case 1:
-              p.fill(255, 255, 255);
-              break;
-            case 2:
-              p.fill(0, 0, 200);
-              break;
-            default:
-              p.fill(0);
-          }
-
-          if(tower[i].playerID == current_player){
-            p.fill(200, 0, 0);
-          }
-          p.stroke(100);
-          p.strokeWeight(1);
-          var x = calc.xToScreen(tower[i].x());
-          var y = calc.yToScreen(tower[i].y());
-          p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
-
-
-          if(calc.zoom < 2){
-            //Draw the strength lines
-            p.strokeWeight(2);
-            switch(tower[i].color()){
-              case 0:
-                p.stroke(255);
-                break;
-              case 1:
-                p.stroke(0);
-                break;
-              default:
-                p.stroke(100);
-            }
-            for (var j = 0; j < tower[i].strength(); j++) {
-              var xLerp = p.lerp(x, x + calc.BRICK_WIDTH, (j + 1) / (tower[i].strength() + 1));
-              p.line(xLerp, y + 5, xLerp, y + (calc.BRICK_HEIGHT - 5));
-            }
-          }
-        }
+        drawBrick(tower[i]);
 			}
 
 			//Draw navigation arrows
@@ -121,6 +75,53 @@ $(document).ready(function(){
 				calc.moveDown();
 			}
 		};
+
+    function drawBrick(brick){
+      //Draw the rectangle for the block
+      var x = calc.xToScreen(brick.x());
+      var y = calc.yToScreen(brick.y());
+      if (x > 0 - calc.BRICK_WIDTH && x < p.width && y > 0 - calc.BRICK_HEIGHT && y < p.height) {
+        if(brick.playerID == current_player){
+          p.fill(200, 0, 0);
+        }else{
+          switch (brick.color()){
+            case 0:
+              p.fill(0, 0, 0);
+              break;
+            case 1:
+              p.fill(255, 255, 255);
+              break;
+            case 2:
+              p.fill(0, 0, 200);
+              break;
+            default:
+              p.fill(0);
+          }
+        }
+        p.stroke(0);
+        p.strokeWeight(1);
+        p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+
+        //Draw the strength lines
+        if(calc.zoom < 2){
+          p.strokeWeight(2);
+          switch(brick.color()){
+            case 0:
+              p.stroke(255);
+              break;
+            case 1:
+              p.stroke(0);
+              break;
+            default:
+              p.stroke(100);
+          }
+          for (var j = 0; j < brick.strength(); j++) {
+            var xLerp = p.lerp(x, x + calc.BRICK_WIDTH, (j + 1) / (brick.strength() + 1));
+            p.line(xLerp, y + 5, xLerp, y + (calc.BRICK_HEIGHT - 5));
+          }
+        }
+      }
+    }
 
 		p.mouseMoved = function(){
 			//Find the brick they just moused over

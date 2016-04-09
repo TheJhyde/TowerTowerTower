@@ -11,6 +11,14 @@ $gray-medium-light: #eaeaea;
 // 	box-sizing: border-box;
 // }
 
+@mixin rotate($degrees) {
+  -webkit-transform: rotate($degrees);
+  -moz-transform: rotate($degrees);
+  -ms-transform: rotate($degrees);
+  -o-transform: rotate($degrees);
+  transform: rotate($degrees);
+}
+
 // /* alerts */
 .alert {
   width: 60%;
@@ -220,8 +228,8 @@ input, textarea, select .uneditable-input {
 
 // /* header */
 header {
-  -webkit-transform: rotate(1deg);
-  transform: rotate(1deg);
+  @include rotate((random(100)/10-5) + deg);
+
   text-align: center;
   ul {
     display: inline-block;

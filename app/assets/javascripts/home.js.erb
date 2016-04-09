@@ -67,7 +67,6 @@ $(document).ready(function(){
 					var brick = new Brick(data[i]["x"], data[i]["y"], data[i]["color"], data[i]["strength"]);
 					brick.id = data[i]["id"];
           brick.playerID = data[i]["user_id"];
-          console.log(brick.playerID);
 					tower.push(brick);
 				}
 				for(var i = 0; i < 4; i++){

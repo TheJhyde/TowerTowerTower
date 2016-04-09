@@ -2,6 +2,7 @@ class Brick < ActiveRecord::Base
 	before_create :set_level
 
 	belongs_to :user
+	belongs_to :level
 	has_many :events
 
 	def self.gravity(news = [])
@@ -28,6 +29,6 @@ class Brick < ActiveRecord::Base
 
 	private
 		def set_level
-			self.level = (self.y - 1)/10
+			self.level = Level.find_by_y(self.y)
 		end
 end

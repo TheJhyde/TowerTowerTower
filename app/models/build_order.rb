@@ -2,7 +2,7 @@ include ActionView::Helpers::TextHelper
 
 class BuildOrder < ActiveRecord::Base
 	belongs_to :user
-	belongs_to :stranger
+	belongs_to :level
 	has_many :events
 	serialize :x, Array
 	serialize :y, Array
