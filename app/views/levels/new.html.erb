@@ -1,0 +1,25 @@
+<% provide(:title, 'New Level') %>
+
+<h1>New Level</h1>
+<div>
+  <div>
+    <%= form_for @level do |f| %>
+        <%= f.label :level %><br>
+        <%= f.text_field :level %><br>
+
+        <%= f.label :update_rate %><br>
+        <%= f.text_field :update_rate %><br>
+
+        <%= f.label :strength_requirement %><br>
+        <%= f.text_field :strength_requirement %><br>
+
+        <%= f.label :background %><br>
+        <%= f.text_field :background %><br>
+
+        <%= f.label :text %><br>
+        <%= f.text_area :text %><br>
+
+        <%= f.submit 'Create' %>
+    <% end %>
+  </div>
+</div>

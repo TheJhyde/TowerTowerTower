@@ -1,0 +1,13 @@
+<h1>Levels</h1>
+
+<hr>
+<% @levels.order(:level).each do |level| %>
+    <p>
+      <%= level.level %>. Update Rate: <%= level.update_rate %>, Strength: <%= level.strength_requirement %>,
+      Bricks: <%= level.bricks.count %> <a href = "/<%= level.background%>">Background</a>.
+      <%= link_to 'Update', edit_level_path(level) %><br>
+      <u>Text</u>: <%= level.text %>
+    </p>
+<% end %>
+
+<%= link_to 'New Level', new_level_path %>
