@@ -207,6 +207,8 @@ $(document).ready(function(){
       if (x > calc.BRICK_WIDTH * -1 && x < p.width) {
         if(brick.new){
           p.tint(200, 0, 0);
+        }else{
+          p.noTint();
         }
         if(brick.color() == 1){
           p.image(whiteBrick, 0, 0, whiteBrick.width, whiteBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
@@ -306,12 +308,14 @@ $(document).ready(function(){
           tower.push(brick);
           var creation = new Date(towerData[i]["created_at"]);
           if(Date.now() - creation < interval * 60000 && calc.level > 0){
+            console.log("This brick is new because of intervals");
             brick.new = true;
           }else if(interval == 0 && Date.now() - creation < 10 * 1000 && towerData[i]["user_id"] == USER_ID){
+            console.log("This brick is new because it's recent and the player's")
             brick.new = true;
           }
         }
-      })
+      });
     }
 
     function updateAlert() {

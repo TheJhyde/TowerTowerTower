@@ -42,7 +42,7 @@ def define_levels
                update_rate: 0,
                strength_requirement: 0,
                background: 'level_one.jpg',
-               text: "Build the tower. Do not let your bricks <a href ='/gravity'>fall.</a>. Do not <a href = '/strength'>overlap</a> bricks of opposing colors.|
+               text: "Build the tower. Do not let your bricks <a href ='/gravity'>fall</a>. Do not <a href = '/strength'>overlap</a> bricks of opposing colors.|
                 Click on your bricks or press space to move them. Click submit to add your bricks to the tower.")
   Level.create(level: 1,
                update_rate: 5,
