@@ -3,6 +3,7 @@ function Brick(startX, startY, color, strength){
 	var y = startY;
 	this.id;
   this.playerID;
+  this.new = false;
 
 	this.update = function(newX, newY){
 		x = newX;
@@ -64,6 +65,15 @@ function BrickCalc(p){
       this.center();
     }
   };
+
+  this.setOffset = function(x){
+    this.offset = p.width/2 - this.BRICK_WIDTH * x;
+    if(this.offset > this.leftbound){
+      this.offset = this.leftbound;
+    }else if (this.offset < this.rightbound) {
+      this.offset = this.rightbound;
+    }
+  }
 
   this.moveRight = function(){
     if(this.BRICK_WIDTH * this.COLUMNS > p.width) {

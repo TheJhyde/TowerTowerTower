@@ -16,10 +16,10 @@
       <div id = "stats" class = "box">
         <strong>Personal Stats</strong><br>
         Actions: <%= current_user.actions %><br>
-        Highest Level: <%= current_user.bricks.order(:y).last.level %><br>
+        Highest Level: <%= current_user.bricks.order(:y).last.level.level %><br>
         <br>
         <strong>Global Stats</strong><br>
-        Tower Height: <%= @tower.order(:y).last.y %> bricks, <%= @tower.order(:y).last.level %> levels</br>
+        Tower Height: <%= @tower.order(:y).last.y %> bricks, <%= @tower.order(:y).last.level.level %> levels</br>
         Total Bricks: <%= @tower.count %></br>
       </div>
       <div id = "canvas" class="box"></div>

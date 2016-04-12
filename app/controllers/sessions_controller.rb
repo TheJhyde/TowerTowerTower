@@ -37,7 +37,15 @@ class SessionsController < ApplicationController
       @user[:level] = @user[:max_level] - 1
     else
       @user[:level] = session[:level]
-    end
+	end
+
+	if session[:offset].nil?
+	  # @user[:offset] = Global.tower.bricks_layer/2
+	  # I don't know which brick this puts you near. The farthest right one maybe?
+	  @user[:offset] = Level.where(level: @user[:level]).first.bricks.first.x
+	else
+	  @user[:offset] = session[:offset]
+	end
 
     #The color of the bricks
     if session[:color].nil?
@@ -60,6 +68,9 @@ class SessionsController < ApplicationController
 
     respond_to do |format|
           format.json {render json: @user }
-      end
+	end
+	#Sets the level and the offset back to nil and therefore their default values
+	session[:level] = nil
+	session[:offset] = nil
   end
 end

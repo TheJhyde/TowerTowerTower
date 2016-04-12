@@ -3,11 +3,13 @@
 		<li><%= link_to "Home", 	root_path %></li>
 		<li><%= link_to "Actions", actions_path, target: '_blank'%>: <%= current_user.actions %></li>
 		<li><%= link_to "About", 	about_path %></li>
-		<% if logged_in? %>
-			<li><%= link_to "Build Tower", new_build_order_path %></li>
-		<% else %>
-			<li><%= link_to "Play Now", new_build_order_path %></li>
-		<% end %>
+    <% if current_user.actions > 0 %>
+        <% if logged_in?%>
+            <li><%= link_to "Build Tower", new_build_order_path %></li>
+        <% else %>
+            <li><%= link_to "Play Now", new_build_order_path %></li>
+        <% end %>
+    <% end %>
 		<li><%= link_to "See Tower", tower_index_path %></li>
 		<% if logged_in? %>
 			<li><%= link_to "Log Out", logout_path, method: "delete" %></li>
