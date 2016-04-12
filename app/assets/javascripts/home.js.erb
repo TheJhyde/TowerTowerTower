@@ -8,6 +8,7 @@ $(document).ready(function(){
 		var tower = [];
     var calc;
     var current_player = -1;
+    var levelHeight;
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
       calc = new BrickCalc(p);
@@ -28,6 +29,12 @@ $(document).ready(function(){
 			for(var i = 0; i < tower.length; i++){
 				drawBrick(tower[i]);
 			}
+      //Clouds
+      p.fill(255);
+      p.noStroke();
+      for(var i = 0; i < p.width/(levelHeight*2/3)+1; i++){
+        p.ellipse(i*(levelHeight*2/3), 0, levelHeight, levelHeight);
+      }
 		};
 
     function drawBrick(brick) {
@@ -60,7 +67,7 @@ $(document).ready(function(){
 
 		//------------------------------------------OTHER FUNCTIONS------------------------------------
 		//Loads the tower from the server
-		function loadTower(requestedLevel){
+		function loadTower(){
 			tower = [];
 			$.get('/tower.json', function(data){
 				for(var i = 0; i < data.length; i++){
@@ -74,7 +81,8 @@ $(document).ready(function(){
 				}
 
         var width = calc.BRICK_WIDTH * <%= Global.tower.bricks_layer %> + 10;
-        var height = <%= Global.tower.brick_height %> * (<%= Global.tower.level_height %> + 1);
+        levelHeight = calc.BRICK_WIDTH * <%= Global.tower.level_height %>;
+        var height = levelHeight * <%= Global.tower.max_levels %>
 				var canvas = p.createCanvas(width, height);
 				canvas.parent("canvas");
         calc.center();

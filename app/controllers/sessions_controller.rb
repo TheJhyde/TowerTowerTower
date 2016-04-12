@@ -35,13 +35,17 @@ class SessionsController < ApplicationController
     #The level the user should currently be at
     if session[:level].nil?
       @user[:level] = @user[:max_level] - 1
-    else
+	  if @user[:level] == -2
+		@user[:level] = 0
+	  end
+	else
       @user[:level] = session[:level]
 	end
 
 	if session[:offset].nil?
 	  # @user[:offset] = Global.tower.bricks_layer/2
 	  # I don't know which brick this puts you near. The farthest right one maybe?
+	  puts @user[:level]
 	  @user[:offset] = Level.where(level: @user[:level]).first.bricks.first.x
 	else
 	  @user[:offset] = session[:offset]
