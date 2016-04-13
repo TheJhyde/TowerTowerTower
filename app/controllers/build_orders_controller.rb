@@ -99,13 +99,14 @@ class BuildOrdersController < ApplicationController
 
   #Pulls up a list of orders for display on the site
   def get_orders
+    current_level = Level.where(level: params[:level].to_i);
     if params[:id].to_i == 0
       #Shows all the build orders that haven't been used yet
-      @orders = BuildOrder.where(level: params[:level].to_i, used: nil)
+      @orders = BuildOrder.where(level: current_level, used: nil)
     else
       #shows all the build orders that were used around the given time
       last_order = Time.at(date).to_datetime
-      @orders = BuildOrder.where(used: last_order..(last_order + 5.minute))
+      @orders = BuildOrder.where(used: last_order..(last_order + 5.minute), level: current_level)
     end
 
     @glyphs = Glyph.all

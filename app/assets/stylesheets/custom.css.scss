@@ -194,7 +194,7 @@ input, textarea, select .uneditable-input {
 /* glyphs */
 .button {
   height: 75px;
-  width: 75px;
+  width: 70px;
   margin: 1px;
   display: inline-block;
   background-color: #FF9966;
@@ -312,6 +312,7 @@ h1 {
 
 // /* universal */
 body {
+  //background-image: url("/brick.gif");
   background-color: #add8e6;
   font-family: sans-serif;
 }
@@ -341,6 +342,22 @@ a:link{
   h1 {
     margin-bottom: 10px;
   }
+}
+
+/* Glitch */
+.overlap{
+
+}
+
+.overlap:before {
+  content: attr(data-text);
+  position: absolute;
+}
+
+.tip{
+  background-color: grey;
+  position: absolute;
+  margin: 2px;
 }
 
 // /* Users */

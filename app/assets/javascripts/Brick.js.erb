@@ -151,6 +151,6 @@ function BrickCalc(p){
   };
 
   this.withinLevel = function(x, y){
-    return (x >= 0 && x <= this.COLUMNS && Math.floor((y - 1) / this.BPL) == this.level);
+    return (x >= 0 && x < this.COLUMNS && Math.floor((y - 1) / this.BPL) == this.level);
   }
 }

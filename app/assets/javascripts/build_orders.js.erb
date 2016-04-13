@@ -248,6 +248,7 @@ $(document).ready(function(){
 
     //Takes the new bricks and moves them to the given coordinates
     function updateBricks(x, y){
+
       if (!calc.withinLevel(x, y)) {
         return false;
       }

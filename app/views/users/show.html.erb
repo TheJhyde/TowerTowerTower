@@ -4,16 +4,17 @@
 		<section class="user_info">
 			<h1><%= @user.name %></h1>
       <p>
-        Gender: <%= @user.gender %><br/>.
-        The gods have cursed me with <%= @user.curse %>.
+        Gender: <strong><%= @user.gender %></strong>.<br/>
+        The gods have cursed me with <strong><%= @user.curse %></strong>.<br>
+        I have been here for <strong><%= number_with_delimiter(((Time.now - @user.created_at)/360).floor, :delimiter => ',') %> hours</strong>.
       </p>
 
       <p>
-        I have submitted to the tower <%= pluralize(@user.build_orders.count, 'time') %>.<br>
-        I have <%= pluralize(@user.bricks.count, 'brick') %> on the tower.<br>
-        <%= pluralize(@user.placing_events.count + @user.brick_events.count, 'thing') %> have happened to me.<br>
+        I have submitted to the tower <strong><%= pluralize(@user.build_orders.count, 'time') %></strong>.<br>
+        I have <strong><%= pluralize(@user.bricks.count, 'brick') %></strong> on the tower.<br>
+        <strong><%= pluralize(@user.placing_events.count + @user.brick_events.count, 'thing') %></strong> have happened to me.<br>
         <% if @user.bricks.count > 0 %>
-          I have reached level <%= @user.bricks.order(:y).last.level %>.
+          I have reached <strong>level <%= @user.bricks.order(:y).last.level.level %></strong>.
         <% end %>
       </p>
 		</section>

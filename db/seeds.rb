@@ -1,12 +1,11 @@
 #Adds the glyphs to the database
 def add_glyphs
   images = 'both bottom bring builder builders column despair down error hole large left
-  monster neither no destroy pyramid right up warning within white black top'
-
-  meanings = images
+  monster neither no destroy pyramid right up warning within white black top AGAIN CORNER
+  CURVE DIAGONAL EDGE HOOK REVERSE STRENGTH'
 
   urls = images.split(' ')
-  words = meanings.split(' ')
+  words = images.split(' ')
   words.each do |word|
     word.upcase!
   end
@@ -89,7 +88,9 @@ def set_levels
   end
 end
 
-define_levels
+#define_levels
+
+add_glyphs
 
 # me = User.find_or_create_by(name: "Cool Goat")
 # me.update(admin: true, email: "jkhyde86@gmail.com", activated: true, actions: 100, password: User.digest('password'))

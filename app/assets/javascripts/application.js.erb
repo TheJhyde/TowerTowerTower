@@ -83,3 +83,16 @@ function nextTime(interval){
 		return "at " + (d.getHours() - 12) + ":" + d.getMinutes() + " PM";
 	}
 }
+
+//This was my attempt at getting custom tooltips. No success so far
+//$(document).hover(function(){
+//  $('.glyph_image').hover(function(){
+//    console.log("Hover!");
+//    var image = $(this);
+//    $(image).after("<div id = 'tip'>" + image.attr("title") + "</div>");
+//    var bottom = image.position().top + parseInt(image.height());
+//    $('#tip').css({position: 'absolute', top: bottom, left: image.position().left, 'background-color': 'light-gray', margin: '4px'});
+//  }, function(){
+//    $('#tip').remove();
+//  });
+//});
