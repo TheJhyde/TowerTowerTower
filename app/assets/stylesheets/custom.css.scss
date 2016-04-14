@@ -351,6 +351,10 @@ a:link{
 }
 
 /* Glitch */
+@mixin slow_blink{
+  animation: slow_blink 5s infinite linear alternate;
+}
+
 .overlap{
 
 }
@@ -369,6 +373,20 @@ a:link{
 .achievement_level{
   text-shadow: -4px -4px red;
   font-size: large;
+}
+
+.slow_blink{
+  @include slow_blink;
+}
+
+@keyframes slow_blink {
+  0%{
+    opacity: 1;
+  }
+
+  100%{
+    opacity: 0;
+  }
 }
 
 // /* Users */

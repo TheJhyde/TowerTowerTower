@@ -11,7 +11,7 @@
       <%= link_to "Sign Up", signup_path, class: "btn btn-primary" %>
     </div>
 <% else %>
-    <h1><%= current_user.name %></h1>
+    <h1 class = "slow_blink"><%= current_user.name %></h1>
     <div id = "information">
       <div id = "stats" class = "stats_box">
         <strong>Personal Stats</strong><br>
