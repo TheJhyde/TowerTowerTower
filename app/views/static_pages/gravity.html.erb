@@ -2,12 +2,13 @@
 
 <h1 class = "center">What is <span class = "overlap" data-text = "Falling">Gravity</span>?</h1>
 <p>
-	Bricks need support or they will fall and be destroyed. Destroyed by gravity.
+	Bricks need support or they will fall and be destroyed. Destroyed by gravity. A brick is
+  supported if there is brick underneath it, underneath to the left, or underneath to the
+  right.
 </p>
 
 <p>
-	A brick is supported if there is brick underneath it, underneath to the left, or underneath to the
-  right.
+  <%= image_tag "#{Rails.configuration.x.img_url}gravity_diagram.png", class: 'centered' %>
 </p>
 
 <p>

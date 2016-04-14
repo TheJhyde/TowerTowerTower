@@ -27,7 +27,7 @@ $gray-medium-light: #eaeaea;
   margin-left: auto;
   margin-bottom: 10px;
   border-style: dotted;
-  height: 60px;
+  min-height: 60px;
   display: block;
   p{
     text-align: center;
@@ -37,21 +37,27 @@ $gray-medium-light: #eaeaea;
 .alert-success{
   border-color: blue;
   background-color: cornflowerblue;
+  margin-left: 100px;
 }
 
 .alert-danger{
   border-color: red;
   background-color: palevioletred;
+  margin-right: auto;
 }
 
 .alert-warning{
   border-color: yellow;
   background-color: yellowgreen;
+  margin-right: auto;
+  margin-left: 0px;
 }
 
 .alert-info{
   border-color: purple;
   background-color: mediumpurple;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Tower Building */
@@ -162,7 +168,7 @@ input, textarea, select .uneditable-input {
   border-radius: 25px;
 }
 
-.box{
+.stats_box{
   border-style: solid;
   border-width: 1px;
   margin: 10px;
@@ -358,6 +364,11 @@ a:link{
   background-color: grey;
   position: absolute;
   margin: 2px;
+}
+
+.achievement_level{
+  text-shadow: -4px -4px red;
+  font-size: large;
 }
 
 // /* Users */

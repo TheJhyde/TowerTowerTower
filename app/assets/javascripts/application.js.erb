@@ -85,7 +85,7 @@ function nextTime(interval){
 }
 
 //This was my attempt at getting custom tooltips. No success so far
-//$(document).hover(function(){
+$(document).ready(function(){
 //  $('.glyph_image').hover(function(){
 //    console.log("Hover!");
 //    var image = $(this);
@@ -95,4 +95,9 @@ function nextTime(interval){
 //  }, function(){
 //    $('#tip').remove();
 //  });
-//});
+
+});
+
+$(document).on('click', '.close', function(){
+  $(this).parents('.box').remove();
+});

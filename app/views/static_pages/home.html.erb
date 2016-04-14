@@ -13,7 +13,7 @@
 <% else %>
     <h1><%= current_user.name %></h1>
     <div id = "information">
-      <div id = "stats" class = "box">
+      <div id = "stats" class = "stats_box">
         <strong>Personal Stats</strong><br>
         Actions: <%= current_user.actions %><br>
         Highest Level: <%= current_user.bricks.order(:y).last.level.level %><br>
@@ -22,8 +22,8 @@
         Tower Height: <%= @tower.order(:y).last.y %> bricks, <%= @tower.order(:y).last.level.level %> levels</br>
         Total Bricks: <%= @tower.count %><br>
       </div>
-      <div id = "canvas" class="box"></div>
-      <div id = "links" class = "box">
+      <div id = "canvas" class="stats_box"></div>
+      <div id = "links" class = "stats_box">
         <%= link_to "Profile", current_user %><br/>
         <%= link_to "Settings", edit_user_path(current_user) %><br/>
         <%= link_to "Build Tower", new_build_order_path %><br/>

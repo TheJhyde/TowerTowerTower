@@ -117,7 +117,7 @@ class Event < ActiveRecord::Base
 	msg += Event.collision_sentence('made them weaker', events.where(category: categories['weakened']), total_bricks );
 	msg += Event.collision_sentence('destroyed them ', events.where(category: categories['demolished']), total_bricks );
 	msg += Event.collision_sentence('made them stronger ', events.where(category: categories['strengthened']), total_bricks );
-	msg += "<br>"
+	msg
   end
 
   def self.collision_sentence(verb, events, total)
