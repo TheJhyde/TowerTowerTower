@@ -163,7 +163,7 @@ $(document).ready(function(){
 
     p.keyPressed = function () {
       switch (p.keyCode) {
-        case 32: //A, rotate the bricks
+        case 32: //Space, rotate the bricks
           if (!finish) {
             for (var i = 0; i < ar.length; i++) {
               var new_ar = [0, 0];
@@ -171,10 +171,10 @@ $(document).ready(function(){
               new_ar[1] = ar[i][0];
               ar[i] = new_ar;
             }
-            updateBricks(p.mouseX, p.mouseY);
+            updateBricks(calc.screenToX(p.mouseX), calc.screenToY(p.mouseY));
           } else {
             moveBricks();
-            updateBricks(p.mouseX, p.mouseY);
+            updateBricks(calc.screenToX(p.mouseX), calc.screenToY(p.mouseY));
           }
           break;
         case 39: //Right arrow key, move around tower

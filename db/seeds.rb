@@ -18,7 +18,7 @@ end
 
 def add_intro
 	intro = NewsItem.find_or_create_by(id: 1)
-	intro.update(msg_type: 'new', message: "Welcome to Tower Brick Lightning! To get updates
+	intro.update(msg_type: 'new', message: "Welcome to Tower Tower Tower! To get updates
 		about the game, check out our <a href ='http://towerbricklightning.tumblr.com/'>tumblr</a>
 		 or <a href='https://twitter.com/TBLGame'>twitter</a>.")
 end

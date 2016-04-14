@@ -39,7 +39,8 @@ class BuildOrdersController < ApplicationController
       @order.resolve_at = DateTime.now
     end
 
-    if current_user.build_orders.order(:created_at).last.created_at > (Time.now - 5.seconds)
+    last_order = current_user.build_orders.order(:created_at).last
+    if !last_order.nil? && last_order.created_at > (Time.now - 5.seconds)
       @order.delete
       flash[:danger] = 'You may only submit one order every five seconds.'
       redirect_to new_build_order_path and return
