@@ -47,4 +47,15 @@ class BuildOrder < ActiveRecord::Base
 		update_attribute(:used, DateTime.now)
 	end
 
+  def self.check_rotation(ar, offset)
+	4.times do |i|
+	  if ar == offset
+		return true
+	  end
+	  new_ar = [[ar[0][1] * -1, ar[0][0]], [ar[1][1]*-1, ar[1][0]]]
+	  ar = new_ar
+	end
+	return false
+  end
+
 end

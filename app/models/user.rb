@@ -106,6 +106,14 @@ class User < ActiveRecord::Base
 	  end
 	end
 
+	def self.clear_strangers
+	  User.where(signed_up: false).where(['created_at < ?', (DateTime.now - 2.days)]).each do |stranger|
+		if stranger.build_orders.count == 0
+		  stranger.delete
+		end
+	  end
+	end
+
 	private
 		def downcase_email
 			self.email = email.downcase

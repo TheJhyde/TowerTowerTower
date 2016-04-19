@@ -3,7 +3,6 @@ class BuildOrdersController < ApplicationController
   before_action :check_admin, only: [:index]
 
   def new
-
   end
 
   def finished
@@ -19,9 +18,19 @@ class BuildOrdersController < ApplicationController
       redirect_to new_build_order_path
     end
 
+    x = params["build_order"]["x"].split(" ").map { |x| x.to_i }
+    y = params["build_order"]["y"].split(" ").map { |x| x.to_i }
+    ar = [[x[0] - x[1], y[0] - y[1]], [x[0]-x[2], y[0] - y[2]]]
+    offset = session[:ar]
+
+    if !BuildOrder.check_rotation(ar, offset)
+      flash[:danger] = 'Invalid coordinates'
+      redirect_to new_build_order_path and return
+    end
+
     @order = BuildOrder.new
-    @order.x = params["build_order"]["x"].split(" ").map { |x| x.to_i }
-    @order.y = params["build_order"]["y"].split(" ").map { |x| x.to_i }
+    @order.x = x
+    @order.y = y
     @order.level = Level.find_by_y(@order.y[0])
 
     if params["build_order"]["message"].empty? && @order.level.level >= 1

@@ -28,35 +28,38 @@ class Event < ActiveRecord::Base
 	  end
 	  #---------Bricks which you placed that did things to other's bricks--------
 	  #All the bricks worn down by your bricks
-	  if new_placed.where(category: categories[:weakened]).count > 0
-		news += "Your bricks collided with bricks placed by "
-		names = []
-		new_placed.where(category: categories[:weakened]).each do |event|
-		  names << event.original_player.name
-		end
-		names.uniq!
-		news += "#{names.to_sentence} weakening them.<br>"
-	  end
+	  news += Event.collision_sentence('made them weaker', new_placed.where(category: categories['weakened']));
+	  # if new_placed.where(category: categories[:weakened]).count > 0
+		# news += "Your bricks collided with bricks placed by "
+		# names = []
+		# new_placed.where(category: categories[:weakened]).each do |event|
+		#   names << event.original_player.name
+		# end
+		# names.uniq!
+		# news += "#{names.to_sentence} weakening them.<br>"
+	  # end
 	  #All the bricks destroyed by your bricks.
-	  if new_placed.where(category: categories[:demolished]).count > 0
-		news += "Your bricks collided with bricks placed by "
-		names = []
-		new_placed.where(category: categories["demolish"]).each do |event|
-		  names << event.original_player.name
-		end
-		names.uniq!
-		news += "#{names.to_sentence} destroying them.<br>"
-	  end
+	  news += Event.collision_sentence('destroyed them', new_placed.where(category: categories['demolished']));
+	  # if new_placed.where(category: categories[:demolished]).count > 0
+		# news += "Your bricks collided with bricks placed by "
+		# names = []
+		# new_placed.where(category: categories["demolish"]).each do |event|
+		#   names << event.original_player.name
+		# end
+		# names.uniq!
+		# news += "#{names.to_sentence} destroying them.<br>"
+	  # end
 	  #All the bricks strengthened by your bricks.
-	  if new_placed.where(category: categories["strengthened"]).count > 0
-		news += "Your bricks collided with bricks placed by "
-		names = []
-		new_placed.where(category: categories["strengthened"]).each do |event|
-		  names << event.original_player.name
-		end
-		names.uniq!
-		news += "#{names.to_sentence} strengthening them.<br>"
-	  end
+	  news += Event.collision_sentence('made them strong', new_placed.where(category: categories['strengthened']));
+	  # if new_placed.where(category: categories["strengthened"]).count > 0
+		# news += "Your bricks collided with bricks placed by "
+		# names = []
+		# new_placed.where(category: categories["strengthened"]).each do |event|
+		#   names << event.original_player.name
+		# end
+		# names.uniq!
+		# news += "#{names.to_sentence} strengthening them.<br>"
+	  # end
 
 	  #-------Bricks other people placed which did things to your bricks
 	  #All the bricks worn down by your bricks
@@ -120,7 +123,7 @@ class Event < ActiveRecord::Base
 	msg
   end
 
-  def self.collision_sentence(verb, events, total)
+  def self.collision_sentence(verb, events, total = 99999)
 	msg = ''
 	if events.count > 0
 	  if events.count == total

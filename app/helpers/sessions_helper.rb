@@ -2,6 +2,8 @@ module SessionsHelper
 
 	def log_in(user)
 		session[:user_id] = user.id
+	#   Maybe check here, see if they already have a session id
+	#   And then delete it if it's done nothing, merge their actions if it's done things
 	end
 
 	def remember(user)
@@ -19,17 +21,25 @@ module SessionsHelper
 				log_in user
 				@current_user = user
 			end
-		else
-			new_user = User.create(actions: Global.player.starting_actions, 
-				name: "Mysterious Stranger #{User.count + 1}", 
-				signed_up: false)
-			log_in new_user #This is weird because I'm logging the user in but they won't be actually be logged in
-			@current_user = new_user
 		end
+
+		if @current_user.nil?
+		  @current_user = create_stranger
+		end
+	  	@current_user
+	end
+
+	def create_stranger
+	  new_user = User.create(actions: Global.player.starting_actions,
+							 name: "Mysterious Stranger #{User.count + 1}",
+							 signed_up: false)
+	  #This is weird because I'm logging the user in but they won't be actually be logged in
+	  log_in new_user
+	  new_user
 	end
 
 	def logged_in?
-		!current_user.nil? && current_user.signed_up
+		current_user.signed_up
 	end
 
 	def logged_in_user
