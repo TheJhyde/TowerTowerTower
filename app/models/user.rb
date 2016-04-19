@@ -98,6 +98,14 @@ class User < ActiveRecord::Base
 		reset_sent_at < 2.hours.ago
 	end
 
+	def highest_level
+	  if self.bricks.count > 0
+		self.bricks.order(:y).last.level.level
+	  else
+		0
+	  end
+	end
+
 	private
 		def downcase_email
 			self.email = email.downcase

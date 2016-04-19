@@ -2,6 +2,14 @@
 
 <h1 class = "center">What is <span class = "overlap" data-text = "Falling">Gravity</span>?</h1>
 <p>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/warning.png", title: 'WARNING', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/down.png", title: 'DOWN', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/destroy.png", title: 'DESTROY', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/AGAIN.png", title: 'AGAIN', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/AGAIN.png", title: 'AGAIN', width: '40', class: 'glyph_image' %>
+</p>
+
+<p>
 	Bricks need support or they will fall and be destroyed. Destroyed by gravity. A brick is
   supported if there is brick underneath it, underneath to the left, or underneath to the
   right.

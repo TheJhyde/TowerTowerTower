@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
   def create
     @user = current_user
-  	@user.name = "#{params[:name][:name_1]} #{params[:name][:name_2]}"
+  	@user.name = glitch_name("#{params[:name][:name_1]} #{params[:name][:name_2]}")
     @user.signed_up = true
     @user.assign_attributes(user_params)
   	if @user.save
@@ -74,7 +74,15 @@ class UsersController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_url) unless current_user?(@user)
-    end
+	end
+
+  def glitch_name(name)
+	glitch_chars = "x|z/\\%(<>"
+	rand(4).times do
+	  name[rand(name.length)]= glitch_chars[rand(glitch_chars.length)]
+	end
+	name
+  end
 
   	# def set_name
   	# 	params.user.name = "#{params.name.name_1} #{params.name.name_2}" 

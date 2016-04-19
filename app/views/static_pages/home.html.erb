@@ -6,17 +6,33 @@
       <p>
         Build the tower and escape to the heavens.
       </p>
+      <p>
+        <%= image_tag "#{Rails.configuration.x.img_url}glyphs/builders.png", title: 'BUILDERS', width: '40', class: 'glyph_image' %>
+        <%= image_tag "#{Rails.configuration.x.img_url}glyphs/up.png", title: 'UP', width: '40', class: 'glyph_image' %>
+        <%= image_tag "#{Rails.configuration.x.img_url}glyphs/no.png", title: 'NO', width: '40', class: 'glyph_image' %>
+        <%= image_tag "#{Rails.configuration.x.img_url}glyphs/within.png", title: 'WITHIN', width: '40', class: 'glyph_image' %>
+        <%= image_tag "#{Rails.configuration.x.img_url}glyphs/monster.png", title: 'MONSTER', width: '40', class: 'glyph_image' %>
+      </p>
       <%= link_to "Play Now", new_build_order_path, class: "btn btn-primary" %>
       <%= link_to "About", about_path, class: "btn btn-primary" %>
       <%= link_to "Sign Up", signup_path, class: "btn btn-primary" %>
     </div>
 <% else %>
     <h1><%= current_user.name %></h1>
+
+    <p class = "center">
+      <%= image_tag "#{Rails.configuration.x.img_url}glyphs/builders.png", title: 'BUILDERS', width: '40', class: 'glyph_image' %>
+      <%= image_tag "#{Rails.configuration.x.img_url}glyphs/up.png", title: 'UP', width: '40', class: 'glyph_image' %>
+      <%= image_tag "#{Rails.configuration.x.img_url}glyphs/no.png", title: 'NO', width: '40', class: 'glyph_image' %>
+      <%= image_tag "#{Rails.configuration.x.img_url}glyphs/within.png", title: 'WITHIN', width: '40', class: 'glyph_image' %>
+      <%= image_tag "#{Rails.configuration.x.img_url}glyphs/monster.png", title: 'MONSTER', width: '40', class: 'glyph_image' %>
+    </p>
+
     <div id = "information">
       <div id = "stats" class = "stats_box">
         <strong>Personal Stats</strong><br>
         Actions: <%= current_user.actions %><br>
-        Highest Level: <%= current_user.bricks.order(:y).last.level.level %><br>
+        Highest Level: <%= current_user.highest_level %><br>
         <br>
         <strong>Global Stats</strong><br>
         Tower Height: <%= @tower.order(:y).last.y %> bricks, <%= @tower.order(:y).last.level.level %> levels</br>
@@ -33,6 +49,7 @@
         <% end %>
       </div>
     </div>
+
     <div id = "news_feed">
       <h3>News</h3>
       <ul>

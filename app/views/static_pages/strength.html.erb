@@ -8,12 +8,17 @@
 
 <p>
 	When you put a brick on top of a brick that matches it's color or put two bricks of the same color
-  on the same place at the same time, you get a stronger brick. A brick's strength is shown in how many
-  lines it has on it.
+  on the same place at the same time, you get a stronger brick. A brick's strength is shown in how many lines it has on it.
 </p>
 
 <p>
-	When you put a brick on top of a brick of a different color or put two bricks of different colors on
-  the tower at the same time, you get a weaker brick. If a brick's strength falls below zero, it is
-   destroyed.
+	When you put a brick on top of a brick of a different color or put two bricks of different colors on the tower at the same time, you get a weaker brick. If a brick's strength falls below zero, it is destroyed.
+</p>
+
+<p>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/STRENGTH.png", title: 'STRENGTH', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/error.png", title: 'ERROR', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/destroy.png", title: 'DESTROY', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/REVERSE.png", title: 'REVERSE', width: '40', class: 'glyph_image' %>
+  <%= image_tag "#{Rails.configuration.x.img_url}glyphs/top.png", title: 'TOP', width: '40', class: 'glyph_image' %>
 </p>
