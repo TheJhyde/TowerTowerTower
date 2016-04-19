@@ -51,6 +51,10 @@ class UsersController < ApplicationController
     @users = User.paginate(page: params[:page], per_page: 10)
   end
 
+  def achievement_levels
+	@user = User.where(signed_up: true)
+  end
+
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "User destroyed. Fuck that guy."

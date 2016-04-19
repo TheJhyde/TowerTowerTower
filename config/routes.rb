@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   get 'signup' => 'users#new'
   resources :users
+  get 'achievement_levels' => 'users#achievement_levels'
 
   resources :account_activations, only: [:edit]
 

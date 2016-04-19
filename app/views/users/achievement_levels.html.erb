@@ -1,0 +1,16 @@
+<% provide(:title, 'Achievement Levels') %>
+<h1 class = "super_achievement">Achievement Levels</h1>
+
+<table>
+  <tr>
+    <td>User Name</td>
+    <td><span class='achievement_level'>Achievement Levels</span></td>
+  </tr>
+  <% @user.sort_by {|a| a.bricks.count + a.build_orders.count}.reverse.each_with_index do |user, i| %>
+      <tr>
+        <td><%= i + 1 %>. <%= link_to user.name, user %> <%= "\t" %></td>
+        <td><%= user.bricks.count + user.build_orders.count %></td>
+      </tr>
+
+  <% end %>
+</table>

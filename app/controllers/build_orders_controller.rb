@@ -59,7 +59,7 @@ class BuildOrdersController < ApplicationController
       end
 
       flash[:success] = msg
-      flash[:info] = "You have reached <span class = 'achievement_level'>Achievement Level</span> #{current_user.bricks.order(:y).last.level.level} - #{current_user.bricks.count + current_user.build_orders.count}. Congratulations."
+      flash[:info] = "You have reached <a href = '/achievement_levels' class = 'achievement_level'>Achievement Level</a> #{current_user.bricks.order(:y).last.level.level} - #{current_user.bricks.count + current_user.build_orders.count}. Congratulations."
       flash[:warning] = "The tower has reached <span class = 'achievement_level'>Achievement Level</span> #{Brick.count} - #{Brick.all.order(:y).last.level.level}. My condolences."
       flash[:alert] = "You have #{current_user.actions} <a href ='/actions' target = '_blank'>actions</a> left for the day."
       session[:color] = nil

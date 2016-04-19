@@ -325,6 +325,9 @@ body {
 
 a:visited{
   color: darkgreen;
+  &.achievement_level{
+    color: black !important;
+  }
 }
 
 a:hover{
@@ -333,6 +336,9 @@ a:hover{
 
 a:link{
   color: darkblue;
+  &.achievement_level{
+    color: black !important;
+  }
 }
 
 // section{
@@ -373,6 +379,26 @@ a:link{
 .achievement_level{
   text-shadow: -4px -4px red;
   font-size: large;
+  text-decoration: none;
+}
+
+.super_achievement{
+  font-size: 4em;
+  $value: '5px -5px mediumvioletred';
+  @for $i from 0 to 6{
+    $value: '#{$value}, #{10+$i*35}px #{-10-$i*35}px orangered';
+    $value: '#{$value}, #{15+$i*35}px #{-15-$i*35}px yellowgreen';
+    $value: '#{$value}, #{20+$i*35}px #{-20-$i*35}px mediumspringgreen';
+    $value: '#{$value}, #{25+$i*35}px #{-25-$i*35}px cornflowerblue';
+    $value: '#{$value}, #{30+$i*35}px #{-30-$i*35}px indigo';
+    $value: '#{$value}, #{35+$i*35}px #{-35-$i*35}px violet';
+    $value: '#{$value}, #{40+$i*35}px #{-40-$i*35}px mediumvioletred';
+  }
+  text-shadow: unquote($value);
+}
+
+td{
+  padding-right: 50px;
 }
 
 .slow_blink{
