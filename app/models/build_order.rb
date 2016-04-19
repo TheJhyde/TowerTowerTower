@@ -14,6 +14,7 @@ class BuildOrder < ActiveRecord::Base
 		end
 		Brick.check_strength
 		Brick.gravity
+	  	Star.check_for_found
 	end
 
 	def place_bricks

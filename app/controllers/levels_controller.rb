@@ -40,6 +40,7 @@ class LevelsController < ApplicationController
     one_down = Brick.where(y: params["id"].to_i * Global.tower.level_height)
     one_up = Brick.where(y: (params["id"].to_i + 1) * Global.tower.level_height + 1);
     @level['bricks'] = this_level.bricks + one_down + one_up
+    @level['stars'] = this_level.stars.where(found: false);
     respond_to do |format|
       format.json {render json: @level }
     end

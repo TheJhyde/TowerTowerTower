@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160408171538) do
+ActiveRecord::Schema.define(version: 20160414213901) do
 
   create_table "bricks", force: :cascade do |t|
     t.integer  "x"
@@ -84,6 +84,15 @@ ActiveRecord::Schema.define(version: 20160408171538) do
 
   add_index "news_items_users", ["news_item_id", "user_id"], name: "index_news_items_users_on_news_item_id_and_user_id"
   add_index "news_items_users", ["user_id", "news_item_id"], name: "index_news_items_users_on_user_id_and_news_item_id"
+
+  create_table "stars", force: :cascade do |t|
+    t.integer  "x"
+    t.integer  "y"
+    t.integer  "level_id"
+    t.boolean  "found",      default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "strangers", force: :cascade do |t|
     t.integer  "number"

@@ -16,7 +16,7 @@ class Brick < ActiveRecord::Base
 		return news
 	end
 
-	def self.check_strength(news = [])
+	def self.check_strength
 		Brick.all.each do |brick|
 			#Bricks which are too weak for their level are destroyed
 			if brick.strength < (brick.level.strength_requirement)

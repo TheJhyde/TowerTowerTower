@@ -45,12 +45,13 @@ function BrickCalc(p){
   this.BRICK_HEIGHT = <%= Global.tower.brick_height %>;
   this.COLUMNS = <%= Global.tower.bricks_layer %>;
   this.BPL = <%= Global.tower.level_height %>;
+  this.MAX_LEVELS = <%= Global.tower.max_levels %>;
 
   this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
   this.verticalOffset = 0;
   this.leftbound = this.BRICK_WIDTH;
   this.rightbound = p.width - (this.BRICK_WIDTH * this.COLUMNS + this.BRICK_WIDTH);
-  this.upperbound = this.BRICK_HEIGHT * this.BPL * 20 * -1;
+  this.upperbound = this.BRICK_HEIGHT * this.BPL * this.MAX_LEVELS * -1;
   this.zoom = 0;
 
   this.level;
@@ -88,9 +89,13 @@ function BrickCalc(p){
 
   //There should be some limit on how far up you can go
   this.moveUp = function(){
-    this.verticalOffset -= 15;
-    if(this.verticalOffset < this.upperbound){
-      this.verticalOffset = this.upperbound;
+    if(this.BRICK_WIDTH * this.BPL * this.MAX_LEVELS > p.height){
+      this.verticalOffset -= 15;
+      if(this.verticalOffset < this.upperbound){
+        this.verticalOffset = this.upperbound;
+      }
+    }else{
+      this.verticalOffset = 0;
     }
   };
 
@@ -106,9 +111,8 @@ function BrickCalc(p){
       this.zoom++;
       this.BRICK_WIDTH *= 0.5;
       this.BRICK_HEIGHT *= 0.5;
-      reviseBounds();
+      this.reviseBounds();
       //This always put the offset at the halfway point
-
       this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
     }
   };
@@ -118,14 +122,17 @@ function BrickCalc(p){
       this.zoom--;
       this.BRICK_WIDTH *= 2;
       this.BRICK_HEIGHT *= 2;
-      reviseBounds();
+      this.reviseBounds();
       this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
     }
   };
 
-  function reviseBounds(){
+   this.reviseBounds = function(){
     this.rightbound = p.width - (this.BRICK_WIDTH * this.COLUMNS + 10);
-    this.upperbound = this.BRICK_HEIGHT * this.BPL * 20 * -1;
+     this.leftbound = this.BRICK_WIDTH;
+    this.upperbound = this.BRICK_HEIGHT * this.BPL * this.MAX_LEVELS * -1;
+    console.log(this.upperbound);
+    console.log(this.rightbound);
   }
 
   this.center = function(){

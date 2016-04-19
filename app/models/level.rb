@@ -1,6 +1,7 @@
 class Level < ActiveRecord::Base
   has_many :bricks
   has_many :build_orders
+  has_many :stars
   validates :level, presence: true, uniqueness: true
 
   @default_text = 'Continue building the tower.|Your bricks will be added to the tower <nextTime()>.'

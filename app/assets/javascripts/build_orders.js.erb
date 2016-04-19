@@ -10,6 +10,7 @@ $(document).ready(function(){
     var calc;
 
     var tower = [];
+    var stars = [];
     var newBricks = [];
     var finish = false;
     var ar = [];
@@ -33,6 +34,8 @@ $(document).ready(function(){
 
       whiteBrick = p.loadImage("/brick-02.png");
       blackBrick = p.loadImage("/brick-01.png");
+
+      p.angleMode(p.DEGREES);
 
       $.get('/session.json', function (data) {
         USER_ID = data["id"];
@@ -70,6 +73,11 @@ $(document).ready(function(){
         p.stroke(100);
         p.strokeWeight(1);
         drawBrick(tower[i]);
+      }
+
+      //Draws the stars which are
+      for(var i = 0; i < stars.length; i++){
+        drawStar(stars[i]["x"], stars[i]['y']);
       }
 
       //Draws the player's bricks
@@ -234,6 +242,16 @@ $(document).ready(function(){
       }
     }
 
+    function drawStar(x, y){
+      p.noStroke();
+      p.fill(238, 130, 238);
+      p.translate(calc.xToScreen(x)+calc.BRICK_WIDTH/2, calc.yToScreen(y)+calc.BRICK_HEIGHT/2);
+      p.rotate(360 * ((p.millis() % 5000)/5000));
+      //p.rect(calc.xToScreen(x)+calc.BRICK_WIDTH/4, calc.yToScreen(y)+calc.BRICK_HEIGHT/4, calc.BRICK_WIDTH/2, calc.BRICK_HEIGHT/2);
+      p.rect(1-calc.BRICK_WIDTH/4, 1-calc.BRICK_HEIGHT/4, calc.BRICK_WIDTH/2, calc.BRICK_HEIGHT/2)
+      p.resetMatrix();
+    }
+
     //------------------------------------------OTHER FUNCTIONS------------------------------------
 
     //Is the given screen coordinates inside the new bricks?
@@ -303,19 +321,20 @@ $(document).ready(function(){
         finishText = text.slice(text.indexOf('|')+2);
         unfinishedText = text.slice(0, text.indexOf('|'));
         updateAlert();
+        //Loads the tower
         var towerData = data["bricks"];
         for (var i = 0; i < towerData.length; i++) {
           var brick = new Brick(towerData[i]["x"], towerData[i]["y"], towerData[i]["color"], towerData[i]["strength"]);
           tower.push(brick);
           var creation = new Date(towerData[i]["created_at"]);
           if(Date.now() - creation < interval * 60000 && calc.level > 0){
-            console.log("This brick is new because of intervals");
             brick.new = true;
           }else if(interval == 0 && Date.now() - creation < 10 * 1000 && towerData[i]["user_id"] == USER_ID){
-            console.log("This brick is new because it's recent and the player's")
             brick.new = true;
           }
         }
+        //Loads stars
+        stars = data['stars'];
       });
     }
 

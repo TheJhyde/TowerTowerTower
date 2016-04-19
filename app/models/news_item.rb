@@ -6,7 +6,7 @@ class NewsItem < ActiveRecord::Base
 
 	def self.tell_all(news)
 		 broadcast = NewsItem.create(msg_type: "news", message: news)
-		 User.all.each do |user|
+		 User.where(signed_up: true).each do |user|
 		 	user.news_items << broadcast
 		 	user.save
 		 end
