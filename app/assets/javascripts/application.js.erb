@@ -95,9 +95,17 @@ $(document).ready(function(){
 //  }, function(){
 //    $('#tip').remove();
 //  });
-
+  $('p').each(function(){
+    var degrees = Math.random()*2.0 - 1;
+    $(this).css({'-webkit-transform' : 'rotate('+ degrees +'deg)',
+      '-moz-transform' : 'rotate('+ degrees +'deg)',
+      '-ms-transform' : 'rotate('+ degrees +'deg)',
+      'transform' : 'rotate('+ degrees +'deg)'});
+  })
 });
 
 $(document).on('click', '.close', function(){
   $(this).parents('.box').remove();
 });
+
+
