@@ -16,13 +16,15 @@
 function readGlyphs(){
 	//Adds glyphs to the message when you click on the keyboard
 	$(document).on('click', '.glyph', function(){
-	  var $glyph = $(this);
-	  var $image = $glyph.find("img").clone();
-	  $image.addClass("msg_glyph");
-	  $('#text_area').append($image);
-	  $('#build_order_message').val(function(index, value){
-	    return value + $glyph.find("p").attr("id") + " ";
-	  });
+    if($('#text_area').children().length < 12 ){
+      var $glyph = $(this);
+      var $image = $glyph.find("img").clone();
+      $image.addClass("msg_glyph");
+      $('#text_area').append($image);
+      $('#build_order_message').val(function(index, value){
+        return value + $glyph.find("p").attr("id") + " ";
+      });
+    }
 	});
 
 	//Removes glyphs from the message when you click on them 

@@ -20,7 +20,13 @@ class BuildOrdersController < ApplicationController
 
     x = params["build_order"]["x"].split(" ").map { |x| x.to_i }
     y = params["build_order"]["y"].split(" ").map { |x| x.to_i }
-    ar = [[x[0] - x[1], y[0] - y[1]], [x[0]-x[2], y[0] - y[2]]]
+
+    ar = []
+    for i in 1..(x.length-1)
+      ar << [x[0] - x[i], y[0] - y[i]]
+    end
+
+    #ar = [[x[0] - x[1], y[0] - y[1]], [x[0]-x[2], y[0] - y[2]]]
     offset = session[:ar]
 
     if !BuildOrder.check_rotation(ar, offset)

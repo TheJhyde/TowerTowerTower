@@ -48,11 +48,14 @@ class BuildOrder < ActiveRecord::Base
 	end
 
   def self.check_rotation(ar, offset)
-	4.times do |i|
+	4.times do
 	  if ar == offset
 		return true
 	  end
-	  new_ar = [[ar[0][1] * -1, ar[0][0]], [ar[1][1]*-1, ar[1][0]]]
+	  new_ar = []
+	  ar.each do |line|
+		new_ar << [line[1] * -1, line[0]]
+	  end
 	  ar = new_ar
 	end
 	return false
