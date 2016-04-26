@@ -60,7 +60,7 @@ class SessionsController < ApplicationController
     #How the bricks should be laid out
     if session[:ar].nil?
       arrangement = [[0, 0], [0, 0]]
-      (Global.tower.shipment_size - 1).times do |i| 
+      (Global.tower.shipment_size - 1).times do |i|
         arrangement[i][0] = rand(3) - 1
         arrangement[i][1] = rand(3) - 1
       end
