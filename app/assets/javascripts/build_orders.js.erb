@@ -24,6 +24,7 @@ $(document).ready(function(){
     var blackBrick;
 
     var background;
+    var textSize = 17;
 
     //-----------------------------------P5 FUNCTIONS---------------------------------------------
     p.setup = function () {
@@ -46,6 +47,7 @@ $(document).ready(function(){
           }else{
             calc.level = 0;
           }
+          $('#controls').append("<br>Use arrows at top and bottom of screen to move up and down the tower.");
         } else {
           calc.level = 0;
           maxLevel = 0;
@@ -61,10 +63,12 @@ $(document).ready(function(){
     };
 
     p.draw = function () {
+      //Draws the background images
       p.background(100);
       p.image(background, 0, 0, background.width, background.height, ((calc.offset - calc.BRICK_WIDTH) % p.width), 0, p.width, p.height);
       p.image(background, 0, 0, background.width, background.height, ((calc.offset - calc.BRICK_WIDTH) % p.width + p.width), 0, p.width, p.height);
-      p.filter(p.POSTERIZE, 4);
+//      p.filter(p.POSTERIZE, 4);
+      //p.filter(p.BLUR, 2);
 
       //Draws the bricks from the tower
       p.stroke(0);
@@ -72,7 +76,7 @@ $(document).ready(function(){
       for (var i = 0; i < tower.length; i++) {
         p.stroke(100);
         p.strokeWeight(1);
-        drawBrick(tower[i]);
+        drawBrick(tower[i], false);
       }
 
       //Draws the stars which are
@@ -84,36 +88,44 @@ $(document).ready(function(){
       p.stroke(255);
       p.strokeWeight(3);
       for (var i = 0; i < newBricks.length; i++) {
-        p.stroke(0,128,0);
-        p.strokeWeight(4);
-        if(finish){
-          p.tint(255, 180);
-          drawBrick(newBricks[i]);
-        }else{
-          drawBrick(newBricks[i]);
-        }
+        drawBrick(newBricks[i], true);
       }
 
       //Draws the information block in the upper left
       p.fill(255);
       p.stroke(0);
-      if (requiredStrength <= 0) {
-        p.rect(0, 0, 250, 70);
+      if(interval == 0) {
+        p.rect(0, 0, 220, (textSize+2)*2+2);
+      }else if (requiredStrength <= 0) {
+        p.rect(0, 0, 220, (textSize+2)*3+2);
       } else {
-        p.rect(0, 0, 250, 100);
+        p.rect(0, 0, 220, (textSize+2)*4+2);
       }
       p.fill(0);
       p.strokeWeight(1);
-      p.textSize(20);
-      p.text("Level: " + calc.level, 10, 25);
+      p.textSize(textSize);
+      p.text("Level: " + calc.level, 10, textSize);
       if (interval == 0) {
-        p.text("Update Rate: Immediate", 10, 50);
+        p.text("Update Rate: Immediate", 10, (textSize)*2+2);
       } else {
-        p.text("Update Rate: " + interval + " minutes", 10, 50);
+        p.text("Update Rate: " + interval + " minutes", 10, (textSize)*2+2);
+        var d = new Date();
+        var nextUpdate = nextTime(interval);
+        var minutes = nextUpdate.getMinutes() - d.getMinutes() - 1;
+        var seconds = 59 - d.getSeconds();
+        var milliseconds = 999 - d.getMilliseconds();
+        var millisecondsText = ("000" + milliseconds).slice(-3);
+        var textSeconds;
+        if(seconds < 10) {
+          textSeconds = "0" + seconds;
+        }else{
+          textSeconds = seconds;
+        }
+        p.text("Next update in " + minutes + ":" + textSeconds + "." + millisecondsText, 10, (textSize)*3+4);
       }
 
       if (requiredStrength > 0) {
-        p.text("Required Strength: " + requiredStrength, 10, 75);
+        p.text("Required Strength: " + requiredStrength, 10, (textSize)*4+6);
       }
 
       //Draw navigation arrows
@@ -208,7 +220,7 @@ $(document).ready(function(){
       }
     };
 
-    function drawBrick(brick) {
+    function drawBrick(brick, newBrick) {
       //Draw the rectangle for the block
       var x = calc.xToScreen(brick.x());
       var y = calc.yToScreen(brick.y());
@@ -218,6 +230,18 @@ $(document).ready(function(){
         }else{
           p.noTint();
         }
+
+        if(newBrick){
+          p.strokeWeight(6);
+          p.fill(255, 255, 255, 0);
+          p.stroke(200, 0, 0);
+          if(finish){
+            p.stroke(200, 0, 0, 200);
+            p.tint(255, 200);
+          }
+          p.rect(x-1, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+        }
+
         if(brick.color() == 1){
           p.image(whiteBrick, 0, 0, whiteBrick.width, whiteBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
         }else{
@@ -317,7 +341,7 @@ $(document).ready(function(){
         background = p.loadImage("../" + level['background']);
 
         var text = level["text"];
-        text = text.replace('<nextTime()>', nextTime(interval));
+        text = text.replace('<nextTime()>', timeText(interval));
         finishText = text.slice(text.indexOf('|')+2);
         unfinishedText = text.slice(0, text.indexOf('|'));
         updateAlert();

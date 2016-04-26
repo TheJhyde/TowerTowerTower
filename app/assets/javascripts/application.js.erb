@@ -72,13 +72,19 @@ function loadOrders(level, date){
 }
 
 function nextTime(interval){
+  var d = new Date();
+  var next_time = d.getMinutes() - d.getMinutes() % interval + interval
+  d.setMinutes(next_time);
+  d.setSeconds(0);
+  return d;
+}
+
+function timeText(interval){
 	if(interval == 0){
 		return "immediately";
 	}
 	//And then do the rest in here
-	var d = new Date();
-	var next_time = d.getMinutes() - d.getMinutes() % interval + interval
-	d.setMinutes(next_time);
+	var d = nextTime(interval);
 	if( d.getHours() <= 12){
 		return "at " + d.getHours() + ":" + d.getMinutes() + " AM";
 	}else{
