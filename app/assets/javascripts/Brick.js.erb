@@ -58,7 +58,7 @@ function BrickCalc(p){
 
   this.moveLeft = function(){
     if(this.BRICK_WIDTH * this.COLUMNS > p.width){
-      this.offset += 15;
+      this.offset += 11;
       if(this.offset > this.leftbound){
         this.offset = this.leftbound;
       }
@@ -78,7 +78,7 @@ function BrickCalc(p){
 
   this.moveRight = function(){
     if(this.BRICK_WIDTH * this.COLUMNS > p.width) {
-      this.offset -= 15;
+      this.offset -= 11;
       if (this.offset < this.rightbound) {
         this.offset = this.rightbound;
       }

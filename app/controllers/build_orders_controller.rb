@@ -15,7 +15,7 @@ class BuildOrdersController < ApplicationController
 
   def create
     if session[:ar].nil?
-      redirect_to new_build_order_path
+      redirect_to new_build_order_path and return
     end
 
     x = params["build_order"]["x"].split(" ").map { |x| x.to_i }
@@ -26,10 +26,7 @@ class BuildOrdersController < ApplicationController
       ar << [x[0] - x[i], y[0] - y[i]]
     end
 
-    #ar = [[x[0] - x[1], y[0] - y[1]], [x[0]-x[2], y[0] - y[2]]]
-    offset = session[:ar]
-
-    if !BuildOrder.check_rotation(ar, offset)
+    if !BuildOrder.check_rotation(ar, session[:ar])
       flash[:danger] = 'Invalid coordinates'
       redirect_to new_build_order_path and return
     end
@@ -40,7 +37,9 @@ class BuildOrdersController < ApplicationController
     @order.level = Level.find_by_y(@order.y[0])
 
     if params["build_order"]["message"].empty? && @order.level.level >= 1
-      flash[:danger] = "Bricks must have a message."
+      flash[:danger] = 'Bricks must have a message.'
+      session[:level] = @order.level.level
+      session[:offset] = @order.x[0]
       redirect_to new_build_order_path and return
     end
     @order.message = params["build_order"]["message"]
@@ -55,9 +54,12 @@ class BuildOrdersController < ApplicationController
     end
 
     last_order = current_user.build_orders.order(:created_at).last
-    if !last_order.nil? && last_order.created_at > (Time.now - 5.seconds)
+    if !last_order.nil? && last_order.created_at > (Time.now - 5.seconds) && last_order.x == @order.x && last_order.y == @order.y
       @order.delete
-      flash[:danger] = 'You may only submit one order every five seconds.'
+      redirect_to new_build_order_path and return
+    elsif last_order.created_at > (Time.now - 1.seconds)
+      @order.delete
+      flash[:danger] = 'You may only submit one order every seconds.'
       redirect_to new_build_order_path and return
     end
 
@@ -76,7 +78,7 @@ class BuildOrdersController < ApplicationController
       flash[:success] = msg
       flash[:info] = "You have reached <a href = '/achievement_levels' class = 'achievement_level'>Achievement Level</a> #{current_user.bricks.order(:y).last.level.level} - #{current_user.bricks.count + current_user.build_orders.count}. Congratulations."
       if current_user.build_orders.count == 1
-        flash[:info] += ' You may now access higher levels of the tower.'
+        flash[:info] += ' You may now access higher levels of the tower by clicking on the black arrow.'
       end
       flash[:warning] = "The tower has reached <span class = 'achievement_level'>Achievement Level</span> #{Brick.count} - #{Brick.all.order(:y).last.level.level}. My condolences."
       flash[:alert] = "You have #{current_user.actions} <a href ='/actions' target = '_blank'>actions</a> left for the day."

@@ -22,9 +22,12 @@ $(document).ready(function(){
 
     var whiteBrick;
     var blackBrick;
+    var newBlackBrick;
+    var newWhiteBrick;
 
     var background;
     var textSize = 17;
+    var lastLevelChange;
 
     //-----------------------------------P5 FUNCTIONS---------------------------------------------
     p.setup = function () {
@@ -35,8 +38,12 @@ $(document).ready(function(){
 
       whiteBrick = p.loadImage("/brick-02.png");
       blackBrick = p.loadImage("/brick-01.png");
+      newBlackBrick = p.loadImage("/new_black_brick.png");
+      newWhiteBrick = p.loadImage("/new_white_brick.png");
+
 
       p.angleMode(p.DEGREES);
+      lastLevelChange = p.millis();
 
       $.get('/session.json', function (data) {
         USER_ID = data["id"];
@@ -47,7 +54,7 @@ $(document).ready(function(){
           }else{
             calc.level = 0;
           }
-          $('#controls').append("<br>Use arrows at top and bottom of screen to move up and down the tower.");
+          $('#controls').append("<br>Click the arrows at the top and bottom of screen to move up and down the tower.");
         } else {
           calc.level = 0;
           maxLevel = 0;
@@ -112,6 +119,9 @@ $(document).ready(function(){
         var d = new Date();
         var nextUpdate = nextTime(interval);
         var minutes = nextUpdate.getMinutes() - d.getMinutes() - 1;
+        if(minutes < 0){
+          minutes += 60;
+        }
         var seconds = 59 - d.getSeconds();
         var milliseconds = 999 - d.getMilliseconds();
         var millisecondsText = ("000" + milliseconds).slice(-3);
@@ -129,25 +139,44 @@ $(document).ready(function(){
       }
 
       //Draw navigation arrows
-      p.fill(100);
       //Up and down arrows
-      if (p.mouseY < calc.BRICK_HEIGHT && calc.level < maxLevel && p.mouseX > 0 && p.mouseX < p.width) {
-        p.triangle(p.width / 2, 5, p.width / 2 - 40, (calc.BRICK_HEIGHT - 10) / 2, p.width / 2 + 40, (calc.BRICK_HEIGHT - 10) / 2);
-      } else if (p.mouseY > p.height - calc.BRICK_HEIGHT && calc.level > 0 && p.mouseX > 0 && p.mouseX < p.width) {
+//      if (p.mouseY < calc.BRICK_HEIGHT && calc.level < maxLevel && p.mouseX > 0 && p.mouseX < p.width) {
+//        p.triangle(p.width / 2, 5, p.width / 2 - 40, (calc.BRICK_HEIGHT - 10) / 2, p.width / 2 + 40, (calc.BRICK_HEIGHT - 10) / 2);
+//        //I tried to implement this because everyone asked for it
+//        //But it's the fucking worst, everyone is an idiot
+////        if(p.millis() - lastLevelChange > 2000){
+////          calc.level++;
+////          setLevel();
+////          lastLevelChange = p.millis();
+////        }
+//      } else if (p.mouseY > p.height - calc.BRICK_HEIGHT && calc.level > 0 && p.mouseX > 0 && p.mouseX < p.width) {
+//        p.triangle(p.width / 2, p.height - 5, p.width / 2 - 40, p.height - (calc.BRICK_HEIGHT - 10) / 2, p.width / 2 + 40, p.height - (calc.BRICK_HEIGHT - 10) / 2);
+////        if(p.millis() - lastLevelChange > 2000){
+////          calc.level--;
+////          setLevel();
+////          lastLevelChange = p.millis();
+////        }
+//      }
+
+      p.fill(0);
+      p.stroke(255);
+      p.strokeWeight(2);
+      if( calc.level > 0 ){
         p.triangle(p.width / 2, p.height - 5, p.width / 2 - 40, p.height - (calc.BRICK_HEIGHT - 10) / 2, p.width / 2 + 40, p.height - (calc.BRICK_HEIGHT - 10) / 2);
       }
-
-      //Left and right arrows
-      if (p.mouseX < calc.BRICK_WIDTH) {
-        p.triangle(5, p.height / 2, calc.BRICK_WIDTH - 10, p.height / 2 - 40, calc.BRICK_WIDTH - 10, p.height / 2 + 40);
-      } else if (p.mouseX > p.width - calc.BRICK_WIDTH) {
-        p.triangle(p.width - 5, p.height / 2, p.width - calc.BRICK_WIDTH + 10, p.height / 2 - 40, p.width - calc.BRICK_WIDTH + 10, p.height / 2 + 40);
+      if(calc.level < maxLevel){
+        p.triangle(p.width / 2, 5, p.width / 2 - 40, (calc.BRICK_HEIGHT - 10) / 2, p.width / 2 + 40, (calc.BRICK_HEIGHT - 10) / 2);
       }
 
+      //Left and right, Move the scene if the mouse wanders into that area
+      p.fill(100);
+      p.stroke(0);
       if (p.mouseX < calc.BRICK_WIDTH && p.mouseX > 0 && p.mouseY > p.height / 2 - 200 && p.mouseY < p.height / 2 + 200) {
         calc.moveLeft();
+        p.triangle(5, p.height / 2, calc.BRICK_WIDTH - 10, p.height / 2 - 40, calc.BRICK_WIDTH - 10, p.height / 2 + 40);
       } else if (p.mouseX > p.width - calc.BRICK_WIDTH && p.mouseX < p.width && p.mouseY > p.height / 2 - 200 && p.mouseY < p.height / 2 + 200) {
         calc.moveRight();
+        p.triangle(p.width - 5, p.height / 2, p.width - calc.BRICK_WIDTH + 10, p.height / 2 - 40, p.width - calc.BRICK_WIDTH + 10, p.height / 2 + 40);
       }
     };
 
@@ -225,27 +254,31 @@ $(document).ready(function(){
       var x = calc.xToScreen(brick.x());
       var y = calc.yToScreen(brick.y());
       if (x > calc.BRICK_WIDTH * -1 && x < p.width) {
-        if(brick.new){
-          p.tint(139,69,19);
-        }else{
-          p.noTint();
-        }
 
         if(newBrick){
           p.strokeWeight(6);
           p.fill(255, 255, 255, 0);
-          p.stroke(200, 0, 0);
+          p.stroke(147, 112, 219);
           if(finish){
-            p.stroke(200, 0, 0, 200);
+            p.stroke(147, 112, 219, 200);
             p.tint(255, 200);
           }
           p.rect(x-1, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
         }
 
         if(brick.color() == 1){
-          p.image(whiteBrick, 0, 0, whiteBrick.width, whiteBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+          if(brick.new){
+            p.image(newWhiteBrick, 0, 0, whiteBrick.width, whiteBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+          }else{
+            p.image(whiteBrick, 0, 0, whiteBrick.width, whiteBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+          }
         }else{
-          p.image(blackBrick, 0, 0, blackBrick.width, blackBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+          if(brick.new){
+            p.image(newBlackBrick, 0, 0, blackBrick.width, blackBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+          }else{
+            p.image(blackBrick, 0, 0, blackBrick.width, blackBrick.height, x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+          }
+
         }
         //Draw the strength lines
         p.strokeWeight(2);
@@ -338,7 +371,9 @@ $(document).ready(function(){
 
         requiredStrength = level["strength_requirement"];
         interval = level["update_rate"];
-        background = p.loadImage("../" + level['background']);
+        p.loadImage("../" + level['background'], function(img){
+          background = img;
+        });
 
         var text = level["text"];
         text = text.replace('<nextTime()>', timeText(interval));
@@ -351,9 +386,9 @@ $(document).ready(function(){
           var brick = new Brick(towerData[i]["x"], towerData[i]["y"], towerData[i]["color"], towerData[i]["strength"]);
           tower.push(brick);
           var creation = new Date(towerData[i]["created_at"]);
-          if(Date.now() - creation < interval * 60000 && calc.level > 0){
+          if(interval != 0 && Date.now() - creation < interval * 60000){
             brick.new = true;
-          }else if(interval == 0 && Date.now() - creation < 10 * 1000 && towerData[i]["user_id"] == USER_ID){
+          }else if(interval == 0 && Date.now() - creation < 10 * 900 && towerData[i]["user_id"] == USER_ID){
             brick.new = true;
           }
         }
