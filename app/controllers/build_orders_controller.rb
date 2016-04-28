@@ -54,14 +54,17 @@ class BuildOrdersController < ApplicationController
     end
 
     last_order = current_user.build_orders.order(:created_at).last
-    if !last_order.nil? && last_order.created_at > (Time.now - 5.seconds) && last_order.x == @order.x && last_order.y == @order.y
-      @order.delete
-      redirect_to new_build_order_path and return
-    elsif last_order.created_at > (Time.now - 1.seconds)
-      @order.delete
-      flash[:danger] = 'You may only submit one order every seconds.'
-      redirect_to new_build_order_path and return
+    if !last_order.nil?
+      if last_order.created_at > (Time.now - 5.seconds) && last_order.x == @order.x && last_order.y == @order.y
+        @order.delete
+        redirect_to new_build_order_path and return
+      elsif last_order.created_at > (Time.now - 1.seconds)
+        @order.delete
+        flash[:danger] = 'You may only submit one order every seconds.'
+        redirect_to new_build_order_path and return
+      end
     end
+
 
     if @order.save
       current_user.update(actions: (current_user.actions - 1))
