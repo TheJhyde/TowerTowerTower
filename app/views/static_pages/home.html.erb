@@ -32,7 +32,7 @@
       <div id = "stats" class = "stats_box">
         <strong>Personal Stats</strong><br>
         Actions: <%= current_user.actions %><br>
-        Highest Level: <%= current_user.highest_level %><br>
+        Highest Level: <%= current_user.max_level - 1 %><br>
         <br>
         <strong>Global Stats</strong><br>
         Tower Height: <%= @tower.order(:y).last.y %> bricks, <%= @tower.order(:y).last.level.level %> levels</br>

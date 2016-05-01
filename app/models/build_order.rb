@@ -26,6 +26,9 @@ class BuildOrder < ActiveRecord::Base
 					if brick.color == self.colors
 						brick.update(strength: brick.strength + 1)
 						Event.create(category: "strengthened", original_player: brick.user, placing_player: self.user, brick: brick, build_order: self)
+						if self.user.max_level < self.level.level + 1
+						  self.user.update(max_level: self.level.level + 1);
+						end
 					else
 						#If they are different colors, make them weaker
 						brick.update(strength: brick.strength - 1)
@@ -42,6 +45,9 @@ class BuildOrder < ActiveRecord::Base
 				#Then there isn't a brick there. Add one to the tower.
 				brick = Brick.create(x: x, y: self.y[i], color: self.colors, user: self.user)
 				Event.create(category: "placed", placing_player: self.user, build_order: self, brick: brick)
+			  	if self.user.max_level < self.level.level + 1
+				  self.user.update(max_level: self.level.level + 1);
+				end
 			end
 		end
 		update_attribute(:used, DateTime.now)

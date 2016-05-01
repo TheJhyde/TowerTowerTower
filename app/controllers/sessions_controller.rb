@@ -27,11 +27,7 @@ class SessionsController < ApplicationController
   def index
     @user = {id: current_user.id}
     #The highest the user can go
-    if current_user.bricks.count > 0
-      @user[:max_level] = current_user.bricks.order(:y).last.level.level + 1
-    else
-      @user[:max_level] = -1
-    end
+	@user[:max_level] = current_user.max_level
     #The level the user should currently be at
     if session[:level].nil?
       @user[:level] = @user[:max_level] - 1

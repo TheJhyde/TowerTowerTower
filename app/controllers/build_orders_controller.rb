@@ -79,7 +79,7 @@ class BuildOrdersController < ApplicationController
       end
 
       flash[:success] = msg
-      flash[:info] = "You have reached <a href = '/achievement_levels' class = 'achievement_level'>Achievement Level</a> #{current_user.bricks.order(:y).last.level.level} - #{current_user.bricks.count + current_user.build_orders.count}. Congratulations."
+      flash[:info] = "You have reached <a href = '/achievement_levels' class = 'achievement_level'>Achievement Level</a> #{current_user.max_level} - #{current_user.bricks.count + current_user.build_orders.count}. Congratulations."
       if current_user.build_orders.count == 1
         flash[:info] += ' You may now access higher levels of the tower by clicking on the black arrow.'
       end
