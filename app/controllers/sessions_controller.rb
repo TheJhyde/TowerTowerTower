@@ -38,11 +38,16 @@ class SessionsController < ApplicationController
       @user[:level] = session[:level]
 	end
 
+	puts 'We got this far in the function'
 	if session[:offset].nil?
 	  # @user[:offset] = Global.tower.bricks_layer/2
 	  # I don't know which brick this puts you near. The farthest right one maybe?
 	  puts @user[:level]
-	  @user[:offset] = Level.where(level: @user[:level]).first.bricks.first.x
+	  if Level.where(level: @user[:level]).first.bricks.count > 0
+		  @user[:offset] = Level.where(level: @user[:level]).first.bricks.first.x
+	  else
+		@user[:offset] = 50
+	  end
 	else
 	  @user[:offset] = session[:offset]
 	end
