@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get 'strength' => 'static_pages#strength'
   get 'gravity' => 'static_pages#gravity'
   get 'level' => 'static_pages#level'
+  get 'showmode' => 'static_pages#show_mode'
 
 
   get 'login' => 'sessions#new'

@@ -65,6 +65,9 @@ module SessionsHelper
 		unless current_user.actions > 0
 			flash[:danger] = "You are out of <a href ='/actions' target = '_blank'>actions</a> for day. You'll get more at noon EST."
       		redirect_to tower_index_path
+			if session[:show]
+			  current_user.update(actions: 6);
+			end
 		end
 	end
 
@@ -76,8 +79,10 @@ module SessionsHelper
 
 	def log_out
 		forget(current_user)
+		show = session[:show]
 		#session.delete(:user_id)
 		reset_session
+		session[:show] = show
 		@current_user = nil
 	end
 

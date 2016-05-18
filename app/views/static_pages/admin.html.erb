@@ -6,3 +6,12 @@ I ain't making this look nice, nobody but us chickens in here<br/>
 <%= link_to "Levels", levels_path %><br/>
 <b>To Build</b><br/>
 <%= link_to "All Bricks", '#' %><br/>
+
+<p>
+  <%= link_to "Show Mode", showmode_path %><br>
+  The game is current
+  <% if !@show_mode %>
+    NOT
+  <% end %>
+  in show mode.
+</p>

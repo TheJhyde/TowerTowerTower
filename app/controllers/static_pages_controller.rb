@@ -13,9 +13,10 @@ class StaticPagesController < ApplicationController
   end
 
   def admin
+	@show_mode = session[:show]
   end
 
-  #Page for the reporting problems page
+  #Page for the reporting problems
   def report
   	@error = NewsItem.new
   end
@@ -35,6 +36,11 @@ class StaticPagesController < ApplicationController
   		flash[:danger] = "There was an error with the error reporting. That's just fucked up."
   		render 'report'
   	end
+  end
+
+  def show_mode
+	session[:show] = !session[:show]
+	redirect_to :admin
   end
 
   def news_items
