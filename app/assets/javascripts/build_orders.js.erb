@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  //If there's already a canvas loaded or it's the wrong page, don't load this page
+  //If there's already a canvas loaded or it's the wrong page, don't load this script
   if($("canvas").size() > 0 || $(".build_orders.new").length == 0){
     return false;
   }
@@ -31,22 +31,26 @@ $(document).ready(function(){
 
     //-----------------------------------P5 FUNCTIONS---------------------------------------------
     p.setup = function () {
+      //Loads the canvas, sized based on window size and how many bricks we want to show on each level
       var canvas = p.createCanvas(p.windowWidth - 450, <%= Global.tower.brick_height * (Global.tower.level_height + Global.tower.overlap) %>);
       canvas.parent("canvas");
+      //Loads the background
       background = p.loadImage("../level_one.jpg");
       calc = new BrickCalc(p);
 
+      //All the images we'll be using
       whiteBrick = p.loadImage("/brick-02.png");
       blackBrick = p.loadImage("/brick-01.png");
       newBlackBrick = p.loadImage("/new_black_brick.png");
       newWhiteBrick = p.loadImage("/new_white_brick.png");
 
-
       p.angleMode(p.DEGREES);
       lastLevelChange = p.millis();
 
+      //Gets the player's information
       $.get('/session.json', function (data) {
         USER_ID = data["id"];
+        //Sets the highest they can go on the tower
         if (data["max_level"] >= 0) {
           maxLevel = data["max_level"];
           if(data["level"] >= 0){
@@ -56,12 +60,15 @@ $(document).ready(function(){
           }
           $('#controls').append("<br>Click the arrows at the top and bottom of screen to move up and down the tower.");
         } else {
+          //If their max level is 0, then they're a new player and we should keep them on the first level
           calc.level = 0;
           maxLevel = 0;
         }
+        //Moves the offset and tower to last brick they placed
         calc.setOffset(data["offset"]);
         setLevel();
 
+        //Gets the arrangement the player last had - players can't reload the page to get a different brick arrangement
         ar = data["ar"];
         for (var i = 0; i < ar.length + 1; i++) {
           newBricks.push(new Brick(50, 2, data["color"], 0));
@@ -72,6 +79,7 @@ $(document).ready(function(){
     p.draw = function () {
       //Draws the background images
       p.background(100);
+      //Two background images so they wrap
       p.image(background, 0, 0, background.width, background.height, ((calc.offset - calc.BRICK_WIDTH) % p.width), 0, p.width, p.height);
       p.image(background, 0, 0, background.width, background.height, ((calc.offset - calc.BRICK_WIDTH) % p.width + p.width), 0, p.width, p.height);
       //p.filter(p.POSTERIZE, 3);
@@ -100,6 +108,7 @@ $(document).ready(function(){
       //Draws the information block in the upper left
       p.fill(255);
       p.stroke(0);
+      //The information block should be larger the more we have to say
       if(interval == 0) {
         p.rect(0, 0, 220, (textSize+2)*2+2);
       }else if (requiredStrength <= 0) {
@@ -111,10 +120,12 @@ $(document).ready(function(){
       p.strokeWeight(1);
       p.textSize(textSize);
       p.text("Level: " + calc.level, 10, textSize);
+      //Update rate
       if (interval == 0) {
         p.text("Update Rate: Immediate", 10, (textSize)*2+2);
       } else {
         p.text("Update Rate: " + interval + " minutes", 10, (textSize)*2+2);
+        //Calculates when the next update will be
         var d = new Date();
         var nextUpdate = nextTime(interval);
         var minutes = nextUpdate.getMinutes() - d.getMinutes() - 1;
@@ -132,13 +143,12 @@ $(document).ready(function(){
         }
         p.text("Next update in " + minutes + ":" + textSeconds + "." + millisecondsText, 10, (textSize)*3+4);
       }
-
+      //Required strength
       if (requiredStrength > 0) {
         p.text("Required Strength: " + requiredStrength, 10, (textSize)*4+6);
       }
 
-      //Draw navigation arrows
-      //Up and down arrows
+      //Used to have up and down arrows in the top left, but nobody understood those so they're out
 //      if (p.mouseY < calc.BRICK_HEIGHT && calc.level < maxLevel && p.mouseX > 0 && p.mouseX < p.width) {
 //        p.triangle(p.width / 2, 5, p.width / 2 - 40, (calc.BRICK_HEIGHT - 10) / 2, p.width / 2 + 40, (calc.BRICK_HEIGHT - 10) / 2);
 //        //I tried to implement this because everyone asked for it
@@ -157,6 +167,7 @@ $(document).ready(function(){
 ////        }
 //      }
 
+      //Up and down arrows at the middle top
       p.fill(0);
       p.stroke(255);
       p.strokeWeight(2);
@@ -179,13 +190,17 @@ $(document).ready(function(){
       }
     };
 
+    //Handles any clicking within the canvas
     p.mouseClicked = function () {
+      //moving up
       if (p.mouseY < calc.BRICK_HEIGHT / 2 && p.mouseY >= 0 && calc.level < maxLevel && p.mouseX > 0 && p.mouseX < p.width) {
         calc.level++;
         setLevel();
+      //moving down
       } else if (p.mouseY > p.height - calc.BRICK_HEIGHT / 2 && p.mouseY < p.height && calc.level > 0 && p.mouseX > 0 && p.mouseX < p.width) {
         calc.level--;
         setLevel();
+      //clicking on bricks
       } else if (p.mouseX > calc.BRICK_WIDTH && p.mouseX < p.width - calc.BRICK_WIDTH && p.mouseY > 0 && p.mouseY < p.height) {
         if (!finish) {
           //console.log("Brick at " + newBricks[0].x() + ", " + newBricks[0].y() + " level: " + newBricks[0].level());
@@ -204,6 +219,7 @@ $(document).ready(function(){
     };
 
     p.mouseMoved = function () {
+      //move the bricks around if your mouse is inside the canvas
       if (p.mouseY < p.height && p.mouseY > 0 && p.mouseX > 0 && p.mouseX < p.width && !finish) {
         updateBricks(calc.screenToX(p.mouseX), calc.screenToY(p.mouseY));
       }
@@ -225,10 +241,10 @@ $(document).ready(function(){
             updateBricks(calc.screenToX(p.mouseX), calc.screenToY(p.mouseY));
           }
           break;
-        case 39: //Right arrow key, move around tower
+        case 39: //Right arrow key, move right on the tower
           calc.moveRight();
           break;
-        case 37: //Left arrow key, move around tower
+        case 37: //Left arrow key, move left on the tower
           calc.moveLeft();
           break;
         case 38: //Up arrow key, move up a level
@@ -248,8 +264,10 @@ $(document).ready(function(){
       }
     };
 
+    //Does what it says on the tin
+    //brick is the brick object, with all it's data
+    //newBrick is a bool - new bricks are drawn differently
     function drawBrick(brick, newBrick) {
-      //Draw the rectangle for the block
       var x = calc.xToScreen(brick.x());
       var y = calc.yToScreen(brick.y());
       if (x > calc.BRICK_WIDTH * -1 && x < p.width) {
@@ -279,7 +297,7 @@ $(document).ready(function(){
           }
 
         }
-        //Draw the strength lines
+        //Draws the strength lines
         p.strokeWeight(2);
         switch (brick.color()) {
           case 0:
@@ -322,7 +340,6 @@ $(document).ready(function(){
 
     //Takes the new bricks and moves them to the given coordinates
     function updateBricks(x, y){
-
       if (!calc.withinLevel(x, y)) {
         return false;
       }
@@ -337,6 +354,7 @@ $(document).ready(function(){
       }
     }
 
+    //Does everything that needs to happen when you move up and down levels.
     function setLevel() {
       loadLevel(calc.level);
       loadOrders(calc.level, 0);
@@ -363,11 +381,11 @@ $(document).ready(function(){
       noReadGlyphs();
     }
 
+    //AJAX request for the level's information
     function loadLevel(requestedLevel){
       tower = [];
       $.get('/levels/' + requestedLevel + '.json', function(data){
         var level = data["level"];
-
         requiredStrength = level["strength_requirement"];
         interval = level["update_rate"];
         p.loadImage("../" + level['background'], function(img){
@@ -379,7 +397,8 @@ $(document).ready(function(){
         finishText = text.slice(text.indexOf('|')+2);
         unfinishedText = text.slice(0, text.indexOf('|'));
         updateAlert();
-        //Loads the tower
+
+        //Loads all the bricks
         var towerData = data["bricks"];
         for (var i = 0; i < towerData.length; i++) {
           var brick = new Brick(towerData[i]["x"], towerData[i]["y"], towerData[i]["color"], towerData[i]["strength"]);
@@ -396,6 +415,7 @@ $(document).ready(function(){
       });
     }
 
+    //Changes the text on the left panel based on your level
     function updateAlert() {
       if (finish) {
         $("#instructions").html(finishText);
@@ -407,6 +427,7 @@ $(document).ready(function(){
 
   var myp5 = new p5(sketch);
 
+  //overrides space function
   window.onkeydown = function(e){
     return !(e.keyCode == 32);
   };

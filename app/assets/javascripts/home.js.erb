@@ -1,3 +1,5 @@
+//Draws a small picture of the entire tower
+
 $(document).ready(function(){
 	//If there's already a canvas loaded or it's the wrong page, don't load this page
 	if($("canvas").size() > 0 || $(".static_pages.home").length == 0 || $("#canvas").length == 0){
@@ -29,7 +31,7 @@ $(document).ready(function(){
 			for(var i = 0; i < tower.length; i++){
 				drawBrick(tower[i]);
 			}
-      //Clouds
+      //Draws clouds at the top
       p.fill(255);
       p.noStroke();
       for(var i = 0; i < p.width/(levelHeight*2/3)+1; i++){
@@ -37,6 +39,7 @@ $(document).ready(function(){
       }
 		};
 
+    //Every script has it's own drawBrick function because they all draw bricks slightly differently
     function drawBrick(brick) {
       //Draw the rectangle for the block
       if (brick.x() >= 0 && brick.x() < calc.COLUMNS) {

@@ -1,3 +1,7 @@
+//Brick and BrickCalc help keep track of where all the tower is and
+//where all the bricks are. Keeping all that data in it's own object
+//means I can reuse the code for both placing bricks and viewing the tower. Very useful
+
 function Brick(startX, startY, color, strength){
   var x = startX;
 	var y = startY;
@@ -10,6 +14,7 @@ function Brick(startX, startY, color, strength){
 		y = newY;
 	};
 
+  //A function that makes the brick fall a little bit. Currently not used for anything
 	this.fall = function(){
 		y -= 0.1;
 	};
@@ -34,13 +39,13 @@ function Brick(startX, startY, color, strength){
     return strength;
   };
 
-	//Do I use this function anywhere?
 	this.level = function(){
 		return Math.floor((y - 1) / BPL);
 	};
 }
 
 function BrickCalc(p){
+  //Pulls in a lot of globals here
   this.BRICK_WIDTH = <%= Global.tower.brick_width %>;
   this.BRICK_HEIGHT = <%= Global.tower.brick_height %>;
   this.COLUMNS = <%= Global.tower.bricks_layer %>;
@@ -112,7 +117,7 @@ function BrickCalc(p){
       this.BRICK_WIDTH *= 0.5;
       this.BRICK_HEIGHT *= 0.5;
       this.reviseBounds();
-      //This always put the offset at the halfway point
+      //This always put the offset at the halfway point, which is less than ideal
       this.offset = (p.width - this.BRICK_WIDTH * this.COLUMNS)/2;
     }
   };

@@ -1,3 +1,5 @@
+//Draws the tower viewer version of the tower
+
 $(document).ready(function(){
 	//If there's already a canvas loaded or it's the wrong page, don't load this page
 	if($("canvas").size() > 0 || $(".tower.index").length == 0){
@@ -5,32 +7,32 @@ $(document).ready(function(){
 	}
 
 	var sketch = function(p){
-		var tower = [];
-		var arrow_width;
-		var current_brick;
-    var current_player;
+    	var tower = [];
+    	var arrow_width;
+    	var current_brick;
+        var current_player;
 
-    var calc;
+        var calc;
 
 		//-----------------------------------P5 FUNCTIONS---------------------------------------------
 		p.setup = function(){
 			var canvas = p.createCanvas(p.windowWidth - 450, <%= Global.tower.brick_height %> * (<%= Global.tower.level_height %> + 1));
-      arrow_width = <%= Global.tower.brick_width %>;
+		    arrow_width = <%= Global.tower.brick_width %>;
 
-      canvas.parent("canvas");
-      calc = new BrickCalc(p);
+			canvas.parent("canvas");
+			calc = new BrickCalc(p);
 			calc.level = 0;
 
-      $.get('/session.json', function(data){
-        current_player = data["id"];
-      });
+			$.get('/session.json', function(data){
+				//we use the player's id to draw their bricks red
+				current_player = data["id"];
+			});
 
-      loadTower();
+			loadTower();
 		};
 
 		p.draw = function(){
 			p.background(255);
-
 
 			//Level markers
 			p.noStroke();
@@ -42,7 +44,7 @@ $(document).ready(function(){
 
 			//Draws the bricks from the tower
 			for(var i = 0; i < tower.length; i++){
-        drawBrick(tower[i]);
+        		drawBrick(tower[i]);
 			}
 
 			//Draw navigation arrows
@@ -68,7 +70,7 @@ $(document).ready(function(){
 				calc.moveRight();
 			}
 
-			//This is where the mouse stuff for the up and down go
+			//Move up and down
 			if(p.mouseY < arrow_width && p.mouseY > 0 && p.mouseX > p.width/2 - 200 && p.mouseX < p.width/2 + 200){
 				calc.moveUp();
 			}else if(p.mouseY > p.height-arrow_width && p.mouseY < p.height && p.mouseX > p.width/2 - 200 && p.mouseX < p.width/2 + 200){
@@ -76,76 +78,79 @@ $(document).ready(function(){
 			}
 		};
 
-    function drawBrick(brick){
-      //Draw the rectangle for the block
-      var x = calc.xToScreen(brick.x());
-      var y = calc.yToScreen(brick.y());
-      if (x > 0 - calc.BRICK_WIDTH && x < p.width && y > 0 - calc.BRICK_HEIGHT && y < p.height) {
-        if(brick.playerID == current_player){
-          p.fill(200, 0, 0);
-        }else{
-          switch (brick.color()){
-            case 0:
-              p.fill(0, 0, 0);
-              break;
-            case 1:
-              p.fill(255, 255, 255);
-              break;
-            case 2:
-              p.fill(0, 0, 200);
-              break;
-            default:
-              p.fill(0);
-          }
+        function drawBrick(brick){
+            //Draw the rectangle for the block
+            var x = calc.xToScreen(brick.x());
+            var y = calc.yToScreen(brick.y());
+            if (x > 0 - calc.BRICK_WIDTH && x < p.width && y > 0 - calc.BRICK_HEIGHT && y < p.height) {
+              	//If the player placed this brick, it's red
+                if(brick.playerID == current_player){
+                  p.fill(200, 0, 0);
+                }else{
+                  switch (brick.color()){
+                    case 0:
+                      p.fill(0, 0, 0);
+                      break;
+                    case 1:
+                      p.fill(255, 255, 255);
+                      break;
+                    case 2:
+                      p.fill(0, 0, 200);
+                      break;
+                    default:
+                      p.fill(0);
+                  }
+                }
+                p.stroke(100);
+                p.strokeWeight(1);
+                p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
+
+                //Draw the strength lines
+                if(calc.zoom < 2){
+                    p.strokeWeight(2);
+                    switch(brick.color()){
+                        case 0:
+                            p.stroke(255);
+                            break;
+                        case 1:
+                            p.stroke(0);
+                            break;
+                        default:
+                        p.stroke(100);
+                    }
+                    for (var j = 0; j < brick.strength(); j++) {
+                        var xLerp = p.lerp(x, x + calc.BRICK_WIDTH, (j + 1) / (brick.strength() + 1));
+                        p.line(xLerp, y + 5, xLerp, y + (calc.BRICK_HEIGHT - 5));
+                    }
+                }
+            }
         }
-        p.stroke(100);
-        p.strokeWeight(1);
-        p.rect(x, y, calc.BRICK_WIDTH, calc.BRICK_HEIGHT);
 
-        //Draw the strength lines
-        if(calc.zoom < 2){
-          p.strokeWeight(2);
-          switch(brick.color()){
-            case 0:
-              p.stroke(255);
-              break;
-            case 1:
-              p.stroke(0);
-              break;
-            default:
-              p.stroke(100);
-          }
-          for (var j = 0; j < brick.strength(); j++) {
-            var xLerp = p.lerp(x, x + calc.BRICK_WIDTH, (j + 1) / (brick.strength() + 1));
-            p.line(xLerp, y + 5, xLerp, y + (calc.BRICK_HEIGHT - 5));
-          }
-        }
-      }
-    }
+    	p.mouseMoved = function(){
+    	   //Find the brick they just moused over
+            var x = calc.screenToX(p.mouseX);
+            var y = calc.screenToY(p.mouseY);
+            var index = -1;
+            for(var i = 0; i < tower.length; i++){
+                if(tower[i].x() == x && tower[i].y() == y){
+                    index = i;
+                    i = tower.length + 1;
+                }
+            }
 
-		p.mouseMoved = function(){
-			//Find the brick they just moused over
-      var x = calc.screenToX(p.mouseX);
-      var y = calc.screenToY(p.mouseY);
-      var index = -1;
-			for(var i = 0; i < tower.length; i++){
-        if(tower[i].x() == x && tower[i].y() == y){
-          index = i;
-          i = tower.length + 1;
-        }
-      }
+            //Pulls up the history of the brick
+            if(index != -1){
+                if(index != current_brick){
+                    current_brick = index;
+        			$.get('/tower/history/'+ tower[current_brick].id +'.js');
+    		    }
+            }else{
+    	        $("#info").html("");
+    	        current_brick = -1;
+            }
+    	};
 
-			if(index != -1){
-				if(index != current_brick){
-					current_brick = index;
-					$.get('/tower/history/'+ tower[current_brick].id +'.js');
-				}
-			}else{
-				$("#info").html("");
-				current_brick = -1;
-			}
-		};
-
+        //Which brick is x, y within?
 		function overBrick(x, y){
 			for(var i = 0; i < tower.length; i++){
 				if(tower[i].isWithin(x, y)){
@@ -188,12 +193,12 @@ $(document).ready(function(){
 				for(var i = 0; i < data.length; i++){
 					var brick = new Brick(data[i]["x"], data[i]["y"], data[i]["color"], data[i]["strength"]);
 					brick.id = data[i]["id"];
-          brick.playerID = data[i]["user_id"];
+                    brick.playerID = data[i]["user_id"];
 					tower.push(brick);
 				}
 			});
 		}
-	};
+    };
 
 	var myp5 = new p5(sketch);
 });

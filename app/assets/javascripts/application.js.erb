@@ -43,6 +43,7 @@ function readGlyphs(){
 	});
 }
 
+//Removes the handlers for the glyphs 
 function noReadGlyphs(){
   $(document).off('click', '.glyph');
   $(document).off('click', '#text_area .glyph_image');
@@ -66,6 +67,7 @@ function loadKeyboard(bricks, calc){
 	});
 }
 
+
 function loadOrders(level, date){
 	$("#messages").html("");
 	$.get('/build_orders/get_orders/' + date + '.js', {level: level});
@@ -79,11 +81,11 @@ function nextTime(interval){
   return d;
 }
 
+//Describes how far in the future something will happen
 function timeText(interval){
 	if(interval == 0){
 		return "immediately";
 	}
-	//And then do the rest in here
 	var d = nextTime(interval);
 	if( d.getHours() <= 12){
 		return "at " + d.getHours() + ":" + d.getMinutes() + " AM";
@@ -92,7 +94,7 @@ function timeText(interval){
 	}
 }
 
-//This was my attempt at getting custom tooltips. No success so far
+//This was my attempt at getting custom tooltips. No success so far.
 $(document).ready(function(){
 //  $('.glyph_image').hover(function(){
 //    console.log("Hover!");
@@ -103,6 +105,8 @@ $(document).ready(function(){
 //  }, function(){
 //    $('#tip').remove();
 //  });
+
+// Rotates each paragraph ever so slightly.
   $('p').each(function(){
     var degrees = Math.random()*2.0 - 1;
     $(this).css({'-webkit-transform' : 'rotate('+ degrees +'deg)',
@@ -112,6 +116,7 @@ $(document).ready(function(){
   })
 });
 
+//Small function to remove various alerts
 $(document).on('click', '.close', function(){
   $(this).parents('.box').remove();
 });
